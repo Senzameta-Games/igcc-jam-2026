@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cp440gmbnqqit"]
+
+[ext_resource type="Script" uid="uid://x21rd7nqhl71" path="res://plate.gd" id="1_iyy21"]
+[ext_resource type="Texture2D" uid="uid://dfr47jt8lburn" path="res://assets/img/Clipart_plate.svg" id="1_xxn75"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hhmh7"]
+radius = 61.0
+
+[node name="Plate" type="Area2D" unique_id=285425983]
+script = ExtResource("1_iyy21")
+
+[node name="Plate" type="Sprite2D" parent="." unique_id=2136577947]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_xxn75")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2077644329]
+shape = SubResource("CircleShape2D_hhmh7")

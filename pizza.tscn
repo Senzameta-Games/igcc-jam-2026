@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bxreaexwfr1h4"]
+
+[ext_resource type="Script" uid="uid://dcjek4l67yemp" path="res://pizza.gd" id="1_i514n"]
+[ext_resource type="Texture2D" uid="uid://dlwnelujbm3mk" path="res://assets/img/pizza-crust.png" id="2_ycrcj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_glui1"]
+radius = 177.0706
+
+[node name="Pizza" type="Area2D" unique_id=271531692]
+script = ExtResource("1_i514n")
+
+[node name="Crust" type="Sprite2D" parent="." unique_id=1980364936]
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("2_ycrcj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1846550097]
+shape = SubResource("CircleShape2D_glui1")

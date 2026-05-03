@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://byocmdf14k1k3"]
+
+[ext_resource type="PackedScene" uid="uid://c6b1bsif06l5o" path="res://order.tscn" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://bd5i3i8l8gkp5" path="res://main.gd" id="1_lquwl"]
+[ext_resource type="PackedScene" uid="uid://cp440gmbnqqit" path="res://plate.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://bxreaexwfr1h4" path="res://pizza.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://cvp7wx02cy63m" path="res://ingredient.tscn" id="4_1bvp3"]
+
+[node name="Main" type="Node" unique_id=1651964293]
+script = ExtResource("1_lquwl")
+ingredient_scene = ExtResource("4_1bvp3")
+
+[node name="Order" parent="." unique_id=792689846 instance=ExtResource("1_0xm2m")]
+position = Vector2(61.52, 75.51)
+
+[node name="Plate" parent="." unique_id=285425983 instance=ExtResource("2_1bvp3")]
+position = Vector2(639.15, 88.255)
+
+[node name="Pizzas" type="Node" parent="." unique_id=117402139]
+
+[node name="Pizza" parent="Pizzas" unique_id=271531692 instance=ExtResource("2_h2yge")]
+position = Vector2(267, 306)
+
+[node name="OrderPizza" parent="Pizzas" unique_id=153992909 instance=ExtResource("2_h2yge")]
+position = Vector2(62, 69)
+scale = Vector2(0.3, 0.3)
+
+[node name="Ingredient" parent="." unique_id=1261428390 instance=ExtResource("4_1bvp3")]
+visible = false
+
+[connection signal="ingredientAdd" from="Plate" to="." method="_on_plate_ingredient_add"]
+[connection signal="pizza_clicked" from="Pizzas/Pizza" to="." method="_on_pizza_pizza_clicked"]

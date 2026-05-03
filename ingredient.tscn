@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cvp7wx02cy63m"]
+
+[ext_resource type="Texture2D" uid="uid://ceteaimsj1v1e" path="res://assets/img/Pepperoni.png" id="1_fyqpv"]
+[ext_resource type="Script" uid="uid://cfa1yeoxsxaay" path="res://ingredient.gd" id="2_762re"]
+
+[node name="Ingredient" type="Sprite2D" unique_id=1261428390]
+scale = Vector2(0.025, 0.025)
+texture = ExtResource("1_fyqpv")
+script = ExtResource("2_762re")
