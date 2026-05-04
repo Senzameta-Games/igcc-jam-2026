@@ -1,6 +1,9 @@
 class_name Note
 extends Node2D
 
+# the thing that crosses the playhead
+# while playback is stopped, position is snapped to a slot. the player can move it to a new slot
+
 signal selected(note: Note)
 
 @export var slot_index: int = 0
