@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bspubr8kdmch8" path="res://core/entities/notes/d-note.tscn" id="3_y5shy"]
 [ext_resource type="PackedScene" uid="uid://dmodddgtqr3fl" path="res://core/entities/notes/a-note.tscn" id="4_rlxeh"]
 [ext_resource type="PackedScene" uid="uid://cx75inkvaagql" path="res://core/entities/notes/c-note.tscn" id="5_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://b63vf8wsa5o8l" path="res://core/entities/notes/f-note.tscn" id="5_rlxeh"]
 
 [node name="Sequencer" type="Node2D" unique_id=1167367685]
 script = ExtResource("1_7ojyt")
@@ -25,6 +26,9 @@ position = Vector2(960, 448)
 radius = 240.0
 
 [node name="Note" parent="Orbit1/Notes" parent_id_path=PackedInt32Array(2058863503, 436274638) index="0" unique_id=1975501567 instance=ExtResource("4_rlxeh")]
+
+[node name="Note2" parent="Orbit1/Notes" parent_id_path=PackedInt32Array(2058863503, 436274638) index="1" unique_id=1127780723 instance=ExtResource("5_rlxeh")]
+slot_index = 4
 
 [node name="Orbit2" parent="." unique_id=1934576512 instance=ExtResource("1_5181e")]
 position = Vector2(960, 448)

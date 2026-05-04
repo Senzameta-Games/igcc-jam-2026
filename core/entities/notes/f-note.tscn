@@ -15,6 +15,7 @@ animations = [{
 }]
 
 [node name="Note" unique_id=552011164 instance=ExtResource("1_kpjew")]
+note_id = &"f"
 texture = ExtResource("2_d07gq")
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]

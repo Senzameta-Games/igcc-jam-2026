@@ -4,6 +4,9 @@ extends Node2D
 signal note_crossed(note_id: StringName, texture: Texture2D)
 
 const PLAYHEAD_T: float = 0.0
+const RESET_DURATION: float = 0.3
+
+var _reset_tween: Tween = null
 
 @export var radius: float = 400.0:
 	set(value):
@@ -62,8 +65,6 @@ func _physics_process(delta: float) -> void:
 	_playhead_check(prev_t, _rot_t)
 
 func _process(delta: float) -> void:
-	if not Playback.is_playing:
-		return
 	_move_notes()
 
 func _input(event: InputEvent) -> void:
@@ -151,12 +152,16 @@ func _note_crossed(prev_note_t: float, curr_note_t: float) -> bool:
 	return prev_note_t < threshold and threshold <= curr_note_t
 
 func _on_playback_stopped() -> void:
-	_rot_t = 0.0
-	line_color = Color("#777777")
-	_move_notes()
+	line_color = Color("#111")
+	if _reset_tween != null:
+		_reset_tween.kill()
+	if _rot_t == 0.0:
+		return
+	_reset_tween = create_tween()
+	_reset_tween.tween_property(self, "_rot_t", 0.0, RESET_DURATION)
 
 func _on_playback_started() -> void:
-	line_color = Color.WHITE
+	line_color = Color("#333")
 
 func _move_notes() -> void:
 	if _path.curve == null:
@@ -166,5 +171,6 @@ func _move_notes() -> void:
 		var n = note as Note
 		if n == null:
 			continue
-		var note_t = fmod(_rot_t + n.slot_t, 1.0)
+		n.tick_visual_t(get_process_delta_time())
+		var note_t = fmod(_rot_t + n.visual_t, 1.0)
 		n.position = _path.curve.sample_baked(note_t * baked_length)
