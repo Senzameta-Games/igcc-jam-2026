@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://3xd20hivcved"]
+
+[ext_resource type="Script" uid="uid://c4b63b0fajejx" path="res://core/entities/orbs/orb_trail.gd" id="1_ryinh"]
+
+[node name="OrbTrail" type="Node2D" unique_id=1302186274]
+z_index = 20
+script = ExtResource("1_ryinh")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=893369840]

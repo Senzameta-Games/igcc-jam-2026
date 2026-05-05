@@ -1,0 +1,37 @@
+class_name OrbTrail
+extends Node2D
+ 
+## Spawned by Sequencer when a Detector triggers.
+## Travels from detector to target slot along an arc.
+## Emits an arrival signal when it reaches the destination, then frees itself.
+ 
+signal arrived
+ 
+@export var travel_duration: float = 0.4
+@export var arc_height: float = 80.0
+ 
+var _from: Vector2
+var _to: Vector2
+var _control: Vector2
+var _elapsed: float = 0.0
+ 
+@onready var _sprite: Sprite2D = $Sprite
+ 
+func setup(texture: Texture2D, from: Vector2, to: Vector2) -> void:
+	_from = from
+	_to = to
+	var mid: Vector2 = (_from + _to) * 0.5
+	_control = mid + Vector2(0.0, -arc_height)
+	_sprite.texture = texture
+	global_position = _from
+ 
+func _process(delta: float) -> void:
+	_elapsed += delta
+	var t: float = clampf(_elapsed / travel_duration, 0.0, 1.0)
+	var ease_t: float = ease(t, -2.0)
+	var a: Vector2 = _from.lerp(_control, ease_t)
+	var b: Vector2 = _control.lerp(_to, ease_t)
+	global_position = a.lerp(b, ease_t)
+	if t >= 1.0:
+		arrived.emit()
+		queue_free()

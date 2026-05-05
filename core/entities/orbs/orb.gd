@@ -11,10 +11,12 @@ const LERP_THRESHOLD: float = 0.5
 
 @export var orb_id: StringName = &""
 @export var texture: Texture2D
+@export var note: AudioStream
 
 var _state: State = State.IN_SLOT
 
 @onready var _sprite: AnimatedSprite2D = $Sprite
+@onready var _note: AudioStreamPlayer = $Note
 
 func _ready() -> void:
 	_sprite.play("default")
@@ -29,6 +31,12 @@ func _process(delta: float) -> void:
 		_state = State.IN_SLOT
 		return
 	position = position.lerp(target, LERP_SPEED * delta)
+
+func play_note() -> void:
+	if note == null:
+		return
+	_note.stream = note
+	_note.play()
 
 func lift() -> void:
 	_state = State.HELD

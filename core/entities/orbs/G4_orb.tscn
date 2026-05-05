@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://b63vf8wsa5o8l"]
+
+[ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_g6dl0"]
+[ext_resource type="Texture2D" uid="uid://cn6t58g3qe3wv" path="res://core/assets/icons/f-note.png" id="2_y1m8o"]
+[ext_resource type="AudioStream" uid="uid://duqrvvpdo5djv" path="res://core/assets/audio/notes/G4orb.wav" id="3_st0p7"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xexi0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_y1m8o")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Orb" unique_id=552011164 instance=ExtResource("1_g6dl0")]
+orb_id = &"g4"
+texture = ExtResource("2_y1m8o")
+note = ExtResource("3_st0p7")
+
+[node name="Sprite" parent="." index="0" unique_id=1751710394]
+sprite_frames = SubResource("SpriteFrames_xexi0")
