@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://db62fn63swnqw"]
+
+[ext_resource type="Script" uid="uid://mds6erxc7xyu" path="res://core/entities/sequence/sequence.gd" id="1_edfga"]
+[ext_resource type="Texture2D" uid="uid://dwe0ak00f8fht" path="res://core/assets/icons/empty.png" id="2_ravim"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ycj8o"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.04755766, 0.047557645, 0.047557645, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+
+[node name="Sequence" type="PanelContainer" unique_id=1463584969]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -168.0
+offset_top = -48.0
+offset_right = 168.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ycj8o")
+script = ExtResource("1_edfga")
+
+[node name="Notes" type="HBoxContainer" parent="." unique_id=1650935675]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="NoteSlot0" type="MarginContainer" parent="Notes" unique_id=1213807150]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Note" type="TextureRect" parent="Notes/NoteSlot0" unique_id=989926475]
+layout_mode = 2
+
+[node name="Empty" type="TextureRect" parent="Notes/NoteSlot0" unique_id=756631102]
+layout_mode = 2
+texture = ExtResource("2_ravim")
+
+[node name="NoteSlot1" type="MarginContainer" parent="Notes" unique_id=2134807631]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Note" type="TextureRect" parent="Notes/NoteSlot1" unique_id=843753657]
+layout_mode = 2
+
+[node name="Empty" type="TextureRect" parent="Notes/NoteSlot1" unique_id=1749297902]
+layout_mode = 2
+texture = ExtResource("2_ravim")
+
+[node name="NoteSlot3" type="MarginContainer" parent="Notes" unique_id=1354515818]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Note" type="TextureRect" parent="Notes/NoteSlot3" unique_id=1016440932]
+layout_mode = 2
+
+[node name="Empty" type="TextureRect" parent="Notes/NoteSlot3" unique_id=8393647]
+layout_mode = 2
+texture = ExtResource("2_ravim")
+
+[node name="NoteSlot4" type="MarginContainer" parent="Notes" unique_id=353610035]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Note" type="TextureRect" parent="Notes/NoteSlot4" unique_id=1671894822]
+layout_mode = 2
+
+[node name="Empty" type="TextureRect" parent="Notes/NoteSlot4" unique_id=1251988211]
+layout_mode = 2
+texture = ExtResource("2_ravim")

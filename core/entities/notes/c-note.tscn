@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cx75inkvaagql"]
+
+[ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/notes/note.tscn" id="1_ermyd"]
+[ext_resource type="Texture2D" uid="uid://bffv5qv7s32ww" path="res://core/assets/icons/c-note.png" id="2_pmbvv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_eqgwp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_pmbvv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Note" unique_id=552011164 instance=ExtResource("1_ermyd")]
+note_id = &"c"
+texture = ExtResource("2_pmbvv")
+
+[node name="Sprite" parent="." index="0" unique_id=1751710394]
+sprite_frames = SubResource("SpriteFrames_eqgwp")

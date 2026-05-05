@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://12ufnc4ajfr1"]
+
+[ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/sequencer/sequencer.tscn" id="1_xiose"]
+[ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
+
+[node name="Main" type="Node2D" unique_id=1746196733]
+
+[node name="Interface" type="CanvasLayer" parent="." unique_id=839751828]
+
+[node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
+
+[node name="Background" type="CanvasLayer" parent="." unique_id=539231450]
+layer = -1
+
+[node name="TextureRect" type="TextureRect" parent="Background" unique_id=366761875]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_r77kf")
+expand_mode = 3
