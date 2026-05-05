@@ -17,12 +17,15 @@ script = ExtResource("1_7ojyt")
 position = Vector2(960, 450)
 
 [node name="Ring0" parent="Rings" unique_id=1939568862 instance=ExtResource("2_y5shy")]
+rpm = 16.0
 
 [node name="Ring1" parent="Rings" unique_id=1726688430 instance=ExtResource("3_rlxeh")]
 
 [node name="Ring2" parent="Rings" unique_id=2043490416 instance=ExtResource("4_pw2oc")]
+rpm = 8.0
 
 [node name="Ring3" parent="Rings" unique_id=1903142803 instance=ExtResource("5_5wsxu")]
+rpm = 4.0
 
 [node name="DetectionFeedback" type="Node2D" parent="." unique_id=461504393]
 
