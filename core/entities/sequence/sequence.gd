@@ -21,17 +21,30 @@ func register_orbit(orbit: Orbit) -> void:
 func _on_note_crossed(note_id: StringName, texture: Texture2D) -> void:
 	if _slots.size() == 0:
 		return
+	if _write_head > 3:
+		_queue_slots(texture)
+		return
 	var slot: Control = _slots[_write_head]
 	var empty := slot.get_node("Empty") as TextureRect
 	var note := slot.get_node("Note") as TextureRect
 	empty.visible = false
 	note.texture = texture
 	note.visible = true
-	_write_head = (_write_head + 1) % SLOT_COUNT
+	_write_head += 1
 
 func _on_playback_stopped() -> void:
 	_write_head = 0
 	_reset_slots()
+	
+func _queue_slots(newTexture: Texture2D) -> void:
+	
+	for i in range(1, SLOT_COUNT):
+		var lastNote := _slots[i-1].get_node("Note") as TextureRect
+		var currNote := _slots[i].get_node("Note") as TextureRect
+		lastNote.texture = currNote.texture
+	
+	var currNote := _slots[3].get_node("Note") as TextureRect
+	currNote.texture = newTexture
 
 func _reset_slots() -> void:
 	for slot in _slots:
