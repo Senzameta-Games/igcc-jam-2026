@@ -10,6 +10,8 @@ extends PanelContainer
 var _write_head: int = 0
 var _prev_write_head: int = -1
 var _slots: Array[SequenceSlot] = []
+var _dip_tween: Tween = null
+var _rest_position: Vector2
 
 func _ready() -> void:
 	for child: Node in _orbs_container.get_children():
@@ -18,6 +20,7 @@ func _ready() -> void:
 			continue
 		_slots.append(slot)
 	Playback.stopped.connect(_on_playback_stopped)
+	_rest_position = position
 	_reset_slots()
 	_update_indicator()
 
@@ -65,9 +68,10 @@ func _update_indicator() -> void:
 	_prev_write_head = current_idx
 
 func _dip_panel() -> void:
-	var origin: Vector2 = position
-	var tween := create_tween()
-	tween.tween_property(self, "position:y", origin.y + dip_distance, dip_duration * 0.5)\
+	if _dip_tween:
+		_dip_tween.kill()
+	_dip_tween = create_tween()
+	_dip_tween.tween_property(self, "position:y", _rest_position.y + dip_distance, dip_duration * 0.5)\
 		.set_ease(Tween.EASE_OUT)
-	tween.tween_property(self, "position:y", origin.y, dip_duration * 0.5)\
+	_dip_tween.tween_property(self, "position:y", _rest_position.y, dip_duration * 0.5)\
 		.set_ease(Tween.EASE_IN)
