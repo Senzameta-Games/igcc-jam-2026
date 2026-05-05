@@ -17,6 +17,7 @@ var _state: State = State.IN_SLOT
 
 @onready var _sprite: AnimatedSprite2D = $Sprite
 @onready var _note: AudioStreamPlayer = $Note
+@onready var _land: AudioStreamPlayer = $Land
 
 func _ready() -> void:
 	_sprite.play("default")
@@ -46,4 +47,5 @@ func land() -> void:
 	# Called by Slot.receive_orb after reparenting.
 	# position is now in Slot local space. Lerp to center.
 	_state = State.LERPING
+	_land.play()
 	z_index = 5

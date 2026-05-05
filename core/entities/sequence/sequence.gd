@@ -41,6 +41,7 @@ func receive_orb(orb_id: StringName, texture: Texture2D) -> void:
 	_slots[idx].receive(texture)
 	_dip_panel()
 	_write_head += 1
+	print("Orb received: ", orb_id)
 	_update_indicator()
 
 func _on_playback_stopped() -> void:

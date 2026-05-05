@@ -53,6 +53,7 @@ func receive_orb(incoming: Orb) -> Orb:
 		if _count < 8:
 			_count += 1
 			incoming.queue_free()
+			
 			_refresh_visual()
 			return null
 		else:
