@@ -1,15 +1,17 @@
 [gd_scene format=3 uid="uid://12ufnc4ajfr1"]
 
 [ext_resource type="Script" uid="uid://ckqdtgnc1nxah" path="res://core/hand.gd" id="1_3gdo0"]
+[ext_resource type="Script" uid="uid://vx6v8iqa4anf" path="res://core/main.gd" id="1_csopv"]
 [ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/sequencer/sequencer.tscn" id="1_xiose"]
 [ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
 
 [node name="Main" type="Node2D" unique_id=1746196733]
-
-[node name="Hand" type="Node2D" parent="." unique_id=1402778550]
-script = ExtResource("1_3gdo0")
+script = ExtResource("1_csopv")
 
 [node name="Interface" type="CanvasLayer" parent="." unique_id=839751828]
+
+[node name="Hand" type="Node2D" parent="Interface" unique_id=1402778550]
+script = ExtResource("1_3gdo0")
 
 [node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
 

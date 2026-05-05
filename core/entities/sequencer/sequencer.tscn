@@ -1,41 +1,44 @@
 [gd_scene format=3 uid="uid://b1vu1c1k0s57o"]
 
 [ext_resource type="Script" uid="uid://bfpd0mdsk51y8" path="res://core/entities/sequencer/sequencer.gd" id="1_7ojyt"]
-[ext_resource type="PackedScene" uid="uid://bwl6tavj5b088" path="res://core/entities/orbits/orbit.tscn" id="1_5181e"]
 [ext_resource type="PackedScene" uid="uid://qc0dwe3v7u2g" path="res://core/entities/button/button.tscn" id="2_ee14c"]
+[ext_resource type="PackedScene" uid="uid://c2ry2hofjuqey" path="res://core/entities/rings/ring-150r.tscn" id="2_y5shy"]
 [ext_resource type="PackedScene" uid="uid://db62fn63swnqw" path="res://core/entities/sequence/sequence.tscn" id="3_fhb8o"]
-[ext_resource type="PackedScene" uid="uid://bspubr8kdmch8" path="res://core/entities/notes/d-note.tscn" id="3_y5shy"]
-[ext_resource type="PackedScene" uid="uid://dmodddgtqr3fl" path="res://core/entities/notes/a-note.tscn" id="4_rlxeh"]
-[ext_resource type="PackedScene" uid="uid://cx75inkvaagql" path="res://core/entities/notes/c-note.tscn" id="5_pw2oc"]
-[ext_resource type="PackedScene" uid="uid://b63vf8wsa5o8l" path="res://core/entities/notes/f-note.tscn" id="5_rlxeh"]
+[ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring-225r.tscn" id="3_rlxeh"]
+[ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring-300r.tscn" id="4_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://cm3vbfeve2gux" path="res://core/entities/rings/ring-375r.tscn" id="5_5wsxu"]
+[ext_resource type="PackedScene" uid="uid://dp33fjwy0hngv" path="res://core/entities/detector/detector.tscn" id="6_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="8_rlxeh"]
 
 [node name="Sequencer" type="Node2D" unique_id=1167367685]
 script = ExtResource("1_7ojyt")
 metadata/_edit_horizontal_guides_ = [540.0, 360.0, 720.0]
 metadata/_edit_vertical_guides_ = [640.0, 1280.0, 960.0]
 
-[node name="Orbit0" parent="." unique_id=1939568862 instance=ExtResource("1_5181e")]
-position = Vector2(960, 448)
-radius = 160.0
-rpm = 16.0
+[node name="Rings" type="Node2D" parent="." unique_id=244183733]
+position = Vector2(960, 450)
 
-[node name="Note" parent="Orbit0/Slots" parent_id_path=PackedInt32Array(1939568862, 436274638) index="0" unique_id=552011164 instance=ExtResource("3_y5shy")]
+[node name="Ring0" parent="Rings" unique_id=1939568862 instance=ExtResource("2_y5shy")]
 
-[node name="Orbit1" parent="." unique_id=2058863503 instance=ExtResource("1_5181e")]
-position = Vector2(960, 448)
-radius = 240.0
-rpm = 8.0
+[node name="Ring1" parent="Rings" unique_id=1726688430 instance=ExtResource("3_rlxeh")]
 
-[node name="Note" parent="Orbit1/Slots" parent_id_path=PackedInt32Array(2058863503, 436274638) index="0" unique_id=1975501567 instance=ExtResource("4_rlxeh")]
+[node name="Ring2" parent="Rings" unique_id=2043490416 instance=ExtResource("4_pw2oc")]
 
-[node name="Note2" parent="Orbit1/Slots" parent_id_path=PackedInt32Array(2058863503, 436274638) index="1" unique_id=1127780723 instance=ExtResource("5_rlxeh")]
+[node name="Ring3" parent="Rings" unique_id=1903142803 instance=ExtResource("5_5wsxu")]
 
-[node name="Orbit2" parent="." unique_id=1934576512 instance=ExtResource("1_5181e")]
-position = Vector2(960, 448)
-radius = 320.0
-rpm = 16.0
+[node name="Detectors" type="Node2D" parent="." unique_id=193498732]
 
-[node name="Note" parent="Orbit2/Slots" parent_id_path=PackedInt32Array(1934576512, 436274638) index="0" unique_id=1642333240 instance=ExtResource("5_pw2oc")]
+[node name="Detector" parent="Detectors" unique_id=1922593718 instance=ExtResource("6_pw2oc")]
+position = Vector2(1332, 452)
+
+[node name="Detector2" parent="Detectors" unique_id=425823484 instance=ExtResource("6_pw2oc")]
+position = Vector2(1252, 452)
+
+[node name="Detector3" parent="Detectors" unique_id=1883867542 instance=ExtResource("6_pw2oc")]
+position = Vector2(1176, 452)
+
+[node name="Detector4" parent="Detectors" unique_id=1461126088 instance=ExtResource("6_pw2oc")]
+position = Vector2(1101, 452)
 
 [node name="StartStop" parent="." unique_id=1422403098 instance=ExtResource("2_ee14c")]
 offset_left = 880.0
@@ -44,11 +47,11 @@ offset_right = 1040.0
 offset_bottom = 529.0
 
 [node name="Sequence" parent="." unique_id=1463584969 instance=ExtResource("3_fhb8o")]
-offset_left = 882.0
-offset_top = 931.0
-offset_right = 1038.0
-offset_bottom = 979.0
+offset_left = 792.0
+offset_top = 907.0
+offset_right = 1128.0
+offset_bottom = 1003.0
 
-[editable path="Orbit0"]
-[editable path="Orbit1"]
-[editable path="Orbit2"]
+[node name="Tray" parent="." unique_id=835271133 instance=ExtResource("8_rlxeh")]
+position = Vector2(1587, 450)
+rotation = -1.5707964

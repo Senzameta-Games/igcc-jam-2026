@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://mds6erxc7xyu" path="res://core/entities/sequence/sequence.gd" id="1_edfga"]
 [ext_resource type="Texture2D" uid="uid://dwe0ak00f8fht" path="res://core/assets/icons/empty.png" id="2_ravim"]
+[ext_resource type="Texture2D" uid="uid://bablmksmjm0vj" path="res://core/assets/icons/indicator.png" id="3_ycj8o"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ycj8o"]
 content_margin_left = 16.0
@@ -30,11 +31,11 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ycj8o")
 script = ExtResource("1_edfga")
 
-[node name="Notes" type="HBoxContainer" parent="." unique_id=1650935675]
+[node name="Orbs" type="HBoxContainer" parent="." unique_id=1650935675]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="NoteSlot0" type="MarginContainer" parent="Notes" unique_id=1213807150]
+[node name="Slot0" type="MarginContainer" parent="Orbs" unique_id=1213807150]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -44,14 +45,21 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="Note" type="TextureRect" parent="Notes/NoteSlot0" unique_id=989926475]
+[node name="Orb" type="TextureRect" parent="Orbs/Slot0" unique_id=989926475]
 layout_mode = 2
 
-[node name="Empty" type="TextureRect" parent="Notes/NoteSlot0" unique_id=756631102]
+[node name="Empty" type="TextureRect" parent="Orbs/Slot0" unique_id=756631102]
 layout_mode = 2
 texture = ExtResource("2_ravim")
 
-[node name="NoteSlot1" type="MarginContainer" parent="Notes" unique_id=2134807631]
+[node name="Indicator" type="TextureRect" parent="Orbs/Slot0" unique_id=218102257]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("3_ycj8o")
+stretch_mode = 2
+
+[node name="Slot1" type="MarginContainer" parent="Orbs" unique_id=2134807631]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -61,14 +69,21 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="Note" type="TextureRect" parent="Notes/NoteSlot1" unique_id=843753657]
+[node name="Orb" type="TextureRect" parent="Orbs/Slot1" unique_id=843753657]
 layout_mode = 2
 
-[node name="Empty" type="TextureRect" parent="Notes/NoteSlot1" unique_id=1749297902]
+[node name="Empty" type="TextureRect" parent="Orbs/Slot1" unique_id=1749297902]
 layout_mode = 2
 texture = ExtResource("2_ravim")
 
-[node name="NoteSlot2" type="MarginContainer" parent="Notes" unique_id=1354515818]
+[node name="Indicator" type="TextureRect" parent="Orbs/Slot1" unique_id=768060036]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("3_ycj8o")
+stretch_mode = 2
+
+[node name="Slot2" type="MarginContainer" parent="Orbs" unique_id=1354515818]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -78,14 +93,21 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="Note" type="TextureRect" parent="Notes/NoteSlot2" unique_id=1016440932]
+[node name="Orb" type="TextureRect" parent="Orbs/Slot2" unique_id=1016440932]
 layout_mode = 2
 
-[node name="Empty" type="TextureRect" parent="Notes/NoteSlot2" unique_id=8393647]
+[node name="Empty" type="TextureRect" parent="Orbs/Slot2" unique_id=8393647]
 layout_mode = 2
 texture = ExtResource("2_ravim")
 
-[node name="NoteSlot3" type="MarginContainer" parent="Notes" unique_id=353610035]
+[node name="Indicator" type="TextureRect" parent="Orbs/Slot2" unique_id=2085342345]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("3_ycj8o")
+stretch_mode = 2
+
+[node name="Slot3" type="MarginContainer" parent="Orbs" unique_id=353610035]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -95,9 +117,16 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="Note" type="TextureRect" parent="Notes/NoteSlot3" unique_id=1671894822]
+[node name="Orb" type="TextureRect" parent="Orbs/Slot3" unique_id=1671894822]
 layout_mode = 2
 
-[node name="Empty" type="TextureRect" parent="Notes/NoteSlot3" unique_id=1251988211]
+[node name="Empty" type="TextureRect" parent="Orbs/Slot3" unique_id=1251988211]
 layout_mode = 2
 texture = ExtResource("2_ravim")
+
+[node name="Indicator" type="TextureRect" parent="Orbs/Slot3" unique_id=1890809888]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("3_ycj8o")
+stretch_mode = 2

@@ -1,35 +1,35 @@
 class_name Hand
 extends Node2D
 
-signal picked_up(note: Note)
+signal picked_up(orb: Orb)
 signal dropped
 
-var _held_note: Note = null
+var _held_orb: Orb = null
 
 func _process(delta: float) -> void:
-	if not _held_note: return
-	_held_note.global_position = get_global_mouse_position()
+	if not _held_orb: return
+	_held_orb.global_position = get_global_mouse_position()
 
-func pick_up(note: Note) -> void:
-	if not note: return
-	_held_note = note
-	_held_note.reparent(self, true)
-	_held_note.lift()
-	picked_up.emit(_held_note)
+func pick_up(orb: Orb) -> void:
+	if not orb: return
+	_held_orb = orb
+	_held_orb.reparent(self, true)
+	_held_orb.lift()
+	picked_up.emit(_held_orb)
 	
 func try_drop(slot: Slot) -> void:
-	if _held_note == null:
+	if _held_orb == null:
 		return
-	var note_to_drop: Note = _held_note
-	_held_note = null
-	var ejected: Note = slot.receive_note(note_to_drop)
+	var orb_to_drop: Orb = _held_orb
+	_held_orb = null
+	var ejected: Orb = slot.receive_orb(orb_to_drop)
 	if ejected != null:
 		pick_up(ejected)
 		return
 	dropped.emit()
 		
 func is_holding() -> bool:
-	return _held_note != null
+	return _held_orb != null
 
 func connect_slot(slot: Slot) -> void:
 	slot.slot_interacted.connect(_on_slot_interacted)
@@ -37,7 +37,7 @@ func connect_slot(slot: Slot) -> void:
 func _on_slot_interacted(slot: Slot) -> void:
 	if Playback.is_playing:
 		return
-	if _held_note != null:
+	if _held_orb != null:
 		try_drop(slot)
 	elif slot.is_occupied():
-		pick_up(slot.eject_note())
+		pick_up(slot.eject_orb())

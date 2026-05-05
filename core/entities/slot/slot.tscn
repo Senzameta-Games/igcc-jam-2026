@@ -13,6 +13,7 @@ texture_empty = ExtResource("2_wt1ix")
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1311755148]
 
 [node name="Area" type="Area2D" parent="." unique_id=662257456]
+collision_mask = 0
 
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=911512724]
 shape = SubResource("CircleShape2D_l5duc")

@@ -9,38 +9,44 @@ signal slot_interacted(slot: Slot)
 
 var index: int
 
-var _note: Note
+var _orb: Orb
 var _hovered: bool = false
 
 @onready var _sprite: Sprite2D = $Sprite
 @onready var _area: Area2D = $Area
 
 func _ready() -> void:
+	# Pick up any orb authored as a child in the editor
+	for child: Node in get_children():
+		var orb := child as Orb
+		if orb != null:
+			_orb = orb
+			break
 	_refresh_visual()
 
-func receive_note(incoming: Note) -> Note:
-	var ejected: Note = null
-	if _note != null:
-		ejected = eject_note()
-	_note = incoming
-	_note.reparent(self, true)
-	_note.land()
+func receive_orb(incoming: Orb) -> Orb:
+	var ejected: Orb = null
+	if _orb != null:
+		ejected = eject_orb()
+	_orb = incoming
+	_orb.reparent(self, true)
+	_orb.land()
 	_refresh_visual()
 	return ejected
 
-func eject_note() -> Note:
-	if _note == null:
+func eject_orb() -> Orb:
+	if _orb == null:
 		return null
-	var note: Note = _note
-	_note = null
+	var orb: Orb = _orb
+	_orb = null
 	_refresh_visual()
-	return note
+	return orb
 
 func is_occupied() -> bool:
-	return _note != null
+	return _orb != null
 
-func get_note() -> Note:
-	return _note
+func get_orb() -> Orb:
+	return _orb
 	
 func _refresh_visual() -> void:
 	if _hovered and not is_occupied():

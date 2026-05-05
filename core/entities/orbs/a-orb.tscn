@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dmodddgtqr3fl"]
 
-[ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/notes/note.tscn" id="1_l1ax1"]
+[ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_l1ax1"]
 [ext_resource type="Texture2D" uid="uid://cghe0s1vy3tlq" path="res://core/assets/icons/a-note.png" id="2_xawdp"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ceag1"]
@@ -14,8 +14,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Note" unique_id=552011164 instance=ExtResource("1_l1ax1")]
-note_id = &"a"
+[node name="Orb" unique_id=552011164 instance=ExtResource("1_l1ax1")]
 texture = ExtResource("2_xawdp")
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]

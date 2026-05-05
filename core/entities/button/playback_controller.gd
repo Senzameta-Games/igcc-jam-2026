@@ -1,4 +1,4 @@
-class_name PlaybackController
+class_name PlaybackButton
 extends Button
 
 func _ready() -> void:
@@ -6,8 +6,8 @@ func _ready() -> void:
 	button_pressed = false
 
 func connect_hand(hand: Hand) -> void:
-	hand.note_picked_up.connect(_on_note_picked_up)
-	hand.note_dropped.connect(_on_note_dropped)
+	hand.picked_up.connect(_on_picked_up)
+	hand.dropped.connect(_on_dropped)
 
 func _on_toggled(toggled_on: bool) -> void:
 	if toggled_on:
@@ -15,9 +15,9 @@ func _on_toggled(toggled_on: bool) -> void:
 	else:
 		Playback.stop()
 
-func _on_note_picked_up(_note: Note) -> void:
+func _on_picked_up(_orb: Orb) -> void:
 	disabled = true
 	button_pressed = false
 
-func _on_note_dropped() -> void:
+func _on_dropped() -> void:
 	disabled = false
