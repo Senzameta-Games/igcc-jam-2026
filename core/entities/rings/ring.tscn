@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bwl6tavj5b088"]
+
+[ext_resource type="Script" uid="uid://cuymnf14uocp2" path="res://core/entities/rings/ring.gd" id="1_66ytn"]
+[ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="2_66ytn"]
+
+[node name="Ring" type="Node2D" unique_id=1939568862]
+script = ExtResource("1_66ytn")
+
+[node name="Ring" type="Sprite2D" parent="." unique_id=294359418]
+scale = Vector2(0.5, 0.5)
+
+[node name="Slots" type="Node2D" parent="." unique_id=436274638]
+
+[node name="Slot1" parent="Slots" unique_id=136360553 instance=ExtResource("2_66ytn")]
+
+[node name="Slot2" parent="Slots" unique_id=1347716651 instance=ExtResource("2_66ytn")]
+
+[node name="Slot3" parent="Slots" unique_id=1069317557 instance=ExtResource("2_66ytn")]
+
+[node name="Slot4" parent="Slots" unique_id=161591035 instance=ExtResource("2_66ytn")]
+
+[node name="Slot5" parent="Slots" unique_id=909856248 instance=ExtResource("2_66ytn")]
+
+[node name="Slot6" parent="Slots" unique_id=2038464099 instance=ExtResource("2_66ytn")]
+
+[node name="Slot7" parent="Slots" unique_id=521964680 instance=ExtResource("2_66ytn")]
+
+[node name="Slot8" parent="Slots" unique_id=795846075 instance=ExtResource("2_66ytn")]
