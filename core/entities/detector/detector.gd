@@ -9,6 +9,7 @@ signal orb_passed(orb_id: StringName, texture: Texture2D)
 @onready var _sprite: Sprite2D = $Sprite
  
 func _ready() -> void:
+	monitoring = false
 	area_entered.connect(_on_area_entered)
 	Playback.stopped.connect(_on_playback_stopped)
 	Playback.started.connect(_on_playback_started)
