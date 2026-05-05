@@ -1,8 +1,6 @@
 class_name Sequence
 extends PanelContainer
 
-const SLOT_COUNT: int = 4
-
 var _write_head: int = 0
 var _slots: Array[Control] = []
 
@@ -27,7 +25,7 @@ func _on_note_crossed(note_id: StringName, texture: Texture2D) -> void:
 	empty.visible = false
 	note.texture = texture
 	note.visible = true
-	_write_head = (_write_head + 1) % SLOT_COUNT
+	_write_head = (_write_head + 1) % _slots.size()
 
 func _on_playback_stopped() -> void:
 	_write_head = 0

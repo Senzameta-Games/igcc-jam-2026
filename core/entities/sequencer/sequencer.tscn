@@ -17,25 +17,25 @@ metadata/_edit_vertical_guides_ = [640.0, 1280.0, 960.0]
 [node name="Orbit0" parent="." unique_id=1939568862 instance=ExtResource("1_5181e")]
 position = Vector2(960, 448)
 radius = 160.0
-rpm = 24.0
+rpm = 16.0
 
-[node name="Note" parent="Orbit0/Notes" parent_id_path=PackedInt32Array(1939568862, 436274638) index="0" unique_id=552011164 instance=ExtResource("3_y5shy")]
+[node name="Note" parent="Orbit0/Slots" parent_id_path=PackedInt32Array(1939568862, 436274638) index="0" unique_id=552011164 instance=ExtResource("3_y5shy")]
 
 [node name="Orbit1" parent="." unique_id=2058863503 instance=ExtResource("1_5181e")]
 position = Vector2(960, 448)
 radius = 240.0
+rpm = 8.0
 
-[node name="Note" parent="Orbit1/Notes" parent_id_path=PackedInt32Array(2058863503, 436274638) index="0" unique_id=1975501567 instance=ExtResource("4_rlxeh")]
+[node name="Note" parent="Orbit1/Slots" parent_id_path=PackedInt32Array(2058863503, 436274638) index="0" unique_id=1975501567 instance=ExtResource("4_rlxeh")]
 
-[node name="Note2" parent="Orbit1/Notes" parent_id_path=PackedInt32Array(2058863503, 436274638) index="1" unique_id=1127780723 instance=ExtResource("5_rlxeh")]
-slot_index = 4
+[node name="Note2" parent="Orbit1/Slots" parent_id_path=PackedInt32Array(2058863503, 436274638) index="1" unique_id=1127780723 instance=ExtResource("5_rlxeh")]
 
 [node name="Orbit2" parent="." unique_id=1934576512 instance=ExtResource("1_5181e")]
 position = Vector2(960, 448)
 radius = 320.0
-rpm = 32.0
+rpm = 16.0
 
-[node name="Note" parent="Orbit2/Notes" parent_id_path=PackedInt32Array(1934576512, 436274638) index="0" unique_id=1642333240 instance=ExtResource("5_pw2oc")]
+[node name="Note" parent="Orbit2/Slots" parent_id_path=PackedInt32Array(1934576512, 436274638) index="0" unique_id=1642333240 instance=ExtResource("5_pw2oc")]
 
 [node name="StartStop" parent="." unique_id=1422403098 instance=ExtResource("2_ee14c")]
 offset_left = 880.0

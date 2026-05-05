@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bwl6tavj5b088"]
 
 [ext_resource type="Script" uid="uid://cuymnf14uocp2" path="res://core/entities/orbits/orbit.gd" id="1_66ytn"]
+[ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="2_66ytn"]
 
 [sub_resource type="Curve2D" id="Curve2D_66ytn"]
 _data = {
@@ -10,17 +11,20 @@ point_count = 4
 
 [node name="Orbit" type="Node2D" unique_id=1939568862]
 script = ExtResource("1_66ytn")
-radius = 200.0
-line_color = Color(0.06666667, 0.06666667, 0.06666667, 1)
-line_width = 64.0
-playhead_color = Color(0.099985994, 0.099985994, 0.099985994, 1)
-rpm = 12.0
 
 [node name="Path" type="Path2D" parent="." unique_id=8376412]
 curve = SubResource("Curve2D_66ytn")
 
-[node name="Visual" type="Line2D" parent="Path" unique_id=974494802]
-joint_mode = 2
-antialiased = true
+[node name="Slots" type="Node2D" parent="." unique_id=436274638]
 
-[node name="Notes" type="Node2D" parent="." unique_id=436274638]
+[node name="Slot1" parent="Slots" unique_id=136360553 instance=ExtResource("2_66ytn")]
+
+[node name="Slot2" parent="Slots" unique_id=1347716651 instance=ExtResource("2_66ytn")]
+
+[node name="Slot3" parent="Slots" unique_id=1069317557 instance=ExtResource("2_66ytn")]
+
+[node name="Slot4" parent="Slots" unique_id=161591035 instance=ExtResource("2_66ytn")]
+
+[node name="Slot5" parent="Slots" unique_id=909856248 instance=ExtResource("2_66ytn")]
+
+[node name="Slot6" parent="Slots" unique_id=2038464099 instance=ExtResource("2_66ytn")]

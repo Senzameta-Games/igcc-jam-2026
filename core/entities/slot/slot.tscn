@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cxh0tse6o5o01"]
+
+[ext_resource type="Script" uid="uid://brnouifiwqqwo" path="res://core/entities/slot/slot.gd" id="1_l5duc"]
+[ext_resource type="Texture2D" uid="uid://dwe0ak00f8fht" path="res://core/assets/icons/empty.png" id="2_wt1ix"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l5duc"]
+radius = 24.0
+
+[node name="Slot" type="Node2D" unique_id=136360553]
+script = ExtResource("1_l5duc")
+texture_empty = ExtResource("2_wt1ix")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1311755148]
+
+[node name="Area" type="Area2D" parent="." unique_id=662257456]
+
+[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=911512724]
+shape = SubResource("CircleShape2D_l5duc")
+
+[connection signal="input_event" from="Area" to="." method="_on_area_input_event"]
+[connection signal="mouse_entered" from="Area" to="." method="_on_area_mouse_entered"]
+[connection signal="mouse_exited" from="Area" to="." method="_on_area_mouse_exited"]

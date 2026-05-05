@@ -68,7 +68,7 @@ layout_mode = 2
 layout_mode = 2
 texture = ExtResource("2_ravim")
 
-[node name="NoteSlot3" type="MarginContainer" parent="Notes" unique_id=1354515818]
+[node name="NoteSlot2" type="MarginContainer" parent="Notes" unique_id=1354515818]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -78,14 +78,14 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="Note" type="TextureRect" parent="Notes/NoteSlot3" unique_id=1016440932]
+[node name="Note" type="TextureRect" parent="Notes/NoteSlot2" unique_id=1016440932]
 layout_mode = 2
 
-[node name="Empty" type="TextureRect" parent="Notes/NoteSlot3" unique_id=8393647]
+[node name="Empty" type="TextureRect" parent="Notes/NoteSlot2" unique_id=8393647]
 layout_mode = 2
 texture = ExtResource("2_ravim")
 
-[node name="NoteSlot4" type="MarginContainer" parent="Notes" unique_id=353610035]
+[node name="NoteSlot3" type="MarginContainer" parent="Notes" unique_id=353610035]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -95,9 +95,9 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="Note" type="TextureRect" parent="Notes/NoteSlot4" unique_id=1671894822]
+[node name="Note" type="TextureRect" parent="Notes/NoteSlot3" unique_id=1671894822]
 layout_mode = 2
 
-[node name="Empty" type="TextureRect" parent="Notes/NoteSlot4" unique_id=1251988211]
+[node name="Empty" type="TextureRect" parent="Notes/NoteSlot3" unique_id=1251988211]
 layout_mode = 2
 texture = ExtResource("2_ravim")
