@@ -15,6 +15,7 @@ animations = [{
 }]
 
 [node name="Orb" unique_id=552011164 instance=ExtResource("1_ex05b")]
+orb_id = &"d"
 texture = ExtResource("2_qfsts")
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]

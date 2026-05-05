@@ -19,12 +19,16 @@ metadata/_edit_vertical_guides_ = [640.0, 1280.0, 960.0]
 position = Vector2(960, 450)
 
 [node name="Ring0" parent="Rings" unique_id=1939568862 instance=ExtResource("2_y5shy")]
+rpm = 8.0
 
 [node name="Ring1" parent="Rings" unique_id=1726688430 instance=ExtResource("3_rlxeh")]
+rpm = 6.0
 
 [node name="Ring2" parent="Rings" unique_id=2043490416 instance=ExtResource("4_pw2oc")]
+rpm = 4.0
 
 [node name="Ring3" parent="Rings" unique_id=1903142803 instance=ExtResource("5_5wsxu")]
+rpm = 2.0
 
 [node name="Detectors" type="Node2D" parent="." unique_id=193498732]
 

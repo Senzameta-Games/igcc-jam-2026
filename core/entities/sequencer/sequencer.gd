@@ -22,3 +22,4 @@ func inject_hand(hand: Hand) -> void:
 		if detector == null:
 			continue
 		_sequence.register_detector(detector)
+		SoundPlayer.register_detector(detector)

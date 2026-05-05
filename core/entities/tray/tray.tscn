@@ -40,11 +40,19 @@ position = Vector2(180, -48)
 [node name="Slot4" parent="Slots" unique_id=1912150730 instance=ExtResource("1_ulkqu")]
 position = Vector2(-180, 48)
 
+[node name="Note" parent="Slots/Slot4" unique_id=300000001 instance=ExtResource("4_olegs")]
+
 [node name="Slot5" parent="Slots" unique_id=1700766379 instance=ExtResource("1_ulkqu")]
 position = Vector2(-60, 48)
+
+[node name="Note" parent="Slots/Slot5" unique_id=300000002 instance=ExtResource("5_1dufa")]
 
 [node name="Slot6" parent="Slots" unique_id=927165811 instance=ExtResource("1_ulkqu")]
 position = Vector2(60, 48)
 
+[node name="Note" parent="Slots/Slot6" unique_id=300000003 instance=ExtResource("6_jn6ln")]
+
 [node name="Slot7" parent="Slots" unique_id=2037920540 instance=ExtResource("1_ulkqu")]
 position = Vector2(180, 48)
+
+[node name="Note" parent="Slots/Slot7" unique_id=300000004 instance=ExtResource("7_0vinb")]

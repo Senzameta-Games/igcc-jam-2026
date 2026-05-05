@@ -22,9 +22,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -168.0
+offset_left = -328.0
 offset_top = -48.0
-offset_right = 168.0
+offset_right = 328.0
 offset_bottom = 48.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -125,6 +125,102 @@ layout_mode = 2
 texture = ExtResource("2_ravim")
 
 [node name="Indicator" type="TextureRect" parent="Orbs/Slot3" unique_id=1890809888]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("3_ycj8o")
+stretch_mode = 2
+
+[node name="Slot4" type="MarginContainer" parent="Orbs" unique_id=400000001]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Orb" type="TextureRect" parent="Orbs/Slot4" unique_id=400000002]
+layout_mode = 2
+
+[node name="Empty" type="TextureRect" parent="Orbs/Slot4" unique_id=400000003]
+layout_mode = 2
+texture = ExtResource("2_ravim")
+
+[node name="Indicator" type="TextureRect" parent="Orbs/Slot4" unique_id=400000004]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("3_ycj8o")
+stretch_mode = 2
+
+[node name="Slot5" type="MarginContainer" parent="Orbs" unique_id=400000005]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Orb" type="TextureRect" parent="Orbs/Slot5" unique_id=400000006]
+layout_mode = 2
+
+[node name="Empty" type="TextureRect" parent="Orbs/Slot5" unique_id=400000007]
+layout_mode = 2
+texture = ExtResource("2_ravim")
+
+[node name="Indicator" type="TextureRect" parent="Orbs/Slot5" unique_id=400000008]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("3_ycj8o")
+stretch_mode = 2
+
+[node name="Slot6" type="MarginContainer" parent="Orbs" unique_id=400000009]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Orb" type="TextureRect" parent="Orbs/Slot6" unique_id=400000010]
+layout_mode = 2
+
+[node name="Empty" type="TextureRect" parent="Orbs/Slot6" unique_id=400000011]
+layout_mode = 2
+texture = ExtResource("2_ravim")
+
+[node name="Indicator" type="TextureRect" parent="Orbs/Slot6" unique_id=400000012]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("3_ycj8o")
+stretch_mode = 2
+
+[node name="Slot7" type="MarginContainer" parent="Orbs" unique_id=400000013]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Orb" type="TextureRect" parent="Orbs/Slot7" unique_id=400000014]
+layout_mode = 2
+
+[node name="Empty" type="TextureRect" parent="Orbs/Slot7" unique_id=400000015]
+layout_mode = 2
+texture = ExtResource("2_ravim")
+
+[node name="Indicator" type="TextureRect" parent="Orbs/Slot7" unique_id=400000016]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
