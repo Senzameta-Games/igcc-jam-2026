@@ -1,28 +1,19 @@
 [gd_scene format=3 uid="uid://12ufnc4ajfr1"]
 
-[ext_resource type="Script" uid="uid://ckqdtgnc1nxah" path="res://core/hand.gd" id="1_3gdo0"]
 [ext_resource type="Script" uid="uid://vx6v8iqa4anf" path="res://core/main.gd" id="1_csopv"]
 [ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/sequencer/sequencer.tscn" id="1_xiose"]
+[ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
 [ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
 
-[node name="Interface" type="CanvasLayer" parent="." unique_id=839751828]
-
-[node name="Hand" type="Node2D" parent="Interface" unique_id=1402778550]
-script = ExtResource("1_3gdo0")
+[node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
 
 [node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
 
-[node name="Background" type="CanvasLayer" parent="." unique_id=539231450]
-layer = -1
-
-[node name="TextureRect" type="TextureRect" parent="Background" unique_id=366761875]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Background" type="Sprite2D" parent="." unique_id=80829557]
+z_index = -1
+position = Vector2(960, 540)
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_r77kf")
-expand_mode = 3

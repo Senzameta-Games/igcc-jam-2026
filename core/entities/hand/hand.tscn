@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://c1ycavhb8bwf4"]
+
+[ext_resource type="Script" uid="uid://ckqdtgnc1nxah" path="res://core/entities/hand/hand.gd" id="1_ljdg1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v2pej"]
+
+[node name="Hand" type="Node2D" unique_id=797971003]
+script = ExtResource("1_ljdg1")
+
+[node name="Area" type="Area2D" parent="." unique_id=388490053]
+collision_layer = 0
+collision_mask = 8
+
+[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1772723908]
+shape = SubResource("RectangleShape2D_v2pej")

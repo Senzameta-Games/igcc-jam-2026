@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bhl2kp75ynwec" path="res://core/assets/detector/detector.png" id="1_r5sl0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_chmv4"]
-size = Vector2(70, 48)
+size = Vector2(24, 4)
 
 [node name="Detector" type="Area2D" unique_id=1922593718]
 z_index = 5

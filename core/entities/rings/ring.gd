@@ -1,90 +1,122 @@
 class_name Ring
 extends Node2D
 
+## Rotary ring. Passive receiver of rot_t from Sequencer.
+## Interval type determines which slot group is active.
+## ring_index maps this ring to its entry in Sequencer._rotations.
+
+enum IntervalType { QUARTER, EIGHTH, SIXTEENTH }
+
 const RESET_SPEED: float = 5.0
 const RESET_THRESHOLD: float = 0.001
 
+@export var ring_index: int = 0
 @export var radius: float = 200.0:
 	set(value):
 		radius = value
 		_calculate_slot_positions()
 
-@export_group("Sequencing")
-@export var rpm: float = 12.0
+@export var interval_type: IntervalType = IntervalType.QUARTER:
+	set(value):
+		interval_type = value
+		_activate_interval_group()
 
-@onready var _slots_container: Node2D = $Slots
+@onready var _slots4: Node2D = $Slots4
+@onready var _slots8: Node2D = $Slots8
+@onready var _slots16: Node2D = $Slots16
 
 var _slots: Array[Slot] = []
 var _hand: Hand = null
-var _rot_t: float = 0.0
-var _resetting: bool = false
 
 func _ready() -> void:
-	Playback.stopped.connect(_on_playback_stopped)
-	Playback.started.connect(_on_playback_started)
-	for child: Node in _slots_container.get_children():
-		var slot := child as Slot
-		if slot == null:
-			continue
-		_slots.append(slot)
-	_calculate_slot_positions()
+	_activate_interval_group()
 
-func _physics_process(delta: float) -> void:
-	if not Playback.is_playing:
-		return
-	_rot_t = fmod(_rot_t + (rpm / 60.0) * delta, 1.0)
-	rotation = _rot_t * TAU
+func tick(rot_t: float) -> void:
+	## Called by Sequencer each physics frame during playback.
+	rotation = rot_t * TAU
+	_playhead_check(rot_t)
 
-func _process(delta: float) -> void:
-	if not _resetting:
-		return
-	# Lerp using shortest arc. if past halfway, approach 0 from above (negative target)
-	var target: float = 0.0 if _rot_t <= 0.5 else 1.0
-	_rot_t = lerpf(_rot_t, target, RESET_SPEED * delta)
-	rotation = _rot_t * TAU
-	if abs(_rot_t - target) < RESET_THRESHOLD or (target == 1.0 and abs(_rot_t - 1.0) < RESET_THRESHOLD):
-		_rot_t = 0.0
-		rotation = 0.0
-		_resetting = false
+func apply_rotation(rot_t: float) -> void:
+	## Called by Sequencer each process frame during reset lerp.
+	rotation = rot_t * TAU
 
 func connect_hand_to_slot(hand: Hand) -> void:
 	_hand = hand
 	for slot: Slot in _slots:
 		_hand.connect_slot(slot)
 
-func add_slot() -> Slot:
-	var slot_scene: PackedScene = preload("res://core/entities/slot/slot.tscn")
-	var slot := slot_scene.instantiate() as Slot
-	slot.index = _slots.size()
-	_slots_container.add_child(slot)
-	_slots.append(slot)
-	_calculate_slot_positions()
-	if _hand != null:
-		_hand.connect_slot(slot)
-	return slot
+func eject_all_orbs() -> void:
+	## Called when interval type changes. Returns orbs to tray.
+	for slot: Slot in _slots:
+		if slot.is_occupied() and _hand != null:
+			_hand.pick_up(slot.eject_orb())
 
-func remove_slot(slot: Slot) -> void:
-	if not _slots.has(slot):
+func get_slot_count() -> int:
+	return _slots.size()
+
+func _activate_interval_group() -> void:
+	if _slots4 == null:
 		return
-	if slot.is_occupied() and _hand != null:
-		_hand.pick_up(slot.eject_orb())
-	_slots.erase(slot)
-	slot.queue_free()
+	
+	if _hand != null:
+		for slot: Slot in _slots:
+			_hand.disconnect_slot(slot)
+			
+	_slots4.visible = false
+	_slots8.visible = false
+	_slots16.visible = false
+	_slots.clear()
+	
+	var active: Node2D
+	match interval_type:
+		IntervalType.QUARTER:
+			active = _slots4
+		IntervalType.EIGHTH:
+			active = _slots8
+		IntervalType.SIXTEENTH:
+			active = _slots16
+			
+	active.visible = true
+	for child: Node in active.get_children():
+		var slot := child as Slot
+		if slot == null:
+			continue
+		_slots.append(slot)
+		
 	_calculate_slot_positions()
-	# Re-index remaining slots
-	for i: int in range(_slots.size()):
-		_slots[i].index = i
+	
+	if _hand != null:
+		for slot: Slot in _slots:
+			_hand.connect_slot(slot)
 
 func _calculate_slot_positions() -> void:
 	var count: int = _slots.size()
 	if count == 0:
 		return
 	for i: int in range(count):
+		_slots[i].index = i
 		var angle: float = (TAU / float(count)) * float(i)
 		_slots[i].position = Vector2(cos(angle), sin(angle)) * radius
 
-func _on_playback_stopped() -> void:
-	_resetting = true
+func _playhead_check(rot_t: float) -> void:
+	pass
+	## NOTE: Crossing detection has moved to Detector (Area2D overlap).
+	## This method is kept as a hook for future per-ring crossing logic.
 
-func _on_playback_started() -> void:
-	_resetting = false
+func _crossed_playhead(prev_orb_t: float, curr_orb_t: float) -> bool:
+	if curr_orb_t < prev_orb_t:
+		curr_orb_t += 1.0
+	var threshold: float = 0.0
+	if threshold < prev_orb_t:
+		threshold += 1.0
+	return prev_orb_t < threshold and threshold <= curr_orb_t
+	
+func get_orbs() -> Array:
+	var sorted_slots: Array[Slot] = _slots.duplicate()
+	sorted_slots.sort_custom(func(a: Slot, b: Slot) -> bool:
+		return a.index < b.index
+	)
+	var ret: Array = []
+	for slot: Slot in sorted_slots:
+		ret.append(slot.get_orb())
+	return ret

@@ -2,6 +2,15 @@
 
 [ext_resource type="Script" uid="uid://bn60o4b8y1qud" path="res://core/entities/orbs/orb.gd" id="1_7f7e3"]
 [ext_resource type="Texture2D" uid="uid://0hqgx1osggs2" path="res://core/assets/icons/note.png" id="2_sv67k"]
+[ext_resource type="AudioStream" uid="uid://buy60vqo7yj0" path="res://core/assets/audio/slot/OrbSlot.wav" id="3_8gtwf"]
+[ext_resource type="AudioStream" uid="uid://2xld5m41asnv" path="res://core/assets/audio/pickup/OrbPickup.wav" id="3_tat5o"]
+[ext_resource type="AudioStream" uid="uid://3vxp0pflrn6c" path="res://core/assets/audio/pickup/OrbPickup2.wav" id="4_8gtwf"]
+[ext_resource type="AudioStream" uid="uid://ccm8aqpxaxxlm" path="res://core/assets/audio/slot/OrbSlot2.wav" id="4_t4js0"]
+[ext_resource type="AudioStream" uid="uid://d28sx7i7jcknv" path="res://core/assets/audio/slot/OrbSlot3.wav" id="5_k8k4c"]
+[ext_resource type="AudioStream" uid="uid://dg61fql5kffj5" path="res://core/assets/audio/pickup/OrbPickup3.wav" id="5_t4js0"]
+[ext_resource type="AudioStream" uid="uid://cxaj1qd6dyeyh" path="res://core/assets/audio/pickup/OrbPickup4.wav" id="6_k8k4c"]
+[ext_resource type="AudioStream" uid="uid://2ss6yd0qjmrr" path="res://core/assets/audio/slot/OrbSlot4.wav" id="6_yye3t"]
+[ext_resource type="AudioStream" uid="uid://5gaxhl48dt2h" path="res://core/assets/audio/slot/OrbSlot5.wav" id="7_mi8b4"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ryudr"]
 animations = [{
@@ -15,7 +24,24 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7f7e3"]
-radius = 12.0
+radius = 16.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_mi8b4"]
+random_pitch = 1.0594631
+streams_count = 5
+stream_0/stream = ExtResource("3_8gtwf")
+stream_1/stream = ExtResource("4_t4js0")
+stream_2/stream = ExtResource("5_k8k4c")
+stream_3/stream = ExtResource("6_yye3t")
+stream_4/stream = ExtResource("7_mi8b4")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_qgeok"]
+random_pitch = 1.0594631
+streams_count = 4
+stream_0/stream = ExtResource("3_tat5o")
+stream_1/stream = ExtResource("4_8gtwf")
+stream_2/stream = ExtResource("5_t4js0")
+stream_3/stream = ExtResource("6_k8k4c")
 
 [node name="Orb" type="Node2D" unique_id=552011164]
 z_index = 3
@@ -31,3 +57,12 @@ collision_mask = 0
 
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=621710364]
 shape = SubResource("CircleShape2D_7f7e3")
+
+[node name="Note" type="AudioStreamPlayer" parent="." unique_id=1641895478]
+
+[node name="Land" type="AudioStreamPlayer" parent="." unique_id=870009125]
+stream = SubResource("AudioStreamRandomizer_mi8b4")
+volume_db = -8.0
+
+[node name="Lift" type="AudioStreamPlayer" parent="." unique_id=1995781555]
+stream = SubResource("AudioStreamRandomizer_qgeok")

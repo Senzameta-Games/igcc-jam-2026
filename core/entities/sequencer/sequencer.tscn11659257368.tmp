@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://b1vu1c1k0s57o"]
+
+[ext_resource type="Script" uid="uid://bfpd0mdsk51y8" path="res://core/entities/sequencer/sequencer.gd" id="1_7ojyt"]
+[ext_resource type="PackedScene" uid="uid://qc0dwe3v7u2g" path="res://core/entities/button/button.tscn" id="2_ee14c"]
+[ext_resource type="PackedScene" uid="uid://c2ry2hofjuqey" path="res://core/entities/rings/ring-150r.tscn" id="2_y5shy"]
+[ext_resource type="PackedScene" uid="uid://db62fn63swnqw" path="res://core/entities/sequence/sequence.tscn" id="3_fhb8o"]
+[ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring-225r.tscn" id="3_rlxeh"]
+[ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring-300r.tscn" id="4_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://cm3vbfeve2gux" path="res://core/entities/rings/ring-375r.tscn" id="5_5wsxu"]
+[ext_resource type="PackedScene" uid="uid://dp33fjwy0hngv" path="res://core/entities/detector/detector.tscn" id="6_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="8_rlxeh"]
+
+[node name="Sequencer" type="Node2D" unique_id=1167367685]
+script = ExtResource("1_7ojyt")
+
+[node name="Rings" type="Node2D" parent="." unique_id=244183733]
+position = Vector2(960, 450)
+
+[node name="Ring0" parent="Rings" unique_id=1939568862 instance=ExtResource("2_y5shy")]
+
+[node name="Ring1" parent="Rings" unique_id=1726688430 instance=ExtResource("3_rlxeh")]
+
+[node name="Ring2" parent="Rings" unique_id=2043490416 instance=ExtResource("4_pw2oc")]
+
+[node name="Ring3" parent="Rings" unique_id=1903142803 instance=ExtResource("5_5wsxu")]
+
+[node name="DetectionFeedback" type="Node2D" parent="." unique_id=461504393]
+
+[node name="Detectors" type="Node2D" parent="." unique_id=193498732]
+
+[node name="Detector0" parent="Detectors" unique_id=1922593718 instance=ExtResource("6_pw2oc")]
+position = Vector2(1332, 452)
+
+[node name="Detector1" parent="Detectors" unique_id=425823484 instance=ExtResource("6_pw2oc")]
+position = Vector2(1257, 452)
+ring_idx = 1
+
+[node name="Detector2" parent="Detectors" unique_id=1883867542 instance=ExtResource("6_pw2oc")]
+position = Vector2(1182, 452)
+ring_idx = 2
+
+[node name="Detector3" parent="Detectors" unique_id=1461126088 instance=ExtResource("6_pw2oc")]
+position = Vector2(1107, 452)
+ring_idx = 3
+
+[node name="StartStop" parent="." unique_id=1422403098 instance=ExtResource("2_ee14c")]
+offset_left = 880.0
+offset_top = 369.0
+offset_right = 1040.0
+offset_bottom = 529.0
+
+[node name="Sequence" parent="." unique_id=1463584969 instance=ExtResource("3_fhb8o")]
+offset_left = 792.0
+offset_top = 907.0
+offset_right = 1128.0
+offset_bottom = 1003.0
+
+[node name="Tray" parent="." unique_id=835271133 instance=ExtResource("8_rlxeh")]
+position = Vector2(1587, 450)
+
+[node name="Reset" type="Button" parent="." unique_id=1353982561]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 1475.0
+offset_top = 730.0
+offset_right = 1698.0
+offset_bottom = 772.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "DEV BOARD CLEAR"
+
+[connection signal="pressed" from="Reset" to="." method="_on_reset_pressed"]

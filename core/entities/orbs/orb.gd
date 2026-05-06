@@ -9,12 +9,18 @@ enum State { IN_SLOT, HELD, LERPING }
 const LERP_SPEED: float = 12.0
 const LERP_THRESHOLD: float = 0.5
 
-@export var orb_id: StringName = &""
+enum OrbType { F3, C4, F4, G4 }
 @export var texture: Texture2D
+@export var note: AudioStream
+
+@export var orb_id: OrbType = OrbType.F3
 
 var _state: State = State.IN_SLOT
 
 @onready var _sprite: AnimatedSprite2D = $Sprite
+@onready var _note: AudioStreamPlayer = $Note
+@onready var _land: AudioStreamPlayer = $Land
+@onready var _lift: AudioStreamPlayer = $Lift
 
 func _ready() -> void:
 	_sprite.play("default")
@@ -30,12 +36,20 @@ func _process(delta: float) -> void:
 		return
 	position = position.lerp(target, LERP_SPEED * delta)
 
+func play_note() -> void:
+	if note == null:
+		return
+	_note.stream = note
+	_note.play()
+
 func lift() -> void:
 	_state = State.HELD
+	_lift.play()
 	z_index = 10
 
 func land() -> void:
 	# Called by Slot.receive_orb after reparenting.
 	# position is now in Slot local space. Lerp to center.
 	_state = State.LERPING
+	_land.play()
 	z_index = 5

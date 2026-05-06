@@ -3,48 +3,59 @@
 [ext_resource type="Script" uid="uid://dajstln6add1p" path="res://core/entities/tray/tray.gd" id="1_5r44a"]
 [ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="1_ulkqu"]
 [ext_resource type="Texture2D" uid="uid://c484hh6i751pt" path="res://core/assets/tray/tray.png" id="2_d5w34"]
-[ext_resource type="PackedScene" uid="uid://dmodddgtqr3fl" path="res://core/entities/orbs/a-orb.tscn" id="4_olegs"]
-[ext_resource type="PackedScene" uid="uid://cx75inkvaagql" path="res://core/entities/orbs/c-orb.tscn" id="5_1dufa"]
-[ext_resource type="PackedScene" uid="uid://bspubr8kdmch8" path="res://core/entities/orbs/d-orb.tscn" id="6_jn6ln"]
-[ext_resource type="PackedScene" uid="uid://b63vf8wsa5o8l" path="res://core/entities/orbs/f-orb.tscn" id="7_0vinb"]
+[ext_resource type="PackedScene" uid="uid://dmodddgtqr3fl" path="res://core/entities/orbs/F3_orb.tscn" id="4_olegs"]
+[ext_resource type="PackedScene" uid="uid://cx75inkvaagql" path="res://core/entities/orbs/C4_orb.tscn" id="5_1dufa"]
+[ext_resource type="PackedScene" uid="uid://bspubr8kdmch8" path="res://core/entities/orbs/F4_orb.tscn" id="6_jn6ln"]
+[ext_resource type="PackedScene" uid="uid://b63vf8wsa5o8l" path="res://core/entities/orbs/G4_orb.tscn" id="7_0vinb"]
 
 [node name="Tray" type="Node2D" unique_id=835271133]
 script = ExtResource("1_5r44a")
+metadata/_edit_vertical_guides_ = [49.0, -46.0]
+metadata/_edit_horizontal_guides_ = [-180.0, -60.0, 60.0, 181.0]
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1569164696]
+rotation = 1.5707964
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_d5w34")
 
 [node name="Slots" type="Node2D" parent="." unique_id=856576797]
 
 [node name="Slot0" parent="Slots" unique_id=136360553 instance=ExtResource("1_ulkqu")]
-position = Vector2(-180, -48)
+position = Vector2(-46, -180)
+stack_count = 8
 
-[node name="Note" parent="Slots/Slot0" unique_id=552011164 instance=ExtResource("4_olegs")]
+[node name="Orb" parent="Slots/Slot0" unique_id=552011164 instance=ExtResource("4_olegs")]
+orb_id = 0
 
 [node name="Slot1" parent="Slots" unique_id=849978761 instance=ExtResource("1_ulkqu")]
-position = Vector2(-60, -48)
+position = Vector2(-46, -60)
+stack_count = 8
 
-[node name="Note" parent="Slots/Slot1" unique_id=1766687212 instance=ExtResource("5_1dufa")]
+[node name="Orb" parent="Slots/Slot1" unique_id=987454045 instance=ExtResource("5_1dufa")]
+orb_id = 1
 
 [node name="Slot2" parent="Slots" unique_id=694147557 instance=ExtResource("1_ulkqu")]
-position = Vector2(60, -48)
+position = Vector2(-46, 60)
+stack_count = 8
 
-[node name="Orb" parent="Slots/Slot2" unique_id=621936697 instance=ExtResource("6_jn6ln")]
+[node name="Orb" parent="Slots/Slot2" unique_id=1316206388 instance=ExtResource("6_jn6ln")]
+orb_id = 2
 
 [node name="Slot3" parent="Slots" unique_id=341874409 instance=ExtResource("1_ulkqu")]
-position = Vector2(180, -48)
+position = Vector2(-46, 181)
+stack_count = 8
 
-[node name="Orb" parent="Slots/Slot3" unique_id=2071454617 instance=ExtResource("7_0vinb")]
+[node name="Orb" parent="Slots/Slot3" unique_id=562958121 instance=ExtResource("7_0vinb")]
+orb_id = 3
 
 [node name="Slot4" parent="Slots" unique_id=1912150730 instance=ExtResource("1_ulkqu")]
-position = Vector2(-180, 48)
+position = Vector2(49, -180)
 
 [node name="Slot5" parent="Slots" unique_id=1700766379 instance=ExtResource("1_ulkqu")]
-position = Vector2(-60, 48)
+position = Vector2(49, -60)
 
 [node name="Slot6" parent="Slots" unique_id=927165811 instance=ExtResource("1_ulkqu")]
-position = Vector2(60, 48)
+position = Vector2(49, 60)
 
 [node name="Slot7" parent="Slots" unique_id=2037920540 instance=ExtResource("1_ulkqu")]
-position = Vector2(180, 48)
+position = Vector2(49, 181)
