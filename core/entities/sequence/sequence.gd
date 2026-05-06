@@ -22,6 +22,7 @@ func _ready() -> void:
 	Playback.stopped.connect(_on_playback_stopped)
 	_rest_position = position
 	_reset_slots()
+	await get_tree().process_frame
 	_update_indicator()
 
 func get_next_slot_position() -> Vector2:
@@ -41,7 +42,6 @@ func receive_orb(orb_id: StringName, texture: Texture2D) -> void:
 	_slots[idx].receive(texture)
 	_dip_panel()
 	_write_head += 1
-	print("Orb received: ", orb_id)
 	_update_indicator()
 
 func _on_playback_stopped() -> void:

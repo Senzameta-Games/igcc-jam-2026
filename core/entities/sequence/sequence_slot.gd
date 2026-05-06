@@ -22,10 +22,21 @@ extends Control
 
 var _orb_texture: Texture2D = null
 var _indicator_tween: Tween = null
+var _slot_center: Vector2
+var _indicator_rest_y: float
 
-@onready var _empty: TextureRect = $Empty
-@onready var _orb: TextureRect = $Orb
-@onready var _indicator: TextureRect = $Indicator
+@onready var _empty: Sprite2D = $Empty
+@onready var _orb: Sprite2D = $Orb
+@onready var _indicator: Sprite2D = $Indicator
+
+func _ready() -> void:
+	await get_tree().process_frame
+	_slot_center = size * 0.5
+	_orb.position = _slot_center
+	_empty.position = _slot_center
+	# place indicator below center — adjust the offset to taste
+	_indicator_rest_y = _slot_center.y + 40.0
+	_indicator.position = Vector2(_slot_center.x, _indicator_rest_y)
 
 func is_filled() -> bool:
 	return _orb_texture != null
@@ -34,22 +45,18 @@ func set_indicator(visible_state: bool) -> void:
 	if _indicator_tween:
 		_indicator_tween.kill()
 	_indicator.visible = visible_state
-	_indicator.offset_top = 4.0
-	_indicator.offset_bottom = 4.0
+	_indicator.position = Vector2(_slot_center.x, _indicator_rest_y)
 	_indicator.modulate.a = 1.0
 
 func play_indicator_enter() -> void:
 	if _indicator_tween:
 		_indicator_tween.kill()
-	_indicator.offset_top = indicator_dip_distance + 4.0
-	_indicator.offset_bottom = indicator_dip_distance + 4.0
+	_indicator.position = Vector2(_slot_center.x, _indicator_rest_y + indicator_dip_distance)
 	_indicator.modulate.a = 0.0
 	_indicator.visible = true
 	_indicator_tween = create_tween()
 	_indicator_tween.set_parallel(true)
-	_indicator_tween.tween_property(_indicator, "offset_top", 4.0, indicator_rise_duration)\
-		.set_ease(Tween.EASE_OUT)
-	_indicator_tween.tween_property(_indicator, "offset_bottom", 4.0, indicator_rise_duration)\
+	_indicator_tween.tween_property(_indicator, "position:y", _indicator_rest_y, indicator_rise_duration)\
 		.set_ease(Tween.EASE_OUT)
 	_indicator_tween.tween_property(_indicator, "modulate:a", 1.0, indicator_rise_duration)
 
@@ -58,13 +65,12 @@ func play_indicator_exit() -> void:
 		_indicator_tween.kill()
 	_indicator_tween = create_tween()
 	_indicator_tween.set_parallel(true)
-	_indicator_tween.tween_property(_indicator, "offset_top", _indicator.offset_top + indicator_dip_distance, indicator_dip_duration)\
+	_indicator_tween.tween_property(_indicator, "position:y", _indicator_rest_y + indicator_dip_distance, indicator_dip_duration)\
 		.set_ease(Tween.EASE_IN)
 	_indicator_tween.tween_property(_indicator, "modulate:a", 0.0, indicator_dip_duration)
 	_indicator_tween.tween_callback(func() -> void:
 		_indicator.visible = false
-		_indicator.offset_top = 4.0
-		_indicator.offset_bottom = 4.0
+		_indicator.position.y = _indicator_rest_y
 		_indicator.modulate.a = 1.0
 	).set_delay(indicator_dip_duration)
 
@@ -86,15 +92,17 @@ func clear() -> void:
 	_orb_texture = null
 	_orb.texture = null
 	_orb.visible = false
-	_orb.position = Vector2.ZERO
+	_orb.position = _slot_center
 	_empty.visible = true
 
 func _animate_enter() -> void:
+	_orb.position = _slot_center
 	var tween := create_tween()
-	tween.set_ease(Tween.EASE_OUT)
-	tween.set_trans(Tween.TRANS_BACK)
-	tween.tween_property(_orb, "position:y", bob_distance, bob_duration * 0.5)
-	tween.tween_property(_orb, "position:y", 0.0, bob_duration * 0.5)
+	tween.tween_property(_orb, "position:y", _slot_center.y + bob_distance, bob_duration * 0.5)\
+		.set_ease(Tween.EASE_OUT)
+	tween.tween_property(_orb, "position:y", _slot_center.y, bob_duration * 0.5)\
+		.set_ease(Tween.EASE_IN)\
+		.set_trans(Tween.TRANS_BACK)
 
 func _animate_eject() -> void:
 	var tween := create_tween()

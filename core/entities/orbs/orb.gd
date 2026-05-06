@@ -18,6 +18,7 @@ var _state: State = State.IN_SLOT
 @onready var _sprite: AnimatedSprite2D = $Sprite
 @onready var _note: AudioStreamPlayer = $Note
 @onready var _land: AudioStreamPlayer = $Land
+@onready var _lift: AudioStreamPlayer = $Lift
 
 func _ready() -> void:
 	_sprite.play("default")
@@ -41,6 +42,7 @@ func play_note() -> void:
 
 func lift() -> void:
 	_state = State.HELD
+	_lift.play()
 	z_index = 10
 
 func land() -> void:

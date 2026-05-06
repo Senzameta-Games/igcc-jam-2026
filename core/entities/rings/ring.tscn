@@ -9,20 +9,66 @@ script = ExtResource("1_66ytn")
 [node name="Ring" type="Sprite2D" parent="." unique_id=294359418]
 scale = Vector2(0.5, 0.5)
 
-[node name="Slots" type="Node2D" parent="." unique_id=436274638]
+[node name="Slots4" type="Node2D" parent="." unique_id=896473347]
 
-[node name="Slot1" parent="Slots" unique_id=136360553 instance=ExtResource("2_66ytn")]
+[node name="Slot1" parent="Slots4" unique_id=136360553 instance=ExtResource("2_66ytn")]
 
-[node name="Slot2" parent="Slots" unique_id=1347716651 instance=ExtResource("2_66ytn")]
+[node name="Slot2" parent="Slots4" unique_id=1309737215 instance=ExtResource("2_66ytn")]
 
-[node name="Slot3" parent="Slots" unique_id=1069317557 instance=ExtResource("2_66ytn")]
+[node name="Slot3" parent="Slots4" unique_id=474748681 instance=ExtResource("2_66ytn")]
 
-[node name="Slot4" parent="Slots" unique_id=161591035 instance=ExtResource("2_66ytn")]
+[node name="Slot4" parent="Slots4" unique_id=1285173639 instance=ExtResource("2_66ytn")]
 
-[node name="Slot5" parent="Slots" unique_id=909856248 instance=ExtResource("2_66ytn")]
+[node name="Slots8" type="Node2D" parent="." unique_id=436274638]
+visible = false
 
-[node name="Slot6" parent="Slots" unique_id=2038464099 instance=ExtResource("2_66ytn")]
+[node name="Slot1" parent="Slots8" unique_id=335950193 instance=ExtResource("2_66ytn")]
 
-[node name="Slot7" parent="Slots" unique_id=521964680 instance=ExtResource("2_66ytn")]
+[node name="Slot2" parent="Slots8" unique_id=1347716651 instance=ExtResource("2_66ytn")]
 
-[node name="Slot8" parent="Slots" unique_id=795846075 instance=ExtResource("2_66ytn")]
+[node name="Slot3" parent="Slots8" unique_id=1069317557 instance=ExtResource("2_66ytn")]
+
+[node name="Slot4" parent="Slots8" unique_id=161591035 instance=ExtResource("2_66ytn")]
+
+[node name="Slot5" parent="Slots8" unique_id=909856248 instance=ExtResource("2_66ytn")]
+
+[node name="Slot6" parent="Slots8" unique_id=2038464099 instance=ExtResource("2_66ytn")]
+
+[node name="Slot7" parent="Slots8" unique_id=521964680 instance=ExtResource("2_66ytn")]
+
+[node name="Slot8" parent="Slots8" unique_id=795846075 instance=ExtResource("2_66ytn")]
+
+[node name="Slots16" type="Node2D" parent="." unique_id=1684310060]
+visible = false
+
+[node name="Slot1" parent="Slots16" unique_id=157663462 instance=ExtResource("2_66ytn")]
+
+[node name="Slot2" parent="Slots16" unique_id=859784477 instance=ExtResource("2_66ytn")]
+
+[node name="Slot3" parent="Slots16" unique_id=73459799 instance=ExtResource("2_66ytn")]
+
+[node name="Slot4" parent="Slots16" unique_id=1982796795 instance=ExtResource("2_66ytn")]
+
+[node name="Slot5" parent="Slots16" unique_id=189475446 instance=ExtResource("2_66ytn")]
+
+[node name="Slot6" parent="Slots16" unique_id=1750777761 instance=ExtResource("2_66ytn")]
+
+[node name="Slot7" parent="Slots16" unique_id=874374997 instance=ExtResource("2_66ytn")]
+
+[node name="Slot8" parent="Slots16" unique_id=131205636 instance=ExtResource("2_66ytn")]
+
+[node name="Slot9" parent="Slots16" unique_id=1146915316 instance=ExtResource("2_66ytn")]
+
+[node name="Slot10" parent="Slots16" unique_id=1924770995 instance=ExtResource("2_66ytn")]
+
+[node name="Slot11" parent="Slots16" unique_id=830158642 instance=ExtResource("2_66ytn")]
+
+[node name="Slot12" parent="Slots16" unique_id=1214740954 instance=ExtResource("2_66ytn")]
+
+[node name="Slot13" parent="Slots16" unique_id=1818382615 instance=ExtResource("2_66ytn")]
+
+[node name="Slot14" parent="Slots16" unique_id=908606099 instance=ExtResource("2_66ytn")]
+
+[node name="Slot15" parent="Slots16" unique_id=1417272697 instance=ExtResource("2_66ytn")]
+
+[node name="Slot16" parent="Slots16" unique_id=984301084 instance=ExtResource("2_66ytn")]

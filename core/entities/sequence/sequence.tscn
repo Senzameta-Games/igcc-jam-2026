@@ -31,6 +31,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ycj8o")
 script = ExtResource("1_edfga")
+metadata/_edit_vertical_guides_ = [680.0, 760.0, 840.0, 920.0, 1000.0, 1080.0, 1160.0, 1240.0]
+metadata/_edit_horizontal_guides_ = [540.0]
 
 [node name="Orbs" type="HBoxContainer" parent="." unique_id=1650935675]
 layout_mode = 2
@@ -41,40 +43,22 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 script = ExtResource("2_rx81g")
-indicator_dip_distance = 16.0
+bob_distance = 4.0
+bob_duration = 0.15
+indicator_dip_distance = 8.0
+indicator_dip_duration = 0.05
+indicator_rise_duration = 0.05
 
-[node name="Orb" type="TextureRect" parent="Orbs/Slot0" unique_id=989926475]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Orb" type="Sprite2D" parent="Orbs/Slot0" unique_id=1042449435]
+position = Vector2(32, 32)
 
-[node name="Empty" type="TextureRect" parent="Orbs/Slot0" unique_id=756631102]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Empty" type="Sprite2D" parent="Orbs/Slot0" unique_id=1568757707]
+position = Vector2(32, 32)
 texture = ExtResource("2_ravim")
 
-[node name="Indicator" type="TextureRect" parent="Orbs/Slot0" unique_id=218102257]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = 4.0
-offset_right = 12.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Indicator" type="Sprite2D" parent="Orbs/Slot0" unique_id=2109215965]
+position = Vector2(32, 48)
 texture = ExtResource("3_ycj8o")
-stretch_mode = 2
 
 [node name="Slot1" type="Control" parent="Orbs" unique_id=1544203556]
 custom_minimum_size = Vector2(64, 64)
@@ -83,38 +67,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_rx81g")
 
-[node name="Orb" type="TextureRect" parent="Orbs/Slot1" unique_id=843753657]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Orb" type="Sprite2D" parent="Orbs/Slot1" unique_id=1726592583]
+position = Vector2(32, 32)
 
-[node name="Empty" type="TextureRect" parent="Orbs/Slot1" unique_id=1749297902]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Empty" type="Sprite2D" parent="Orbs/Slot1" unique_id=761543474]
+position = Vector2(32, 32)
 texture = ExtResource("2_ravim")
 
-[node name="Indicator" type="TextureRect" parent="Orbs/Slot1" unique_id=1629118084]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = 4.0
-offset_right = 12.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Indicator" type="Sprite2D" parent="Orbs/Slot1" unique_id=985557767]
+position = Vector2(32, 48)
 texture = ExtResource("3_ycj8o")
-stretch_mode = 2
 
 [node name="Slot2" type="Control" parent="Orbs" unique_id=1476065902]
 custom_minimum_size = Vector2(64, 64)
@@ -123,38 +85,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_rx81g")
 
-[node name="Orb" type="TextureRect" parent="Orbs/Slot2" unique_id=1016440932]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Orb" type="Sprite2D" parent="Orbs/Slot2" unique_id=1404324035]
+position = Vector2(32, 32)
 
-[node name="Empty" type="TextureRect" parent="Orbs/Slot2" unique_id=8393647]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Empty" type="Sprite2D" parent="Orbs/Slot2" unique_id=1174244721]
+position = Vector2(32, 32)
 texture = ExtResource("2_ravim")
 
-[node name="Indicator" type="TextureRect" parent="Orbs/Slot2" unique_id=63177251]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = 4.0
-offset_right = 12.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Indicator" type="Sprite2D" parent="Orbs/Slot2" unique_id=1449692872]
+position = Vector2(32, 48)
 texture = ExtResource("3_ycj8o")
-stretch_mode = 2
 
 [node name="Slot3" type="Control" parent="Orbs" unique_id=595923083]
 custom_minimum_size = Vector2(64, 64)
@@ -163,38 +103,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_rx81g")
 
-[node name="Orb" type="TextureRect" parent="Orbs/Slot3" unique_id=1671894822]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Orb" type="Sprite2D" parent="Orbs/Slot3" unique_id=991459525]
+position = Vector2(32, 32)
 
-[node name="Empty" type="TextureRect" parent="Orbs/Slot3" unique_id=1251988211]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Empty" type="Sprite2D" parent="Orbs/Slot3" unique_id=410718875]
+position = Vector2(32, 32)
 texture = ExtResource("2_ravim")
 
-[node name="Indicator" type="TextureRect" parent="Orbs/Slot3" unique_id=23193537]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = 4.0
-offset_right = 12.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Indicator" type="Sprite2D" parent="Orbs/Slot3" unique_id=1807104147]
+position = Vector2(32, 48)
 texture = ExtResource("3_ycj8o")
-stretch_mode = 2
 
 [node name="Slot4" type="Control" parent="Orbs" unique_id=1584959683]
 custom_minimum_size = Vector2(64, 64)
@@ -203,38 +121,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_rx81g")
 
-[node name="Orb" type="TextureRect" parent="Orbs/Slot4" unique_id=1237685910]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Orb" type="Sprite2D" parent="Orbs/Slot4" unique_id=1581990946]
+position = Vector2(32, 32)
 
-[node name="Empty" type="TextureRect" parent="Orbs/Slot4" unique_id=1266808390]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Empty" type="Sprite2D" parent="Orbs/Slot4" unique_id=150885053]
+position = Vector2(32, 32)
 texture = ExtResource("2_ravim")
 
-[node name="Indicator" type="TextureRect" parent="Orbs/Slot4" unique_id=1079384725]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = 4.0
-offset_right = 12.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Indicator" type="Sprite2D" parent="Orbs/Slot4" unique_id=1620397790]
+position = Vector2(32, 48)
 texture = ExtResource("3_ycj8o")
-stretch_mode = 2
 
 [node name="Slot5" type="Control" parent="Orbs" unique_id=2094406956]
 custom_minimum_size = Vector2(64, 64)
@@ -243,38 +139,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_rx81g")
 
-[node name="Orb" type="TextureRect" parent="Orbs/Slot5" unique_id=1662479206]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Orb" type="Sprite2D" parent="Orbs/Slot5" unique_id=748647719]
+position = Vector2(32, 32)
 
-[node name="Empty" type="TextureRect" parent="Orbs/Slot5" unique_id=1319510609]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Empty" type="Sprite2D" parent="Orbs/Slot5" unique_id=1244296002]
+position = Vector2(32, 32)
 texture = ExtResource("2_ravim")
 
-[node name="Indicator" type="TextureRect" parent="Orbs/Slot5" unique_id=1467555352]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = 4.0
-offset_right = 12.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Indicator" type="Sprite2D" parent="Orbs/Slot5" unique_id=211558277]
+position = Vector2(32, 48)
 texture = ExtResource("3_ycj8o")
-stretch_mode = 2
 
 [node name="Slot6" type="Control" parent="Orbs" unique_id=328547648]
 custom_minimum_size = Vector2(64, 64)
@@ -283,38 +157,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_rx81g")
 
-[node name="Orb" type="TextureRect" parent="Orbs/Slot6" unique_id=915342141]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Orb" type="Sprite2D" parent="Orbs/Slot6" unique_id=1294541837]
+position = Vector2(32, 32)
 
-[node name="Empty" type="TextureRect" parent="Orbs/Slot6" unique_id=1177167558]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Empty" type="Sprite2D" parent="Orbs/Slot6" unique_id=1242865987]
+position = Vector2(32, 32)
 texture = ExtResource("2_ravim")
 
-[node name="Indicator" type="TextureRect" parent="Orbs/Slot6" unique_id=1147927240]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = 4.0
-offset_right = 12.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Indicator" type="Sprite2D" parent="Orbs/Slot6" unique_id=1603839995]
+position = Vector2(32, 48)
 texture = ExtResource("3_ycj8o")
-stretch_mode = 2
 
 [node name="Slot7" type="Control" parent="Orbs" unique_id=785122773]
 custom_minimum_size = Vector2(64, 64)
@@ -323,35 +175,13 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_rx81g")
 
-[node name="Orb" type="TextureRect" parent="Orbs/Slot7" unique_id=2067752856]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Orb" type="Sprite2D" parent="Orbs/Slot7" unique_id=2071160679]
+position = Vector2(32, 32)
 
-[node name="Empty" type="TextureRect" parent="Orbs/Slot7" unique_id=1440422998]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 60.0
-offset_bottom = 60.0
+[node name="Empty" type="Sprite2D" parent="Orbs/Slot7" unique_id=1060401486]
+position = Vector2(32, 32)
 texture = ExtResource("2_ravim")
 
-[node name="Indicator" type="TextureRect" parent="Orbs/Slot7" unique_id=1980248165]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = 4.0
-offset_right = 12.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Indicator" type="Sprite2D" parent="Orbs/Slot7" unique_id=1803019608]
+position = Vector2(32, 48)
 texture = ExtResource("3_ycj8o")
-stretch_mode = 2

@@ -6,12 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://db62fn63swnqw" path="res://core/entities/sequence/sequence.tscn" id="3_fhb8o"]
 [ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring-225r.tscn" id="3_rlxeh"]
 [ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring-300r.tscn" id="4_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://cm3vbfeve2gux" path="res://core/entities/rings/ring-375r.tscn" id="5_5wsxu"]
 [ext_resource type="PackedScene" uid="uid://dp33fjwy0hngv" path="res://core/entities/detector/detector.tscn" id="6_pw2oc"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="8_rlxeh"]
 
 [node name="Sequencer" type="Node2D" unique_id=1167367685]
 script = ExtResource("1_7ojyt")
-bpm = 40.0
 
 [node name="Rings" type="Node2D" parent="." unique_id=244183733]
 position = Vector2(960, 450)
@@ -19,27 +19,29 @@ position = Vector2(960, 450)
 [node name="Ring0" parent="Rings" unique_id=1939568862 instance=ExtResource("2_y5shy")]
 
 [node name="Ring1" parent="Rings" unique_id=1726688430 instance=ExtResource("3_rlxeh")]
-ring_index = 1
-interval_type = 1
 
 [node name="Ring2" parent="Rings" unique_id=2043490416 instance=ExtResource("4_pw2oc")]
-ring_index = 2
-interval_type = 2
+
+[node name="Ring3" parent="Rings" unique_id=1903142803 instance=ExtResource("5_5wsxu")]
 
 [node name="DetectionFeedback" type="Node2D" parent="." unique_id=461504393]
 
 [node name="Detectors" type="Node2D" parent="." unique_id=193498732]
 
-[node name="Detector0" parent="Detectors" unique_id=1461126088 instance=ExtResource("6_pw2oc")]
-position = Vector2(1107, 452)
+[node name="Detector0" parent="Detectors" unique_id=1922593718 instance=ExtResource("6_pw2oc")]
+position = Vector2(1332, 452)
 
-[node name="Detector1" parent="Detectors" unique_id=1883867542 instance=ExtResource("6_pw2oc")]
-position = Vector2(1182, 441)
+[node name="Detector1" parent="Detectors" unique_id=425823484 instance=ExtResource("6_pw2oc")]
+position = Vector2(1257, 452)
 ring_idx = 1
 
-[node name="Detector2" parent="Detectors" unique_id=425823484 instance=ExtResource("6_pw2oc")]
-position = Vector2(1257, 436)
+[node name="Detector2" parent="Detectors" unique_id=1883867542 instance=ExtResource("6_pw2oc")]
+position = Vector2(1182, 452)
 ring_idx = 2
+
+[node name="Detector3" parent="Detectors" unique_id=1461126088 instance=ExtResource("6_pw2oc")]
+position = Vector2(1107, 452)
+ring_idx = 3
 
 [node name="StartStop" parent="." unique_id=1422403098 instance=ExtResource("2_ee14c")]
 offset_left = 880.0

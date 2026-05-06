@@ -24,9 +24,6 @@ var _hovered: bool = false
 @onready var _badge: Sprite2D = $Badge
 
 func _ready() -> void:
-	print("Badge node: ", _badge)
-	print("Badge textures count: ", badge_textures.size())
-	print("Stack count: ", _count)
 	_drophint.visible = false
 	_drophint.scale = Vector2.ZERO
 	_badge.visible = false

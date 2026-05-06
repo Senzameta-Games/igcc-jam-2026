@@ -5,5 +5,7 @@
 [node name="OrbTrail" type="Node2D" unique_id=1302186274]
 z_index = 20
 script = ExtResource("1_ryinh")
+travel_duration = 0.3
+arc_height = 240.0
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=893369840]
