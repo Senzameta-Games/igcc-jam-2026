@@ -132,3 +132,7 @@ func _process_pending() -> void:
 func _on_reset_pressed() -> void:
 	Playback.stop()
 	get_tree().reload_current_scene()
+
+
+func _on_export_pressed():
+	export()

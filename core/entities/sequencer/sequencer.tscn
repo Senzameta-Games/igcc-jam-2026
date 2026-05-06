@@ -12,6 +12,8 @@
 [node name="Sequencer" type="Node2D" unique_id=1167367685]
 script = ExtResource("1_7ojyt")
 bpm = 40.0
+rotation_model = null
+custom_multipliers = null
 
 [node name="Rings" type="Node2D" parent="." unique_id=244183733]
 position = Vector2(960, 450)
@@ -71,4 +73,20 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 24
 text = "DEV BOARD CLEAR"
 
+[node name="Export" type="Button" parent="." unique_id=2067324072]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 781.0
+offset_top = 832.0
+offset_right = 1166.0
+offset_bottom = 874.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "PRINT CONFIGURATION TO JSON"
+
 [connection signal="pressed" from="Reset" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="Export" to="." method="_on_export_pressed"]
