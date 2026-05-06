@@ -1,7 +1,7 @@
 class_name Detector
 extends Area2D
 
-signal orb_passed(orb_id: StringName, texture: Texture2D, from_pos: Vector2, ring_idx: int)
+signal orb_passed(orb_id: Orb.OrbType, texture: Texture2D, from_pos: Vector2, ring_idx: int)
  
 @export var flash_color: Color = Color(1.0, 1.0, 1.0, 0.8)
 @export var flash_duration: float = 0.12

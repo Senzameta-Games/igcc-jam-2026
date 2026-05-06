@@ -66,7 +66,6 @@ func eject_orb() -> Orb:
 		var spawned: Orb = OrbRegistry.spawn(_orb.orb_id)
 		if spawned == null:
 			return null
-		# Must be in the tree before reparent can work
 		add_child(spawned)
 		_count -= 1
 		_refresh_visual()

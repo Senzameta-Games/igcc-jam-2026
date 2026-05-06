@@ -68,8 +68,12 @@ func _hide_all_drophint() -> void:
 		slot.hide_drophint()
 
 func connect_slot(slot: Slot) -> void:
-	_slots.append(slot)
-	slot.slot_interacted.connect(_on_slot_interacted)
+	if not slot.slot_interacted.is_connected(_on_slot_interacted):
+		slot.slot_interacted.connect(_on_slot_interacted)
+
+func disconnect_slot(slot: Slot) -> void:
+	if slot.slot_interacted.is_connected(_on_slot_interacted):
+		slot.slot_interacted.disconnect(_on_slot_interacted)
 
 func _on_slot_interacted(slot: Slot) -> void:
 	if Playback.is_playing:

@@ -35,7 +35,7 @@ func get_next_slot_position() -> Vector2:
 		_update_indicator()
 	return _slots[_write_head].global_position + _slots[_write_head].size * 0.5
 
-func receive_orb(orb_id: StringName, texture: Texture2D) -> void:
+func receive_orb(orb_id: Orb.OrbType, texture: Texture2D) -> void:
 	if _slots.size() == 0:
 		return
 	var idx: int = _write_head % _slots.size()

@@ -57,10 +57,16 @@ func get_slot_count() -> int:
 func _activate_interval_group() -> void:
 	if _slots4 == null:
 		return
+	
+	if _hand != null:
+		for slot: Slot in _slots:
+			_hand.disconnect_slot(slot)
+			
 	_slots4.visible = false
 	_slots8.visible = false
 	_slots16.visible = false
 	_slots.clear()
+	
 	var active: Node2D
 	match interval_type:
 		IntervalType.QUARTER:
@@ -69,13 +75,16 @@ func _activate_interval_group() -> void:
 			active = _slots8
 		IntervalType.SIXTEENTH:
 			active = _slots16
+			
 	active.visible = true
 	for child: Node in active.get_children():
 		var slot := child as Slot
 		if slot == null:
 			continue
 		_slots.append(slot)
+		
 	_calculate_slot_positions()
+	
 	if _hand != null:
 		for slot: Slot in _slots:
 			_hand.connect_slot(slot)
@@ -103,17 +112,11 @@ func _crossed_playhead(prev_orb_t: float, curr_orb_t: float) -> bool:
 	return prev_orb_t < threshold and threshold <= curr_orb_t
 	
 func get_orbs() -> Array:
-	# orbs can be null
-	var ret_obj = []
-	for i in get_slot_count():
-		ret_obj.append(_slots[i].get_orb())
-		match interval_type:
-			IntervalType.QUARTER:
-				ret_obj.append(null)
-				ret_obj.append(null)
-				ret_obj.append(null)
-				pass
-			IntervalType.EIGHTH:
-				ret_obj.append(null)
-				pass
-	return ret_obj
+	var sorted_slots: Array[Slot] = _slots.duplicate()
+	sorted_slots.sort_custom(func(a: Slot, b: Slot) -> bool:
+		return a.index < b.index
+	)
+	var ret: Array = []
+	for slot: Slot in sorted_slots:
+		ret.append(slot.get_orb())
+	return ret

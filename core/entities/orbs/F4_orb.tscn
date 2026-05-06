@@ -16,9 +16,9 @@ animations = [{
 }]
 
 [node name="Orb" unique_id=552011164 instance=ExtResource("1_wtp3i")]
-orb_id = &"f4"
 texture = ExtResource("2_d7i88")
 note = ExtResource("3_u6ywm")
+orb_id = 2
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]
 sprite_frames = SubResource("SpriteFrames_nw5cr")
