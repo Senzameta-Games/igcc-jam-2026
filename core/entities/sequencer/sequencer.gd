@@ -134,5 +134,19 @@ func _on_reset_pressed() -> void:
 	get_tree().reload_current_scene()
 
 
+func export() -> void:
+	var export_arr = []
+	var ring_orbs = []
+	for ring in _rings: 
+		ring_orbs.append(ring.get_orbs())
+	for i in 16:
+		var curr_pos = []
+		for ring_orb in ring_orbs: 
+			if ring_orb[i] != null:
+				curr_pos.append(ring_orb[i].orb_id)
+		export_arr.append(curr_pos)
+
+	print(export_arr)
+
 func _on_export_pressed():
 	export()

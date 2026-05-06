@@ -101,3 +101,19 @@ func _crossed_playhead(prev_orb_t: float, curr_orb_t: float) -> bool:
 	if threshold < prev_orb_t:
 		threshold += 1.0
 	return prev_orb_t < threshold and threshold <= curr_orb_t
+	
+func get_orbs() -> Array:
+	# orbs can be null
+	var ret_obj = []
+	for i in get_slot_count():
+		ret_obj.append(_slots[i].get_orb())
+		match interval_type:
+			IntervalType.QUARTER:
+				ret_obj.append(null)
+				ret_obj.append(null)
+				ret_obj.append(null)
+				pass
+			IntervalType.EIGHTH:
+				ret_obj.append(null)
+				pass
+	return ret_obj
