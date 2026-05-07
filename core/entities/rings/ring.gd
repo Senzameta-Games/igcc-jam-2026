@@ -34,7 +34,6 @@ const SLOT_SCENE: PackedScene = preload("res://core/entities/slot/slot.tscn")
 @onready var _slots_container: Node2D = $Slots
 
 var _slots: Array[Slot] = []
-var _hand: Hand = null
 
 func _ready() -> void:
 	_rebuild_slots()
@@ -46,15 +45,10 @@ func tick(rot_t: float) -> void:
 func apply_rotation(rot_t: float) -> void:
 	rotation = rot_t * TAU
 
-func connect_hand_to_slot(hand: Hand) -> void:
-	_hand = hand
-	for slot: Slot in _slots:
-		_hand.connect_slot(slot)
-
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:
-		if slot.is_occupied() and _hand != null:
-			_hand.pick_up(slot.eject_orb())
+		if slot.is_occupied():
+			slot.eject_orb()
 
 func get_slots() -> Array[Slot]:
 	return _slots
@@ -72,8 +66,6 @@ func get_orbs() -> Array:
 		ret.append(slot.get_orb())
 	return ret
 
-## Connects all Detector children. Safe to call after scene is ready.
-## Also called if detectors are added dynamically.
 func _connect_detectors() -> void:
 	for child: Node in get_children():
 		var detector := child as Detector
@@ -88,9 +80,6 @@ func _on_detector_orb_passed(orb_id: Orb.OrbType, texture: Texture2D, from_pos: 
 func _rebuild_slots() -> void:
 	if _slots_container == null:
 		return
-	if _hand != null:
-		for slot: Slot in _slots:
-			_hand.disconnect_slot(slot)
 	eject_all_orbs()
 	for slot: Slot in _slots:
 		_slots_container.remove_child(slot)
@@ -103,9 +92,6 @@ func _rebuild_slots() -> void:
 		slot.index = i
 		_slots.append(slot)
 	_calculate_slot_positions()
-	if _hand != null:
-		for slot: Slot in _slots:
-			_hand.connect_slot(slot)
 
 func _calculate_slot_positions() -> void:
 	var count: int = _slots.size()

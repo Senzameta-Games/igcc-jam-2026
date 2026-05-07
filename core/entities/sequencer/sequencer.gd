@@ -3,6 +3,9 @@ extends Node2D
 
 ## Sequencer owns BPM and all ring rotation state.
 ## Rings are passive. They receive rot_t each frame and apply it.
+## Tray and PianoRoll live under Main.
+## Detectors are owned by their respective Ring children.
+## Main listens to note_triggered and owns the trail + piano roll flow.
 
 signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int)
 
@@ -30,18 +33,15 @@ const MAX_BPM: float = 90.0
 @onready var _ring2_interval: OptionButton = $Tools/Ring2Interval
 @onready var _rotation_model_select: OptionButton = $Tools/RotationModel
 @onready var _custom_multipliers_field: TextEdit = $Tools/CustomMultField
-@onready var _reset: Button = $Tools/Reset
-@onready var _export: Button = $Tools/Export
-@onready var _fill_slots: Button = $Tools/FillSlots
 
 var _rings: Array[Ring] = []
 var _rotations: Array[float] = [0.0, 0.0, 0.0]
 var _resetting: bool = false
 
-# Tick driven by ring 0 rotation crossing sixteenth note intervals
+# Tick clock — driven by absolute measure time, independent of ring multipliers
+var _measure_t: float = 0.0
 var _current_tick: int = 0
 var _last_tick_threshold: int = 0
-var _measure_t: float = 0.0 # 0.0 - 1.0 = progress of 1 measure
 
 # Pending crossings per physics frame, sorted by ring_index before dispatch
 var _pending: Array[Dictionary] = []
@@ -52,7 +52,6 @@ func _ready() -> void:
 	Playback.started.connect(_on_playback_started)
 	Playback.stopped.connect(_on_playback_stopped)
 	for child: Node in _rings_container.get_children():
-		print("child: ", child.name, " type: ", child.get_class(), " is Ring: ", child is Ring)
 		var ring := child as Ring
 		if ring == null:
 			continue
@@ -63,14 +62,6 @@ func _ready() -> void:
 	)
 	_setup_dev_tools()
 
-func inject_hand(hand: Hand) -> void:
-	var controller := _button as PlaybackButton
-	if controller == null:
-		return
-	controller.connect_hand(hand)
-	for ring: Ring in _rings:
-		ring.connect_hand_to_slot(hand)
-
 ## Returns the current BPM measure duration in seconds. Used by Main for trail timing.
 func get_measure_duration() -> float:
 	return (60.0 / bpm) * BEATS_PER_MEASURE
@@ -79,14 +70,16 @@ func _physics_process(delta: float) -> void:
 	if not Playback.is_playing:
 		return
 	var base_rate: float = bpm / BEATS_PER_MEASURE / 60.0
-	# Advance measure time
+
+	# Tick clock driven by absolute measure time — independent of ring multipliers
 	_measure_t = fmod(_measure_t + base_rate * delta, 1.0)
-	# 16th note tick clock
 	var tick_threshold: int = int(_measure_t * TICKS_PER_MEASURE)
 	if tick_threshold != _last_tick_threshold:
 		_last_tick_threshold = tick_threshold
 		_current_tick = tick_threshold
 		Playback.tick_advanced.emit(_current_tick)
+
+	# Rings advance at their own multiplied rates
 	for i: int in range(_rings.size()):
 		var multiplier: float = _get_multiplier(i)
 		_rotations[i] = fmod(_rotations[i] + base_rate * multiplier * delta, 1.0)
@@ -122,9 +115,9 @@ func _get_multiplier(ring_index: int) -> float:
 
 func _on_playback_started() -> void:
 	_resetting = false
+	_measure_t = 0.0
 	_current_tick = 0
 	_last_tick_threshold = 0
-	_measure_t = 0.0
 
 func _on_playback_stopped() -> void:
 	_resetting = true
@@ -141,6 +134,8 @@ func _on_ring_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_posit
 		_process_queued = true
 		call_deferred("_flush_pending")
 
+## Sorts pending detections by ring_index and emits note_triggered for each.
+## Deferred so multiple detections in one physics frame are batched.
 func _flush_pending() -> void:
 	_process_queued = false
 	_pending.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -212,10 +207,13 @@ func _setup_dev_tools() -> void:
 	_custom_multipliers_field.text = _multipliers_to_string(custom_multipliers)
 	_custom_multipliers_field.visible = rotation_model == RotationModel.CUSTOM
 	_custom_multipliers_field.focus_exited.connect(_on_custom_multipliers_committed)
-	
-	_reset.pressed.connect(_on_reset_pressed)
-	_export.pressed.connect(_on_export_pressed)
-	_fill_slots.pressed.connect(_on_fill_slots_pressed)
+
+	var reset_btn := $Tools/Reset as Button
+	var export_btn := $Tools/Export as Button
+	var fill_btn := $Tools/FillSlots as Button
+	reset_btn.pressed.connect(_on_reset_pressed)
+	export_btn.pressed.connect(_on_export_pressed)
+	fill_btn.pressed.connect(_on_fill_slots_pressed)
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("hide_tools"):

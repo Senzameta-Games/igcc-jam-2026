@@ -1,15 +1,24 @@
 [gd_scene format=3 uid="uid://c1ycavhb8bwf4"]
 
 [ext_resource type="Script" uid="uid://ckqdtgnc1nxah" path="res://core/entities/hand/hand.gd" id="1_ljdg1"]
+[ext_resource type="Texture2D" uid="uid://ch1re2se0arpy" path="res://core/assets/hand/hand_empty.png" id="2_oaghj"]
+[ext_resource type="Texture2D" uid="uid://du30vgygwe8gd" path="res://core/assets/hand/hand_holding.png" id="3_y17g0"]
+[ext_resource type="Texture2D" uid="uid://db6kld3pwjcw5" path="res://core/assets/hand/hand_pointing.png" id="4_y17g0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v2pej"]
 
 [node name="Hand" type="Node2D" unique_id=797971003]
+z_index = 30
 script = ExtResource("1_ljdg1")
+texture_empty = ExtResource("2_oaghj")
+texture_holding = ExtResource("3_y17g0")
+texture_pointing = ExtResource("4_y17g0")
 
 [node name="Area" type="Area2D" parent="." unique_id=388490053]
 collision_layer = 0
-collision_mask = 8
+collision_mask = 15
 
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1772723908]
 shape = SubResource("RectangleShape2D_v2pej")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=941995552]
