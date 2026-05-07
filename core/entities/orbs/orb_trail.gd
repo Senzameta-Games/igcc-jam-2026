@@ -6,6 +6,8 @@ extends Node2D
 ## Emits an arrival signal when it reaches the destination, then frees itself.
  
 signal arrived
+
+const ARRIVAL_SCALE: float = 0.5
  
 @export var travel_duration: float = 0.4
 @export var arc_height: float = 80.0
@@ -32,6 +34,7 @@ func _process(delta: float) -> void:
 	var a: Vector2 = _from.lerp(_control, ease_t)
 	var b: Vector2 = _control.lerp(_to, ease_t)
 	global_position = a.lerp(b, ease_t)
+	_sprite.scale = Vector2.ONE.lerp(Vector2(ARRIVAL_SCALE, ARRIVAL_SCALE), ease_t)
 	if t >= 1.0:
 		arrived.emit()
 		queue_free()

@@ -6,6 +6,7 @@ extends Node2D
 
 func _ready() -> void:
 	_background.position = get_viewport_rect().size / 2
+	await get_tree().process_frame
 	_sequencer.inject_hand(_hand)
 
 func _input(InputEvent) -> void:

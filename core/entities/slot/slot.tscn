@@ -26,13 +26,14 @@ badge_textures = Array[Texture2D]([ExtResource("3_jflvu"), ExtResource("4_4ycc5"
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1311755148]
 
 [node name="DropHint" type="Sprite2D" parent="." unique_id=1495767581]
+z_index = 4
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_rs7tw")
 
 [node name="Badge" type="Sprite2D" parent="." unique_id=705718178]
 z_index = 4
 scale = Vector2(0.4, 0.4)
-offset = Vector2(0, 96)
+offset = Vector2(-96, 0)
 
 [node name="Handle" type="Area2D" parent="." unique_id=662257456]
 collision_mask = 0
