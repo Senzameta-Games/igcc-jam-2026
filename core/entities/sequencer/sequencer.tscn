@@ -63,7 +63,7 @@ grow_vertical = 1
 fan_radius_inner = 580.0
 fan_radius_outer = 775.0
 fan_angle_span = 90.0
-fan_origin = Vector2(480, 750)
+fan_origin = Vector2(500, 750)
 
 [node name="Tray" parent="." unique_id=1395979546 instance=ExtResource("8_rlxeh")]
 position = Vector2(960, 1068)
