@@ -107,3 +107,6 @@ func _crossed_playhead(prev_orb_t: float, curr_orb_t: float) -> bool:
 	if threshold < prev_orb_t:
 		threshold += 1.0
 	return prev_orb_t < threshold and threshold <= curr_orb_t
+
+func set_orb_at_slot(index: int, type: Orb.OrbType) -> void:
+	_slots[index].set_type(type)

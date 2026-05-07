@@ -62,6 +62,7 @@ func _ready() -> void:
 		return a.ring_index < b.ring_index
 	)
 	_setup_dev_tools()
+	load_game({"solution": [[], [], [], [], [], [], [], [], [], [], [], [], [0], [1], [2], [3]]})
 
 func inject_hand(hand: Hand) -> void:
 	var controller := _button as PlaybackButton
@@ -187,6 +188,7 @@ func export() -> void:
 
 func _on_export_pressed() -> void:
 	export()
+	load_game({"solution": [[], [], [], [], [], [], [], [], [], [], [], [], [0], [1], [2], [3]]})
 
 # --- Dev Tools ---
 
@@ -280,3 +282,29 @@ func _multipliers_to_string(multipliers: Array[float]) -> String:
 	for m: float in multipliers:
 		parts.append(str(m))
 	return ", ".join(parts)
+
+func load_game(json_data: Dictionary) -> void:
+	var solution = json_data["solution"]
+	var export_arr = []
+	var ring_grids = []
+	for index in solution.size():
+		var orb_arr = solution[index]
+		if(orb_arr.size() == 0):
+			continue
+		match(orb_arr.size()):
+			0:
+				pass
+			1:
+				_rings[2].set_orb_at_slot(index, orb_arr[0])
+				pass
+			2:
+				_rings[2].set_orb_at_slot(index, orb_arr[0])
+				_rings[1].set_orb_at_slot(index, orb_arr[1])
+				pass
+			3:
+				_rings[2].set_orb_at_slot(index, orb_arr[0])
+				_rings[1].set_orb_at_slot(index, orb_arr[1])
+				_rings[0].set_orb_at_slot(index, orb_arr[2])
+				pass
+		
+	print("loaded")

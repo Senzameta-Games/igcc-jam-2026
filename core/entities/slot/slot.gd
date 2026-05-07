@@ -130,3 +130,7 @@ func _on_area_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: in
 		if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
 			slot_interacted.emit(self)
 			get_viewport().set_input_as_handled()
+
+func set_type(type: Orb.OrbType):
+	if(_orb != null):
+		_orb.orb_id = Orb.OrbType[Orb.OrbType.find_key(type)]
