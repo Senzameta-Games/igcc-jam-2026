@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring-300r.tscn" id="4_pw2oc"]
 [ext_resource type="PackedScene" uid="uid://dp33fjwy0hngv" path="res://core/entities/detector/detector.tscn" id="6_pw2oc"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="7_rlxeh"]
-[ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="8_rlxeh"]
 
 [node name="Sequencer" type="Node2D" unique_id=1975801920]
 script = ExtResource("1_7ojyt")
@@ -65,17 +64,13 @@ fan_radius_outer = 775.0
 fan_angle_span = 90.0
 fan_origin = Vector2(500, 750)
 
-[node name="Tray" parent="." unique_id=1395979546 instance=ExtResource("8_rlxeh")]
-position = Vector2(960, 1068)
-rotation = 1.5707964
-
-[node name="Tools" type="Control" parent="." unique_id=939070579]
+[node name="Tools" type="Control" parent="." unique_id=616792806]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Header" type="Label" parent="Tools" unique_id=1418214907]
+[node name="Header" type="Label" parent="Tools" unique_id=1361608674]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 58.0
@@ -87,7 +82,7 @@ theme_override_font_sizes/font_size = 16
 text = "Dev Tools
 Use ` (tilde) to hide"
 
-[node name="BPMLabel" type="Label" parent="Tools" unique_id=1442154517]
+[node name="BPMLabel" type="Label" parent="Tools" unique_id=1271297089]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 138.0
@@ -98,7 +93,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Beats per minute (commits on blur)"
 
-[node name="BPM" type="TextEdit" parent="Tools" unique_id=260617024]
+[node name="BPM" type="TextEdit" parent="Tools" unique_id=2142725685]
 custom_minimum_size = Vector2(160, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -109,7 +104,7 @@ theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 placeholder_text = "Beats per minute"
 
-[node name="Interval1Label" type="Label" parent="Tools" unique_id=492282652]
+[node name="Interval1Label" type="Label" parent="Tools" unique_id=588700541]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 270.0
@@ -120,7 +115,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring1 Interval"
 
-[node name="Ring0Interval" type="OptionButton" parent="Tools" unique_id=1728301191]
+[node name="Ring0Interval" type="OptionButton" parent="Tools" unique_id=2090710639]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -130,7 +125,7 @@ offset_bottom = 332.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Interval2Label" type="Label" parent="Tools" unique_id=1440302780]
+[node name="Interval2Label" type="Label" parent="Tools" unique_id=217006808]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 337.0
@@ -141,7 +136,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring2 Interval"
 
-[node name="Ring1Interval" type="OptionButton" parent="Tools" unique_id=131328411]
+[node name="Ring1Interval" type="OptionButton" parent="Tools" unique_id=1650489552]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -151,7 +146,7 @@ offset_bottom = 398.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="INterval3Label" type="Label" parent="Tools" unique_id=1182243796]
+[node name="INterval3Label" type="Label" parent="Tools" unique_id=2022252772]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 407.0
@@ -162,7 +157,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring3 Interval"
 
-[node name="Ring2Interval" type="OptionButton" parent="Tools" unique_id=488989438]
+[node name="Ring2Interval" type="OptionButton" parent="Tools" unique_id=1021885382]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -172,7 +167,7 @@ offset_bottom = 467.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="RotationModelLabel" type="Label" parent="Tools" unique_id=866710032]
+[node name="RotationModelLabel" type="Label" parent="Tools" unique_id=850408348]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 533.0
@@ -183,7 +178,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Rotation Model"
 
-[node name="RotationModel" type="OptionButton" parent="Tools" unique_id=139489791]
+[node name="RotationModel" type="OptionButton" parent="Tools" unique_id=2131848746]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -193,7 +188,7 @@ offset_bottom = 591.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="CustomMultField" type="TextEdit" parent="Tools" unique_id=327080550]
+[node name="CustomMultField" type="TextEdit" parent="Tools" unique_id=1048511240]
 custom_minimum_size = Vector2(320, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -204,7 +199,7 @@ theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 placeholder_text = "1.0, 1.0, 1.0"
 
-[node name="Reset" type="Button" parent="Tools" unique_id=1522969885]
+[node name="Reset" type="Button" parent="Tools" unique_id=1006395446]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -222,7 +217,7 @@ theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Reset scene"
 
-[node name="Export" type="Button" parent="Tools" unique_id=1479989975]
+[node name="Export" type="Button" parent="Tools" unique_id=79612990]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -240,7 +235,7 @@ theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Print as solution json"
 
-[node name="FillSlots" type="Button" parent="Tools" unique_id=712819057]
+[node name="FillSlots" type="Button" parent="Tools" unique_id=445448621]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -257,13 +252,3 @@ theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Fill all slots with 1 random orb"
-
-[connection signal="focus_exited" from="Tools/BPM" to="." method="_on_bpm_committed"]
-[connection signal="item_selected" from="Tools/Ring0Interval" to="." method="_on_ring0_interval_selected"]
-[connection signal="item_selected" from="Tools/Ring1Interval" to="." method="_on_ring1_interval_selected"]
-[connection signal="item_selected" from="Tools/Ring2Interval" to="." method="_on_ring2_interval_selected"]
-[connection signal="item_selected" from="Tools/RotationModel" to="." method="_on_rotation_model_selected"]
-[connection signal="focus_exited" from="Tools/CustomMultField" to="." method="_on_custom_mult_committed"]
-[connection signal="pressed" from="Tools/Reset" to="." method="_on_reset_pressed"]
-[connection signal="pressed" from="Tools/Export" to="." method="_on_export_pressed"]
-[connection signal="pressed" from="Tools/FillSlots" to="." method="_on_fill_slots_pressed"]
