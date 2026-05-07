@@ -17,29 +17,24 @@ position = Vector2(960, 593)
 
 [node name="Ring0" parent="Rings" unique_id=109522518 instance=ExtResource("2_y5shy")]
 
+[node name="Detector0" parent="Rings/Ring0" unique_id=1231722912 instance=ExtResource("6_pw2oc")]
+position = Vector2(147, 0)
+
 [node name="Ring1" parent="Rings" unique_id=1636516408 instance=ExtResource("3_rlxeh")]
 ring_index = 1
 interval_type = 1
+
+[node name="Detector1" parent="Rings/Ring1" unique_id=311348791 instance=ExtResource("6_pw2oc")]
+position = Vector2(222, -8)
 
 [node name="Ring2" parent="Rings" unique_id=817166058 instance=ExtResource("4_pw2oc")]
 ring_index = 2
 interval_type = 2
 
+[node name="Detector2" parent="Rings/Ring2" unique_id=1481402410 instance=ExtResource("6_pw2oc")]
+position = Vector2(297, -14)
+
 [node name="DetectionFeedback" type="Node2D" parent="." unique_id=1843269302]
-
-[node name="Detectors" type="Node2D" parent="." unique_id=1171807417]
-position = Vector2(0, 143)
-
-[node name="Detector0" parent="Detectors" unique_id=1231722912 instance=ExtResource("6_pw2oc")]
-position = Vector2(1107, 450)
-
-[node name="Detector1" parent="Detectors" unique_id=311348791 instance=ExtResource("6_pw2oc")]
-position = Vector2(1182, 442)
-ring_idx = 1
-
-[node name="Detector2" parent="Detectors" unique_id=1481402410 instance=ExtResource("6_pw2oc")]
-position = Vector2(1257, 436)
-ring_idx = 2
 
 [node name="StartStop" parent="." unique_id=1939683072 instance=ExtResource("2_ee14c")]
 offset_left = 880.0
