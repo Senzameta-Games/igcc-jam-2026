@@ -1,68 +1,81 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1vu1c1k0s57o"]
+[gd_scene format=3 uid="uid://b1vu1c1k0s57o"]
 
 [ext_resource type="Script" uid="uid://bfpd0mdsk51y8" path="res://core/entities/sequencer/sequencer.gd" id="1_7ojyt"]
 [ext_resource type="PackedScene" uid="uid://qc0dwe3v7u2g" path="res://core/entities/button/button.tscn" id="2_ee14c"]
 [ext_resource type="PackedScene" uid="uid://c2ry2hofjuqey" path="res://core/entities/rings/ring-150r.tscn" id="2_y5shy"]
-[ext_resource type="PackedScene" uid="uid://db62fn63swnqw" path="res://core/entities/sequence/sequence.tscn" id="3_fhb8o"]
 [ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring-225r.tscn" id="3_rlxeh"]
 [ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring-300r.tscn" id="4_pw2oc"]
 [ext_resource type="PackedScene" uid="uid://dp33fjwy0hngv" path="res://core/entities/detector/detector.tscn" id="6_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="7_rlxeh"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="8_rlxeh"]
 
-[node name="Sequencer" type="Node2D"]
+[node name="Sequencer" type="Node2D" unique_id=1975801920]
 script = ExtResource("1_7ojyt")
 bpm = 40.0
 
-[node name="Rings" type="Node2D" parent="."]
-position = Vector2(960, 450)
+[node name="Rings" type="Node2D" parent="." unique_id=123070447]
+position = Vector2(960, 593)
 
-[node name="Ring0" parent="Rings" instance=ExtResource("2_y5shy")]
+[node name="Ring0" parent="Rings" unique_id=109522518 instance=ExtResource("2_y5shy")]
 
-[node name="Ring1" parent="Rings" instance=ExtResource("3_rlxeh")]
+[node name="Ring1" parent="Rings" unique_id=1636516408 instance=ExtResource("3_rlxeh")]
 ring_index = 1
 interval_type = 1
 
-[node name="Ring2" parent="Rings" instance=ExtResource("4_pw2oc")]
+[node name="Ring2" parent="Rings" unique_id=817166058 instance=ExtResource("4_pw2oc")]
 ring_index = 2
 interval_type = 2
 
-[node name="DetectionFeedback" type="Node2D" parent="."]
+[node name="DetectionFeedback" type="Node2D" parent="." unique_id=1843269302]
 
-[node name="Detectors" type="Node2D" parent="."]
+[node name="Detectors" type="Node2D" parent="." unique_id=1171807417]
+position = Vector2(0, 143)
 
-[node name="Detector0" parent="Detectors" instance=ExtResource("6_pw2oc")]
-position = Vector2(1107, 452)
+[node name="Detector0" parent="Detectors" unique_id=1231722912 instance=ExtResource("6_pw2oc")]
+position = Vector2(1107, 450)
 
-[node name="Detector1" parent="Detectors" instance=ExtResource("6_pw2oc")]
-position = Vector2(1182, 441)
+[node name="Detector1" parent="Detectors" unique_id=311348791 instance=ExtResource("6_pw2oc")]
+position = Vector2(1182, 442)
 ring_idx = 1
 
-[node name="Detector2" parent="Detectors" instance=ExtResource("6_pw2oc")]
+[node name="Detector2" parent="Detectors" unique_id=1481402410 instance=ExtResource("6_pw2oc")]
 position = Vector2(1257, 436)
 ring_idx = 2
 
-[node name="StartStop" parent="." instance=ExtResource("2_ee14c")]
+[node name="StartStop" parent="." unique_id=1939683072 instance=ExtResource("2_ee14c")]
 offset_left = 880.0
-offset_top = 369.0
+offset_top = 514.0
 offset_right = 1040.0
-offset_bottom = 529.0
+offset_bottom = 674.0
 
-[node name="Sequence" parent="." instance=ExtResource("3_fhb8o")]
-offset_left = 792.0
-offset_top = 907.0
-offset_right = 1128.0
-offset_bottom = 1003.0
+[node name="PianoRoll" parent="." unique_id=890019107 instance=ExtResource("7_rlxeh")]
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 461.0
+offset_top = 64.0
+offset_right = 461.0
+offset_bottom = 64.0
+grow_horizontal = 1
+grow_vertical = 1
+fan_radius_inner = 580.0
+fan_radius_outer = 775.0
+fan_angle_span = 90.0
+fan_origin = Vector2(500, 750)
 
-[node name="Tray" parent="." instance=ExtResource("8_rlxeh")]
-position = Vector2(1587, 450)
+[node name="Tray" parent="." unique_id=1395979546 instance=ExtResource("8_rlxeh")]
+position = Vector2(960, 1068)
+rotation = 1.5707964
 
-[node name="Tools" type="Control" parent="."]
+[node name="Tools" type="Control" parent="." unique_id=939070579]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Header" type="Label" parent="Tools"]
+[node name="Header" type="Label" parent="Tools" unique_id=1418214907]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 58.0
@@ -74,7 +87,7 @@ theme_override_font_sizes/font_size = 16
 text = "Dev Tools
 Use ` (tilde) to hide"
 
-[node name="BPMLabel" type="Label" parent="Tools"]
+[node name="BPMLabel" type="Label" parent="Tools" unique_id=1442154517]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 138.0
@@ -85,7 +98,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Beats per minute (commits on blur)"
 
-[node name="BPM" type="TextEdit" parent="Tools"]
+[node name="BPM" type="TextEdit" parent="Tools" unique_id=260617024]
 custom_minimum_size = Vector2(160, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -96,7 +109,7 @@ theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 placeholder_text = "Beats per minute"
 
-[node name="Interval1Label" type="Label" parent="Tools"]
+[node name="Interval1Label" type="Label" parent="Tools" unique_id=492282652]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 270.0
@@ -107,7 +120,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring1 Interval"
 
-[node name="Ring0Interval" type="OptionButton" parent="Tools"]
+[node name="Ring0Interval" type="OptionButton" parent="Tools" unique_id=1728301191]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -117,7 +130,7 @@ offset_bottom = 332.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Interval2Label" type="Label" parent="Tools"]
+[node name="Interval2Label" type="Label" parent="Tools" unique_id=1440302780]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 337.0
@@ -128,7 +141,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring2 Interval"
 
-[node name="Ring1Interval" type="OptionButton" parent="Tools"]
+[node name="Ring1Interval" type="OptionButton" parent="Tools" unique_id=131328411]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -138,7 +151,7 @@ offset_bottom = 398.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="INterval3Label" type="Label" parent="Tools"]
+[node name="INterval3Label" type="Label" parent="Tools" unique_id=1182243796]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 407.0
@@ -149,7 +162,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring3 Interval"
 
-[node name="Ring2Interval" type="OptionButton" parent="Tools"]
+[node name="Ring2Interval" type="OptionButton" parent="Tools" unique_id=488989438]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -159,18 +172,7 @@ offset_bottom = 467.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Disclaimer" type="Label" parent="Tools"]
-layout_mode = 0
-offset_left = 57.0
-offset_top = 476.0
-offset_right = 429.0
-offset_bottom = 499.0
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "It's not eating your orbs, it's swapping between 3 groups of slots"
-
-[node name="RotationModelLabel" type="Label" parent="Tools"]
+[node name="RotationModelLabel" type="Label" parent="Tools" unique_id=866710032]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 533.0
@@ -181,7 +183,7 @@ theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Rotation Model"
 
-[node name="RotationModel" type="OptionButton" parent="Tools"]
+[node name="RotationModel" type="OptionButton" parent="Tools" unique_id=139489791]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -191,7 +193,7 @@ offset_bottom = 591.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="CustomMultField" type="TextEdit" parent="Tools"]
+[node name="CustomMultField" type="TextEdit" parent="Tools" unique_id=327080550]
 custom_minimum_size = Vector2(320, 40)
 layout_mode = 0
 offset_left = 56.0
@@ -202,7 +204,7 @@ theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 placeholder_text = "1.0, 1.0, 1.0"
 
-[node name="Reset" type="Button" parent="Tools"]
+[node name="Reset" type="Button" parent="Tools" unique_id=1522969885]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -220,7 +222,7 @@ theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Reset scene"
 
-[node name="Export" type="Button" parent="Tools"]
+[node name="Export" type="Button" parent="Tools" unique_id=1479989975]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -238,6 +240,24 @@ theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Print as solution json"
 
+[node name="FillSlots" type="Button" parent="Tools" unique_id=712819057]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 46.0
+offset_top = 872.0
+offset_right = 402.0
+offset_bottom = 914.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "Fill all slots with 1 random orb"
+
 [connection signal="focus_exited" from="Tools/BPM" to="." method="_on_bpm_committed"]
 [connection signal="item_selected" from="Tools/Ring0Interval" to="." method="_on_ring0_interval_selected"]
 [connection signal="item_selected" from="Tools/Ring1Interval" to="." method="_on_ring1_interval_selected"]
@@ -246,3 +266,4 @@ text = "Print as solution json"
 [connection signal="focus_exited" from="Tools/CustomMultField" to="." method="_on_custom_mult_committed"]
 [connection signal="pressed" from="Tools/Reset" to="." method="_on_reset_pressed"]
 [connection signal="pressed" from="Tools/Export" to="." method="_on_export_pressed"]
+[connection signal="pressed" from="Tools/FillSlots" to="." method="_on_fill_slots_pressed"]

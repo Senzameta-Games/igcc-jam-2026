@@ -2,6 +2,7 @@ extends Node
 
 signal started
 signal stopped
+signal tick_advanced(tick_index: int)
 
 var is_playing: bool = false
 
