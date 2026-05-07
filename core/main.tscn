@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
 [ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="5_xa854"]
+[ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
@@ -22,3 +23,24 @@ texture = ExtResource("2_r77kf")
 [node name="Tray" parent="." unique_id=835271133 instance=ExtResource("5_xa854")]
 position = Vector2(960, 1068)
 rotation = 1.5707964
+
+[node name="DetectionFeedback" type="Node2D" parent="." unique_id=1631393910]
+
+[node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
+
+[node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 461.0
+offset_top = 64.0
+offset_right = 461.0
+offset_bottom = 64.0
+grow_horizontal = 1
+grow_vertical = 1
+fan_radius_inner = 580.0
+fan_radius_outer = 775.0
+fan_angle_span = 90.0
+fan_origin = Vector2(500, 750)

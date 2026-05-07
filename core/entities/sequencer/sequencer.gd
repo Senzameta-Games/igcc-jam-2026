@@ -4,6 +4,8 @@ extends Node2D
 ## Sequencer owns BPM and all ring rotation state.
 ## Rings are passive. They receive rot_t each frame and apply it.
 
+signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int)
+
 enum RotationModel { QUANTIZED, CUSTOM }
 
 const RING_COUNT: int = 3
@@ -17,11 +19,8 @@ const MAX_BPM: float = 90.0
 ## [1.0, 1.0, 1.0] is the same as QUANTIZED.
 @export var custom_multipliers: Array[float] = [1.0, 1.0, 1.0]
 
-@onready var _piano_roll: PianoRoll = $PianoRoll
 @onready var _button: Button = $StartStop/Button
 @onready var _rings_container: Node2D = $Rings
-@onready var _detectors: Node2D = $Detectors
-@onready var _feedback: Node2D = $DetectionFeedback
 
 # Dev tools
 @onready var _tools: Control = $Tools
@@ -34,8 +33,6 @@ const MAX_BPM: float = 90.0
 @onready var _reset: Button = $Tools/Reset
 @onready var _export: Button = $Tools/Export
 @onready var _fill_slots: Button = $Tools/FillSlots
-
-const ORB_TRAIL_SCENE: PackedScene = preload("res://core/entities/orbs/orb_trail.tscn")
 
 var _rings: Array[Ring] = []
 var _rotations: Array[float] = [0.0, 0.0, 0.0]
@@ -60,14 +57,11 @@ func _ready() -> void:
 		if ring == null:
 			continue
 		_rings.append(ring)
+		ring.note_triggered.connect(_on_ring_note_triggered)
 	_rings.sort_custom(func(a: Ring, b: Ring) -> bool:
 		return a.ring_index < b.ring_index
 	)
 	_setup_dev_tools()
-
-## Called by Main after Tray is ready. Must be called before playback.
-func setup(tray: Tray) -> void:
-	_piano_roll.setup(tray)
 
 func inject_hand(hand: Hand) -> void:
 	var controller := _button as PlaybackButton
@@ -76,11 +70,10 @@ func inject_hand(hand: Hand) -> void:
 	controller.connect_hand(hand)
 	for ring: Ring in _rings:
 		ring.connect_hand_to_slot(hand)
-	for child: Node in _detectors.get_children():
-		var detector := child as Detector
-		if detector == null:
-			continue
-		detector.orb_passed.connect(_on_orb_passed)
+
+## Returns the current BPM measure duration in seconds. Used by Main for trail timing.
+func get_measure_duration() -> float:
+	return (60.0 / bpm) * BEATS_PER_MEASURE
 
 func _physics_process(delta: float) -> void:
 	if not Playback.is_playing:
@@ -136,34 +129,29 @@ func _on_playback_started() -> void:
 func _on_playback_stopped() -> void:
 	_resetting = true
 
-func _on_orb_passed(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, ring_idx: int) -> void:
+func _on_ring_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, ring_index: int) -> void:
 	_pending.append({
 		"orb_id": orb_id,
 		"texture": texture,
 		"from": from_position,
-		"ring_idx": ring_idx,
+		"ring_idx": ring_index,
 		"tick": _current_tick
 	})
 	if not _process_queued:
 		_process_queued = true
-		call_deferred("_process_pending")
+		call_deferred("_flush_pending")
 
-func _process_pending() -> void:
+func _flush_pending() -> void:
 	_process_queued = false
 	_pending.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return a.ring_idx < b.ring_idx
 	)
 	for entry: Dictionary in _pending:
-		var target: Vector2 = _piano_roll.get_cell_position(entry.tick, entry.orb_id)
-		var trail := ORB_TRAIL_SCENE.instantiate() as OrbTrail
-		_feedback.add_child(trail)
-		trail.setup(entry.texture, entry.from, target)
-		var captured_id: Orb.OrbType = entry.orb_id
-		var captured_texture: Texture2D = entry.texture
-		var captured_tick: int = entry.tick
-		var measure_duration: float = (60.0 / bpm) * BEATS_PER_MEASURE
-		trail.arrived.connect(func() -> void:
-			_piano_roll.receive_orb(captured_id, captured_texture, captured_tick, measure_duration)
+		note_triggered.emit(
+			entry.orb_id as Orb.OrbType,
+			entry.texture as Texture2D,
+			entry.from as Vector2,
+			entry.tick as int
 		)
 	_pending.clear()
 
@@ -199,6 +187,7 @@ func _on_export_pressed() -> void:
 
 func _setup_dev_tools() -> void:
 	_bpm_field.text = str(bpm)
+	_bpm_field.focus_exited.connect(_on_bpm_committed)
 
 	var interval_buttons: Array[OptionButton] = [
 		_ring0_interval, _ring1_interval, _ring2_interval
