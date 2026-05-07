@@ -172,17 +172,6 @@ offset_bottom = 467.0
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Disclaimer" type="Label" parent="Tools" unique_id=1030698648]
-layout_mode = 0
-offset_left = 57.0
-offset_top = 476.0
-offset_right = 429.0
-offset_bottom = 499.0
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "It's not eating your orbs, it's swapping between 3 groups of slots"
-
 [node name="RotationModelLabel" type="Label" parent="Tools" unique_id=866710032]
 layout_mode = 0
 offset_left = 57.0
