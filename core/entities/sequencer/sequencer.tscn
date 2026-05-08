@@ -7,6 +7,22 @@
 [ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring-300r.tscn" id="4_pw2oc"]
 [ext_resource type="PackedScene" uid="uid://dp33fjwy0hngv" path="res://core/entities/detector/detector.tscn" id="6_pw2oc"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t7dap"]
+content_margin_left = 32.0
+content_margin_top = 32.0
+content_margin_right = 32.0
+content_margin_bottom = 32.0
+bg_color = Color(0.047557652, 0.047557652, 0.047557607, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0, 0.8, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
 [node name="Sequencer" type="Node2D" unique_id=1975801920]
 script = ExtResource("1_7ojyt")
 bpm = 40.0
@@ -40,217 +56,206 @@ offset_right = 1040.0
 offset_bottom = 674.0
 
 [node name="Tools" type="Control" parent="." unique_id=616792806]
+z_index = 20
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="Header" type="Label" parent="Tools" unique_id=1361608674]
-layout_mode = 0
-offset_left = 1486.0
-offset_top = 403.0
-offset_right = 1761.0
-offset_bottom = 452.0
+[node name="Panel" type="PanelContainer" parent="Tools" unique_id=333190472]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 41.0
+offset_top = 127.0
+offset_right = 677.0
+offset_bottom = 1009.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_t7dap")
+
+[node name="Layout" type="VBoxContainer" parent="Tools/Panel" unique_id=196089343]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Tools/Panel/Layout" unique_id=1361608674]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.94744676, 0.41838992, 1, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 16
 text = "Dev Tools
 Use ` (tilde) to hide"
 
-[node name="BPMLabel" type="Label" parent="Tools" unique_id=1271297089]
-layout_mode = 0
-offset_left = 1484.0
-offset_top = 472.0
-offset_right = 1759.0
-offset_bottom = 495.0
+[node name="Timing" type="VBoxContainer" parent="Tools/Panel/Layout" unique_id=1040760415]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing" unique_id=1342773520]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Timing and sequencer settings"
+
+[node name="BPM" type="VBoxContainer" parent="Tools/Panel/Layout/Timing" unique_id=1233602553]
+layout_mode = 2
+
+[node name="BPMLabel" type="Label" parent="Tools/Panel/Layout/Timing/BPM" unique_id=1271297089]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Beats per minute (commits on blur)"
 
-[node name="BPM" type="TextEdit" parent="Tools" unique_id=2142725685]
+[node name="BPM" type="TextEdit" parent="Tools/Panel/Layout/Timing/BPM" unique_id=2142725685]
 custom_minimum_size = Vector2(160, 40)
-layout_mode = 0
-offset_left = 1483.0
-offset_top = 495.0
-offset_right = 1643.0
-offset_bottom = 535.0
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 placeholder_text = "Beats per minute"
 
-[node name="Interval1Label" type="Label" parent="Tools" unique_id=588700541]
-layout_mode = 0
-offset_left = 1274.0
-offset_top = 725.0
-offset_right = 1549.0
-offset_bottom = 748.0
+[node name="Intervals" type="HBoxContainer" parent="Tools/Panel/Layout/Timing" unique_id=712160145]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Interval1" type="VBoxContainer" parent="Tools/Panel/Layout/Timing/Intervals" unique_id=756806189]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing/Intervals/Interval1" unique_id=588700541]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring1 Interval"
 
-[node name="Ring0Interval" type="OptionButton" parent="Tools" unique_id=2090710639]
-custom_minimum_size = Vector2(240, 40)
-layout_mode = 0
-offset_left = 1273.0
-offset_top = 747.0
-offset_right = 1513.0
-offset_bottom = 787.0
+[node name="Option" type="OptionButton" parent="Tools/Panel/Layout/Timing/Intervals/Interval1" unique_id=2090710639]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Interval2Label" type="Label" parent="Tools" unique_id=217006808]
-layout_mode = 0
-offset_left = 1276.0
-offset_top = 790.0
-offset_right = 1551.0
-offset_bottom = 813.0
+[node name="Interval2" type="VBoxContainer" parent="Tools/Panel/Layout/Timing/Intervals" unique_id=612017228]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing/Intervals/Interval2" unique_id=217006808]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring2 Interval"
 
-[node name="Ring1Interval" type="OptionButton" parent="Tools" unique_id=1650489552]
-custom_minimum_size = Vector2(240, 40)
-layout_mode = 0
-offset_left = 1275.0
-offset_top = 811.0
-offset_right = 1515.0
-offset_bottom = 851.0
+[node name="Option" type="OptionButton" parent="Tools/Panel/Layout/Timing/Intervals/Interval2" unique_id=1650489552]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="INterval3Label" type="Label" parent="Tools" unique_id=2022252772]
-layout_mode = 0
-offset_left = 1274.0
-offset_top = 859.0
-offset_right = 1549.0
-offset_bottom = 882.0
+[node name="Interval3" type="VBoxContainer" parent="Tools/Panel/Layout/Timing/Intervals" unique_id=562703353]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing/Intervals/Interval3" unique_id=2022252772]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring3 Interval"
 
-[node name="Ring2Interval" type="OptionButton" parent="Tools" unique_id=1021885382]
-custom_minimum_size = Vector2(240, 40)
-layout_mode = 0
-offset_left = 1273.0
-offset_top = 879.0
-offset_right = 1513.0
-offset_bottom = 919.0
+[node name="Option" type="OptionButton" parent="Tools/Panel/Layout/Timing/Intervals/Interval3" unique_id=1021885382]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="RotationModelLabel" type="Label" parent="Tools" unique_id=850408348]
-layout_mode = 0
-offset_left = 1541.0
-offset_top = 727.0
-offset_right = 1816.0
-offset_bottom = 750.0
+[node name="Rotation" type="VBoxContainer" parent="Tools/Panel/Layout/Timing" unique_id=1368528883]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing/Rotation" unique_id=850408348]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Rotation Model"
 
-[node name="RotationModel" type="OptionButton" parent="Tools" unique_id=2131848746]
+[node name="Option" type="OptionButton" parent="Tools/Panel/Layout/Timing/Rotation" unique_id=2131848746]
 custom_minimum_size = Vector2(240, 40)
-layout_mode = 0
-offset_left = 1540.0
-offset_top = 745.0
-offset_right = 1780.0
-offset_bottom = 785.0
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="CustomMultField" type="TextEdit" parent="Tools" unique_id=1048511240]
+[node name="Field" type="TextEdit" parent="Tools/Panel/Layout/Timing/Rotation" unique_id=1048511240]
 custom_minimum_size = Vector2(320, 40)
-layout_mode = 0
-offset_left = 1540.0
-offset_top = 809.0
-offset_right = 1860.0
-offset_bottom = 849.0
+layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 placeholder_text = "1.0, 1.0, 1.0"
 
-[node name="Reset" type="Button" parent="Tools" unique_id=1006395446]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 1458.0
-offset_top = 531.0
-offset_right = 1681.0
-offset_bottom = 573.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MiscUtils" type="VBoxContainer" parent="Tools/Panel/Layout" unique_id=1921937481]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Tools/Panel/Layout/MiscUtils" unique_id=2028353018]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Misc. utilities"
+
+[node name="Reset" type="Button" parent="Tools/Panel/Layout/MiscUtils" unique_id=1006395446]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Reset scene"
 
-[node name="Export" type="Button" parent="Tools" unique_id=79612990]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 1457.0
-offset_top = 592.0
-offset_right = 1777.0
-offset_bottom = 634.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Print as solution json"
-
-[node name="FillSlots" type="Button" parent="Tools" unique_id=445448621]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 1458.0
-offset_top = 652.0
-offset_right = 1814.0
-offset_bottom = 694.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="FillSlots" type="Button" parent="Tools/Panel/Layout/MiscUtils" unique_id=445448621]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Fill all slots with 1 random orb"
 
-[node name="Load" type="Button" parent="Tools" unique_id=618998357]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 41.0
-offset_top = 994.0
-offset_right = 168.0
-offset_bottom = 1050.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="LevelData" type="VBoxContainer" parent="Tools/Panel/Layout" unique_id=1011192238]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Tools/Panel/Layout/LevelData" unique_id=491579240]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Level data tools"
+
+[node name="Export" type="Button" parent="Tools/Panel/Layout/LevelData" unique_id=79612990]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
-text = "Load"
+text = "Print current config as solution"
 
-[node name="LoadText" type="TextEdit" parent="Tools" unique_id=964112327]
-layout_mode = 0
-offset_left = 56.0
-offset_top = 849.0
-offset_right = 412.0
-offset_bottom = 999.0
+[node name="Load" type="VBoxContainer" parent="Tools/Panel/Layout/LevelData" unique_id=1915839187]
+layout_mode = 2
+
+[node name="SolutionLabel" type="Label" parent="Tools/Panel/Layout/LevelData/Load" unique_id=57698057]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 12
+text = "Solution data"
+
+[node name="LoadText" type="TextEdit" parent="Tools/Panel/Layout/LevelData/Load" unique_id=964112327]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
 text = "{\"solution\": [[], [], [1,2], [], [1,2,3], [], [], [2], [1,2,3], [], [], [], [0,3,2], [1], [2], [3]]}"
 wrap_mode = 1
+
+[node name="Load" type="Button" parent="Tools/Panel/Layout/LevelData/Load" unique_id=618998357]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "Load this solution"

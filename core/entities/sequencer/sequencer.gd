@@ -27,12 +27,12 @@ const MAX_BPM: float = 90.0
 
 # Dev tools
 @onready var _tools: Control = $Tools
-@onready var _bpm_field: TextEdit = $Tools/BPM
-@onready var _ring0_interval: OptionButton = $Tools/Ring0Interval
-@onready var _ring1_interval: OptionButton = $Tools/Ring1Interval
-@onready var _ring2_interval: OptionButton = $Tools/Ring2Interval
-@onready var _rotation_model_select: OptionButton = $Tools/RotationModel
-@onready var _custom_multipliers_field: TextEdit = $Tools/CustomMultField
+@onready var _bpm_field: TextEdit = $Tools/Panel/Layout/Timing/BPM/BPM
+@onready var _ring0_interval: OptionButton = $Tools/Panel/Layout/Timing/Intervals/Interval1/Option
+@onready var _ring1_interval: OptionButton = $Tools/Panel/Layout/Timing/Intervals/Interval2/Option
+@onready var _ring2_interval: OptionButton = $Tools/Panel/Layout/Timing/Intervals/Interval3/Option
+@onready var _rotation_model_select: OptionButton = $Tools/Panel/Layout/Timing/Rotation/Option
+@onready var _custom_multipliers_field: TextEdit = $Tools/Panel/Layout/Timing/Rotation/Field
 
 var _rings: Array[Ring] = []
 var _rotations: Array[float] = [0.0, 0.0, 0.0]
@@ -211,10 +211,10 @@ func _setup_dev_tools() -> void:
 	_custom_multipliers_field.visible = rotation_model == RotationModel.CUSTOM
 	_custom_multipliers_field.focus_exited.connect(_on_custom_multipliers_committed)
 
-	var reset_btn := $Tools/Reset as Button
-	var export_btn := $Tools/Export as Button
-	var fill_btn := $Tools/FillSlots as Button
-	var load_btn := $Tools/Load as Button
+	var reset_btn := $Tools/Panel/Layout/MiscUtils/Reset as Button
+	var export_btn := $Tools/Panel/Layout/LevelData/Export as Button
+	var fill_btn := $Tools/Panel/Layout/MiscUtils/FillSlots as Button
+	var load_btn := $Tools/Panel/Layout/LevelData/Load/Load as Button
 	reset_btn.pressed.connect(_on_reset_pressed)
 	export_btn.pressed.connect(_on_export_pressed)
 	fill_btn.pressed.connect(_on_fill_slots_pressed)
@@ -282,7 +282,7 @@ func _multipliers_to_string(multipliers: Array[float]) -> String:
 	return ", ".join(parts)
 
 func _on_load_slots_pressed() -> void:
-	var load_obj = JSON.parse_string($Tools/LoadText.text)
+	var load_obj = JSON.parse_string($Tools/Panel/Layout/LevelData/Load/LoadText.text)
 	if(load_obj == null):
 		return
 	load_game(load_obj)
