@@ -289,20 +289,20 @@ func load_game(json_data: Dictionary) -> void:
 		var orb_arr = solution[index]
 		match orb_arr.size():
 			1:
-				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
+				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
 			2:
-				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
-				add_orb_to_slot(_rings[1].get_slots()[index / 2], orb_arr[1])
+				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
+				add_orb_to_slot(_rings[1].slot_at_modified_index(index), orb_arr[1])
 			3:
-				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
-				add_orb_to_slot(_rings[1].get_slots()[index / 2], orb_arr[1])
-				add_orb_to_slot(_rings[0].get_slots()[index / 4], orb_arr[2])
+				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
+				add_orb_to_slot(_rings[1].slot_at_modified_index(index), orb_arr[1])
+				add_orb_to_slot(_rings[0].slot_at_modified_index(index), orb_arr[2])
 	
 	print("loaded")
 
 func add_orb_to_slot(slot: Slot, index: int = -1) -> void:
 	var curr_orb = generate_orb(index)
-	if curr_orb == null:
+	if curr_orb == null or slot == null:
 		return
 	slot.add_child(curr_orb)
 	slot.receive_orb(curr_orb)
