@@ -6,6 +6,7 @@ extends Node2D
 @onready var _piano_roll: PianoRoll = $SkyLayer/PianoRoll
 @onready var _feedback: Node2D = $DetectionFeedback
 @onready var _background: Sprite2D = $Background
+@onready var _playback_button: PlaybackButton = $Sequencer/StartStop/Button
 
 const ORB_TRAIL_SCENE: PackedScene = preload("res://core/entities/orbs/orb_trail.tscn")
 
@@ -13,8 +14,7 @@ func _ready() -> void:
 	_background.position = get_viewport_rect().size / 2
 	await get_tree().process_frame
 	_piano_roll.setup(_tray)
-	_sequencer.inject_hand(_hand)
-	_tray.connect_hand(_hand)
+	_hand.connect_button(_playback_button)
 	_sequencer.note_triggered.connect(_on_note_triggered)
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int) -> void:
