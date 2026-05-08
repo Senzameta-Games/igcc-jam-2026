@@ -7,6 +7,8 @@ extends Node2D
 @onready var _feedback: Node2D = $DetectionFeedback
 @onready var _background: Sprite2D = $Background
 @onready var _playback_button: PlaybackButton = $Sequencer/StartStop/Button
+@onready var _skylayer: Node2D = $SkyLayer
+@onready var _test_rotate_btn: Button = $TestRotate
 
 const ORB_TRAIL_SCENE: PackedScene = preload("res://core/entities/orbs/orb_trail.tscn")
 
@@ -17,16 +19,21 @@ func _ready() -> void:
 	_piano_roll.setup(_tray)
 	_hand.connect_button(_playback_button)
 	_sequencer.note_triggered.connect(_on_note_triggered)
+	_test_rotate_btn.pressed.connect(_on_test_rotate_pressed)
+	
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int) -> void:
 	var target: Vector2 = _piano_roll.get_cell_position(tick, orb_id)
 	var trail := ORB_TRAIL_SCENE.instantiate() as OrbTrail
 	_feedback.add_child(trail)
-	trail.setup(texture, from_position, target)
+	trail.setup(texture, from_position, target, _sequencer.global_position)
 	var measure_duration: float = _sequencer.get_measure_duration()
 	trail.arrived.connect(func() -> void:
 		_piano_roll.receive_orb(orb_id, texture, tick, measure_duration)
 	)
+
+func _on_test_rotate_pressed() -> void:
+	_skylayer.rotate_to_next()
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("dev_quit"):

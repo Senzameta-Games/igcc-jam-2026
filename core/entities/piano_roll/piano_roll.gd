@@ -1,5 +1,5 @@
 class_name PianoRoll
-extends Control
+extends Node2D
 
 ## Piano roll display. 16 columns (ticks) x N rows (unique notes, high to low).
 ## Laid out as a radial fan — rows are concentric arcs, columns are radial lines.
@@ -19,8 +19,8 @@ extends Control
 ## Number of rows to preview in editor (since notes are populated at runtime).
 @export var debug_row_count: int = 4
 
-@onready var _dots_container: Control = $Dots
-@onready var _playhead: Control = $Playhead
+@onready var _dots_container: Node2D = $Dots
+@onready var _playhead: Node2D = $Playhead
 
 const TICKS: int = 16
 const ARRIVAL_SCALE: float = 0.5
@@ -62,7 +62,7 @@ func get_cell_position(tick: int, orb_id: Orb.OrbType) -> Vector2:
 	var note_row: int = notes.find(orb_id)
 	if note_row == -1:
 		return global_position
-	return global_position + _cell_pos(tick, note_row)
+	return to_global(_cell_pos(tick, note_row))
 
 ## Places a dot at (tick, orb_id). Called when an orb trail arrives.
 func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, measure_duration: float) -> void:

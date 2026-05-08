@@ -14,48 +14,43 @@ metadata/_edit_vertical_guides_ = [49.0, -46.0]
 metadata/_edit_horizontal_guides_ = [-180.0, -60.0, 60.0, 181.0]
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1569164696]
-rotation = 1.5707964
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_d5w34")
 
 [node name="Slots" type="Node2D" parent="." unique_id=856576797]
 
 [node name="Slot0" parent="Slots" unique_id=136360553 instance=ExtResource("1_ulkqu")]
-position = Vector2(-46, -180)
+position = Vector2(-54, -189)
 stack_count = 8
 
 [node name="Orb" parent="Slots/Slot0" unique_id=552011164 instance=ExtResource("4_olegs")]
-orb_id = 0
 
 [node name="Slot1" parent="Slots" unique_id=849978761 instance=ExtResource("1_ulkqu")]
-position = Vector2(-46, -60)
+position = Vector2(-30, -100)
 stack_count = 8
 
 [node name="Orb" parent="Slots/Slot1" unique_id=987454045 instance=ExtResource("5_1dufa")]
-orb_id = 1
 
 [node name="Slot2" parent="Slots" unique_id=694147557 instance=ExtResource("1_ulkqu")]
-position = Vector2(-46, 60)
+position = Vector2(-3, -10)
 stack_count = 8
 
 [node name="Orb" parent="Slots/Slot2" unique_id=1316206388 instance=ExtResource("6_jn6ln")]
-orb_id = 2
 
 [node name="Slot3" parent="Slots" unique_id=341874409 instance=ExtResource("1_ulkqu")]
-position = Vector2(-46, 181)
+position = Vector2(22, 79)
 stack_count = 8
 
 [node name="Orb" parent="Slots/Slot3" unique_id=562958121 instance=ExtResource("7_0vinb")]
-orb_id = 3
 
 [node name="Slot4" parent="Slots" unique_id=1912150730 instance=ExtResource("1_ulkqu")]
-position = Vector2(49, -180)
+position = Vector2(-133, -118)
 
 [node name="Slot5" parent="Slots" unique_id=1700766379 instance=ExtResource("1_ulkqu")]
-position = Vector2(49, -60)
+position = Vector2(-107, -27)
 
 [node name="Slot6" parent="Slots" unique_id=927165811 instance=ExtResource("1_ulkqu")]
-position = Vector2(49, 60)
+position = Vector2(-80, 61)
 
 [node name="Slot7" parent="Slots" unique_id=2037920540 instance=ExtResource("1_ulkqu")]
-position = Vector2(49, 181)
+position = Vector2(-54, 150)
