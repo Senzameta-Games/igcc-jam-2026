@@ -282,27 +282,22 @@ func _on_load_slots_pressed() -> void:
 	
 
 func load_game(json_data: Dictionary) -> void:
+	for ring: Ring in _rings:
+		ring.eject_all_orbs()
 	var solution = json_data["solution"]
 	for index in solution.size():
 		var orb_arr = solution[index]
-		if(orb_arr.size() == 0):
-			continue
-		match(orb_arr.size()):
-			0:
-				pass
+		match orb_arr.size():
 			1:
 				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
-				pass
 			2:
 				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
-				add_orb_to_slot(_rings[1].get_slots()[index/2], orb_arr[1])
-				pass
+				add_orb_to_slot(_rings[1].get_slots()[index / 2], orb_arr[1])
 			3:
 				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
-				add_orb_to_slot(_rings[1].get_slots()[index/2], orb_arr[1])
-				add_orb_to_slot(_rings[0].get_slots()[index/4], orb_arr[2])
-				pass
-		
+				add_orb_to_slot(_rings[1].get_slots()[index / 2], orb_arr[1])
+				add_orb_to_slot(_rings[0].get_slots()[index / 4], orb_arr[2])
+	
 	print("loaded")
 
 func add_orb_to_slot(slot: Slot, index: int = -1) -> void:
