@@ -49,8 +49,9 @@ func apply_rotation(rot_t: float) -> void:
 
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:
-		if slot.is_occupied():
-			slot.eject_orb()
+		while slot.is_occupied():
+			var removed_orb = slot.eject_orb()
+			removed_orb.queue_free()
 
 func get_slots() -> Array[Slot]:
 	return _slots
