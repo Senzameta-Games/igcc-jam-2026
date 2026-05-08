@@ -171,7 +171,7 @@ func export() -> void:
 		var curr_pos: Array = []
 		for ring_grid: Array in ring_grids:
 			if ring_grid[i] != null:
-				curr_pos.append((ring_grid[i] as Orb).orb_id)
+				curr_pos.push_front((ring_grid[i] as Orb).orb_id)
 		export_arr.append(curr_pos)
 	var export_obj = {
 		"solution": export_arr
@@ -252,6 +252,7 @@ func _on_rotation_model_selected(item_index: int) -> void:
 
 func _on_fill_slots_pressed() -> void:
 	for ring: Ring in _rings:
+		ring.eject_all_orbs()
 		for slot: Slot in ring.get_slots():
 			if slot.is_occupied():
 				continue

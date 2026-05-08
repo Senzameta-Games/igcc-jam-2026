@@ -109,10 +109,8 @@ func _calculate_slot_positions() -> void:
 func slot_at_modified_index(index: int) -> Slot:
 	if (load_modifier == 1):
 		return _slots[index]
-	var new_index = index / load_modifier
-	if(new_index % 2 == 0):
-		return _slots[new_index]
-	return null
+	var new_index = round(index / load_modifier)
+	return _slots[new_index]
 	
 func _get_load_modifier() -> int:
 	match interval_type:
