@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://bspubr8kdmch8" path="res://core/entities/orbs/F4_orb.tscn" id="6_jn6ln"]
 [ext_resource type="PackedScene" uid="uid://b63vf8wsa5o8l" path="res://core/entities/orbs/G4_orb.tscn" id="7_0vinb"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jn6ln"]
+size = Vector2(240, 540)
+
 [node name="Tray" type="Node2D" unique_id=835271133]
 script = ExtResource("1_5r44a")
 metadata/_edit_vertical_guides_ = [49.0, -46.0]
@@ -23,6 +26,7 @@ texture = ExtResource("2_d5w34")
 [node name="Slot0" parent="Slots" unique_id=136360553 instance=ExtResource("1_ulkqu")]
 position = Vector2(-46, -180)
 stack_count = 8
+in_tray = true
 
 [node name="Orb" parent="Slots/Slot0" unique_id=552011164 instance=ExtResource("4_olegs")]
 orb_id = 0
@@ -30,6 +34,7 @@ orb_id = 0
 [node name="Slot1" parent="Slots" unique_id=849978761 instance=ExtResource("1_ulkqu")]
 position = Vector2(-46, -60)
 stack_count = 8
+in_tray = true
 
 [node name="Orb" parent="Slots/Slot1" unique_id=987454045 instance=ExtResource("5_1dufa")]
 orb_id = 1
@@ -37,6 +42,7 @@ orb_id = 1
 [node name="Slot2" parent="Slots" unique_id=694147557 instance=ExtResource("1_ulkqu")]
 position = Vector2(-46, 60)
 stack_count = 8
+in_tray = true
 
 [node name="Orb" parent="Slots/Slot2" unique_id=1316206388 instance=ExtResource("6_jn6ln")]
 orb_id = 2
@@ -44,18 +50,28 @@ orb_id = 2
 [node name="Slot3" parent="Slots" unique_id=341874409 instance=ExtResource("1_ulkqu")]
 position = Vector2(-46, 181)
 stack_count = 8
+in_tray = true
 
 [node name="Orb" parent="Slots/Slot3" unique_id=562958121 instance=ExtResource("7_0vinb")]
 orb_id = 3
 
 [node name="Slot4" parent="Slots" unique_id=1912150730 instance=ExtResource("1_ulkqu")]
 position = Vector2(49, -180)
+in_tray = true
 
 [node name="Slot5" parent="Slots" unique_id=1700766379 instance=ExtResource("1_ulkqu")]
 position = Vector2(49, -60)
+in_tray = true
 
 [node name="Slot6" parent="Slots" unique_id=927165811 instance=ExtResource("1_ulkqu")]
 position = Vector2(49, 60)
+in_tray = true
 
 [node name="Slot7" parent="Slots" unique_id=2037920540 instance=ExtResource("1_ulkqu")]
 position = Vector2(49, 181)
+in_tray = true
+
+[node name="TrayArea" type="Area2D" parent="." unique_id=1418371354]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TrayArea" unique_id=2104296175]
+shape = SubResource("RectangleShape2D_jn6ln")

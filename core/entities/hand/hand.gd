@@ -35,10 +35,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if _held_orb != null:
 		for area: Area2D in _area.get_overlapping_areas():
-			var slot := area.get_parent() as Slot
-			if slot == null:
+			var parent = area.get_parent()
+			var slot_to_handle = null
+			if(parent is Slot):
+				slot_to_handle = parent as Slot
+			elif(parent is Tray):
+				var tray := parent as Tray
+				slot_to_handle = tray.get_slot_for_orb(_held_orb)
+				pass
+			
+			if slot_to_handle == null:
 				continue
-			try_drop(slot)
+			try_drop(slot_to_handle)
 			get_viewport().set_input_as_handled()
 			return
 	else:
