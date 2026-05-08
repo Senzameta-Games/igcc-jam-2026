@@ -19,7 +19,6 @@ const RESET_SPEED: float = 5.0
 const RESET_THRESHOLD: float = 0.001
 
 const SLOT_SCENE: PackedScene = preload("res://core/entities/slot/slot.tscn")
-
 @export var ring_index: int = 0
 @export var radius: float = 200.0:
 	set(value):
@@ -29,7 +28,10 @@ const SLOT_SCENE: PackedScene = preload("res://core/entities/slot/slot.tscn")
 @export var interval_type: IntervalType = IntervalType.QUARTER:
 	set(value):
 		interval_type = value
+		load_modifier = _get_load_modifier()
 		_rebuild_slots()
+
+var load_modifier = _get_load_modifier()
 
 @onready var _slots_container: Node2D = $Slots
 
@@ -47,8 +49,9 @@ func apply_rotation(rot_t: float) -> void:
 
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:
-		if slot.is_occupied():
-			slot.eject_orb()
+		while slot.is_occupied():
+			var removed_orb = slot.eject_orb()
+			removed_orb.queue_free()
 
 func get_slots() -> Array[Slot]:
 	return _slots
@@ -101,3 +104,20 @@ func _calculate_slot_positions() -> void:
 		_slots[i].index = i
 		var angle: float = (TAU / float(count)) * float(i)
 		_slots[i].position = Vector2(cos(angle), sin(angle)) * radius
+
+
+func slot_at_modified_index(index: int) -> Slot:
+	if (load_modifier == 1):
+		return _slots[index]
+	var new_index = round(index / load_modifier)
+	return _slots[new_index]
+	
+func _get_load_modifier() -> int:
+	match interval_type:
+		IntervalType.QUARTER:
+			return 4
+		IntervalType.EIGHTH:
+			return 2
+		IntervalType.SIXTEENTH:
+			return 1
+	return -1
