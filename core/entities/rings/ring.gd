@@ -5,6 +5,8 @@ extends Node2D
 ## Slots are spawned at runtime based on interval_type.
 ## ring_index maps this ring to its entry in Sequencer._rotations.
 
+signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_pos: Vector2, ring_index: int)
+
 enum IntervalType { QUARTER, EIGHTH, SIXTEENTH }
 
 const SLOT_COUNTS: Dictionary = {
@@ -32,10 +34,10 @@ const SLOT_SCENE: PackedScene = preload("res://core/entities/slot/slot.tscn")
 @onready var _slots_container: Node2D = $Slots
 
 var _slots: Array[Slot] = []
-var _hand: Hand = null
 
 func _ready() -> void:
 	_rebuild_slots()
+	_connect_detectors()
 
 func tick(rot_t: float) -> void:
 	rotation = rot_t * TAU
@@ -43,15 +45,10 @@ func tick(rot_t: float) -> void:
 func apply_rotation(rot_t: float) -> void:
 	rotation = rot_t * TAU
 
-func connect_hand_to_slot(hand: Hand) -> void:
-	_hand = hand
-	for slot: Slot in _slots:
-		_hand.connect_slot(slot)
-
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:
-		if slot.is_occupied() and _hand != null:
-			_hand.pick_up(slot.eject_orb())
+		if slot.is_occupied():
+			slot.eject_orb()
 
 func get_slots() -> Array[Slot]:
 	return _slots
@@ -69,12 +66,20 @@ func get_orbs() -> Array:
 		ret.append(slot.get_orb())
 	return ret
 
+func _connect_detectors() -> void:
+	for child: Node in get_children():
+		var detector := child as Detector
+		if detector == null:
+			continue
+		if not detector.orb_passed.is_connected(_on_detector_orb_passed):
+			detector.orb_passed.connect(_on_detector_orb_passed)
+
+func _on_detector_orb_passed(orb_id: Orb.OrbType, texture: Texture2D, from_pos: Vector2) -> void:
+	note_triggered.emit(orb_id, texture, from_pos, ring_index)
+
 func _rebuild_slots() -> void:
 	if _slots_container == null:
 		return
-	if _hand != null:
-		for slot: Slot in _slots:
-			_hand.disconnect_slot(slot)
 	eject_all_orbs()
 	for slot: Slot in _slots:
 		_slots_container.remove_child(slot)
@@ -87,9 +92,6 @@ func _rebuild_slots() -> void:
 		slot.index = i
 		_slots.append(slot)
 	_calculate_slot_positions()
-	if _hand != null:
-		for slot: Slot in _slots:
-			_hand.connect_slot(slot)
 
 func _calculate_slot_positions() -> void:
 	var count: int = _slots.size()
@@ -99,14 +101,3 @@ func _calculate_slot_positions() -> void:
 		_slots[i].index = i
 		var angle: float = (TAU / float(count)) * float(i)
 		_slots[i].position = Vector2(cos(angle), sin(angle)) * radius
-
-func _crossed_playhead(prev_orb_t: float, curr_orb_t: float) -> bool:
-	if curr_orb_t < prev_orb_t:
-		curr_orb_t += 1.0
-	var threshold: float = 0.0
-	if threshold < prev_orb_t:
-		threshold += 1.0
-	return prev_orb_t < threshold and threshold <= curr_orb_t
-
-func set_orb_at_slot(index: int, type: Orb.OrbType) -> void:
-	_slots[index].set_type(type)

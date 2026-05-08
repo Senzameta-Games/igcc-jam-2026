@@ -1,8 +1,6 @@
 class_name Slot
 extends Node2D
 
-signal slot_interacted(slot: Slot)
-
 @export var texture_empty: Texture2D
 @export var texture_occupied: Texture2D
 @export var texture_hover: Texture2D
@@ -24,6 +22,7 @@ var _hovered: bool = false
 @onready var _badge: Sprite2D = $Badge
 
 func _ready() -> void:
+	add_to_group("slots")
 	_drophint.visible = false
 	_drophint.scale = Vector2.ZERO
 	_badge.visible = false
@@ -37,7 +36,7 @@ func _ready() -> void:
 	_refresh_visual()
 
 func receive_orb(incoming: Orb) -> Orb:
-	# Empty slot path. Accept then type it
+	# Empty slot path. Accept and seat it.
 	if _orb == null:
 		_orb = incoming
 		_count = 1
@@ -45,18 +44,17 @@ func receive_orb(incoming: Orb) -> Orb:
 		_orb.land()
 		_refresh_visual()
 		return null
-	# Matching type path. stack it if under a max (currently 8)
+	# Matching type path. Stack it if under max (currently 8).
 	if incoming.orb_id == _orb.orb_id:
 		if _count < 8:
 			_count += 1
 			incoming.queue_free()
-			
 			_refresh_visual()
 			return null
 		else:
-			# Capped stack path. Reject it
+			# Capped stack path. Reject it.
 			return incoming
-	# Mismatched type. Reject it
+	# Mismatched type. Reject it.
 	return incoming
 
 func eject_orb() -> Orb:
@@ -123,14 +121,3 @@ func _on_area_mouse_entered() -> void:
 func _on_area_mouse_exited() -> void:
 	_hovered = false
 	_refresh_visual()
-
-func _on_area_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton:
-		var mb := event as InputEventMouseButton
-		if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-			slot_interacted.emit(self)
-			get_viewport().set_input_as_handled()
-
-func set_type(type: Orb.OrbType):
-	if(_orb != null):
-		_orb.orb_id = Orb.OrbType[Orb.OrbType.find_key(type)]
