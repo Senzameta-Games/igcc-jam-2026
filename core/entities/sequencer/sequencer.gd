@@ -171,9 +171,12 @@ func export() -> void:
 		var curr_pos: Array = []
 		for ring_grid: Array in ring_grids:
 			if ring_grid[i] != null:
-				curr_pos.append((ring_grid[i] as Orb).orb_id)
+				curr_pos.push_front((ring_grid[i] as Orb).orb_id)
 		export_arr.append(curr_pos)
-	print(export_arr)
+	var export_obj = {
+		"solution": export_arr
+	}
+	$Tools/LoadText.text = JSON.stringify(export_obj)
 
 func _on_export_pressed() -> void:
 	export()
@@ -211,9 +214,11 @@ func _setup_dev_tools() -> void:
 	var reset_btn := $Tools/Reset as Button
 	var export_btn := $Tools/Export as Button
 	var fill_btn := $Tools/FillSlots as Button
+	var load_btn := $Tools/Load as Button
 	reset_btn.pressed.connect(_on_reset_pressed)
 	export_btn.pressed.connect(_on_export_pressed)
 	fill_btn.pressed.connect(_on_fill_slots_pressed)
+	load_btn.pressed.connect(_on_load_slots_pressed)
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("hide_tools"):
@@ -247,15 +252,11 @@ func _on_rotation_model_selected(item_index: int) -> void:
 
 func _on_fill_slots_pressed() -> void:
 	for ring: Ring in _rings:
+		ring.eject_all_orbs()
 		for slot: Slot in ring.get_slots():
 			if slot.is_occupied():
 				continue
-			var random_type: Orb.OrbType = Orb.OrbType.values()[randi() % Orb.OrbType.size()]
-			var orb: Orb = OrbRegistry.spawn(random_type)
-			if orb == null:
-				continue
-			slot.add_child(orb)
-			slot.receive_orb(orb)
+			add_orb_to_slot(slot)
 
 func _on_custom_multipliers_committed() -> void:
 	var parts: Array[String] = []
@@ -279,3 +280,42 @@ func _multipliers_to_string(multipliers: Array[float]) -> String:
 	for m: float in multipliers:
 		parts.append(str(m))
 	return ", ".join(parts)
+
+func _on_load_slots_pressed() -> void:
+	var load_obj = JSON.parse_string($Tools/LoadText.text)
+	if(load_obj == null):
+		return
+	load_game(load_obj)
+	
+
+func load_game(json_data: Dictionary) -> void:
+	for ring: Ring in _rings:
+		ring.eject_all_orbs()
+	var solution = json_data["solution"]
+	for index in solution.size():
+		var orb_arr = solution[index]
+		match orb_arr.size():
+			1:
+				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
+			2:
+				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
+				add_orb_to_slot(_rings[1].slot_at_modified_index(index), orb_arr[1])
+			3:
+				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
+				add_orb_to_slot(_rings[1].slot_at_modified_index(index), orb_arr[1])
+				add_orb_to_slot(_rings[0].slot_at_modified_index(index), orb_arr[2])
+	
+	print("loaded")
+
+func add_orb_to_slot(slot: Slot, index: int = -1) -> void:
+	var curr_orb = generate_orb(index)
+	if curr_orb == null or slot == null:
+		return
+	slot.add_child(curr_orb)
+	slot.receive_orb(curr_orb)
+
+func generate_orb(orb_type_index: int = -1) -> Orb:
+	if(orb_type_index == -1):
+		orb_type_index = randi() % Orb.OrbType.size()
+	var random_type: Orb.OrbType = Orb.OrbType.values()[orb_type_index]
+	return OrbRegistry.spawn(random_type)
