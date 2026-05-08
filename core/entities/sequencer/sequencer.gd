@@ -173,7 +173,10 @@ func export() -> void:
 			if ring_grid[i] != null:
 				curr_pos.append((ring_grid[i] as Orb).orb_id)
 		export_arr.append(curr_pos)
-	print(export_arr)
+	var export_obj = {
+		"solution": export_arr
+	}
+	$Tools/LoadText.text = JSON.stringify(export_obj)
 
 func _on_export_pressed() -> void:
 	export()
@@ -278,7 +281,10 @@ func _multipliers_to_string(multipliers: Array[float]) -> String:
 	return ", ".join(parts)
 
 func _on_load_slots_pressed() -> void:
-	load_game({"solution": [[], [], [1,2], [], [1,2,3], [], [], [2], [1,2,3], [], [], [], [0,3,2], [1], [2], [3]]})
+	var load_obj = JSON.parse_string($Tools/LoadText.text)
+	if(load_obj == null):
+		return
+	load_game(load_obj)
 	
 
 func load_game(json_data: Dictionary) -> void:
