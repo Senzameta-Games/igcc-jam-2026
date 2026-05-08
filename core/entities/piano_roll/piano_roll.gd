@@ -25,9 +25,9 @@ extends Node2D
 const TICKS: int = 16
 const ARRIVAL_SCALE: float = 0.5
 
-const _DEBUG_ARC_COLOR: Color = Color(1.0, 0.0, 1.0, 0.4)
-const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.15)
-const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.6)
+const _DEBUG_ARC_COLOR: Color = Color(1.0, 1.0, 1.0, 0.1)
+const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.1)
+const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.1)
 const _DEBUG_ARC_SEGMENTS: int = 48
 
 ## Ordered high to low — index 0 is highest pitch, index N-1 is lowest.
@@ -109,6 +109,7 @@ func _update_playhead(tick: float) -> void:
 	var angle_rad: float = _tick_angle_rad(tick)
 	var mid_radius: float = (fan_radius_inner + fan_radius_outer) * 0.5
 	_playhead.position = fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * mid_radius
+	_playhead.rotation = angle_rad + PI * 0.5
 
 ## Returns local position for a cell in fan/polar space.
 func _cell_pos(tick: int, note_row: int) -> Vector2:
