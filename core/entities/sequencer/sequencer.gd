@@ -252,11 +252,7 @@ func _on_fill_slots_pressed() -> void:
 		for slot: Slot in ring.get_slots():
 			if slot.is_occupied():
 				continue
-			var orb: Orb = generate_orb()
-			if orb == null:
-				continue
-			slot.add_child(orb)
-			slot.receive_orb(orb)
+			add_orb_to_slot(slot)
 
 func _on_custom_multipliers_committed() -> void:
 	var parts: Array[String] = []
@@ -282,7 +278,7 @@ func _multipliers_to_string(multipliers: Array[float]) -> String:
 	return ", ".join(parts)
 
 func _on_load_slots_pressed() -> void:
-	load_game({"solution": [[], [], [1], [], [3], [], [], [2], [], [], [], [], [0], [1], [2], [3]]})
+	load_game({"solution": [[], [], [1,2], [], [1,2,3], [], [], [2], [1,2,3], [], [], [], [0,3,2], [1], [2], [3]]})
 	
 
 func load_game(json_data: Dictionary) -> void:
@@ -299,24 +295,22 @@ func load_game(json_data: Dictionary) -> void:
 				pass
 			2:
 				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
-				add_orb_to_slot(_rings[1].get_slots()[index], orb_arr[1])
+				add_orb_to_slot(_rings[1].get_slots()[index/2], orb_arr[1])
 				pass
 			3:
 				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
-				add_orb_to_slot(_rings[1].get_slots()[index], orb_arr[1])
-				add_orb_to_slot(_rings[0].get_slots()[index], orb_arr[2])
+				add_orb_to_slot(_rings[1].get_slots()[index/2], orb_arr[1])
+				add_orb_to_slot(_rings[0].get_slots()[index/4], orb_arr[2])
 				pass
 		
 	print("loaded")
 
-func add_orb_to_slot(slot: Slot, index: int) -> void:
+func add_orb_to_slot(slot: Slot, index: int = -1) -> void:
 	var curr_orb = generate_orb(index)
 	if curr_orb == null:
 		return
 	slot.add_child(curr_orb)
 	slot.receive_orb(curr_orb)
-	
-	
 
 func generate_orb(orb_type_index: int = -1) -> Orb:
 	if(orb_type_index == -1):
