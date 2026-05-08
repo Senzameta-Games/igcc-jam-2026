@@ -11,6 +11,7 @@ extends Node2D
 const ORB_TRAIL_SCENE: PackedScene = preload("res://core/entities/orbs/orb_trail.tscn")
 
 func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	_background.position = get_viewport_rect().size / 2
 	await get_tree().process_frame
 	_piano_roll.setup(_tray)

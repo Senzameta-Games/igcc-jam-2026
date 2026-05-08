@@ -8,7 +8,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v2pej"]
 
 [node name="Hand" type="Node2D" unique_id=797971003]
-z_index = 30
+z_index = 99
 script = ExtResource("1_ljdg1")
 texture_empty = ExtResource("2_oaghj")
 texture_holding = ExtResource("3_y17g0")

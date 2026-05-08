@@ -94,13 +94,13 @@ func _on_button_mouse_exited() -> void:
 func _refresh_texture() -> void:
 	if _pointing and _held_orb == null:
 		_sprite.texture = texture_pointing
-		_sprite.offset = Vector2(86.0, 98)
+		_sprite.offset = Vector2(76, 120)
 	elif _held_orb != null:
 		_sprite.texture = texture_holding
-		_sprite.offset = Vector2(86.0, -28.0)
+		_sprite.offset = Vector2(70, 80)
 	else:
 		_sprite.texture = texture_empty
-		_sprite.offset = Vector2(86.0, -28.0)
+		_sprite.offset = Vector2(70, 80)
 
 func _show_all_drophints() -> void:
 	for node: Node in get_tree().get_nodes_in_group("slots"):
