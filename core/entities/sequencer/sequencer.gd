@@ -61,7 +61,6 @@ func _ready() -> void:
 		return a.ring_index < b.ring_index
 	)
 	_setup_dev_tools()
-	load_game({"solution": [[], [], [], [], [], [], [], [], [], [], [], [], [0], [1], [2], [3]]})
 
 ## Returns the current BPM measure duration in seconds. Used by Main for trail timing.
 func get_measure_duration() -> float:
@@ -178,7 +177,6 @@ func export() -> void:
 
 func _on_export_pressed() -> void:
 	export()
-	load_game({"solution": [[], [], [], [], [], [], [], [], [], [], [], [], [0], [1], [2], [3]]})
 
 # --- Dev Tools ---
 
@@ -213,9 +211,11 @@ func _setup_dev_tools() -> void:
 	var reset_btn := $Tools/Reset as Button
 	var export_btn := $Tools/Export as Button
 	var fill_btn := $Tools/FillSlots as Button
+	var load_btn := $Tools/Load as Button
 	reset_btn.pressed.connect(_on_reset_pressed)
 	export_btn.pressed.connect(_on_export_pressed)
 	fill_btn.pressed.connect(_on_fill_slots_pressed)
+	load_btn.pressed.connect(_on_load_slots_pressed)
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("hide_tools"):
@@ -252,8 +252,7 @@ func _on_fill_slots_pressed() -> void:
 		for slot: Slot in ring.get_slots():
 			if slot.is_occupied():
 				continue
-			var random_type: Orb.OrbType = Orb.OrbType.values()[randi() % Orb.OrbType.size()]
-			var orb: Orb = OrbRegistry.spawn(random_type)
+			var orb: Orb = generate_orb()
 			if orb == null:
 				continue
 			slot.add_child(orb)
@@ -282,10 +281,12 @@ func _multipliers_to_string(multipliers: Array[float]) -> String:
 		parts.append(str(m))
 	return ", ".join(parts)
 
+func _on_load_slots_pressed() -> void:
+	load_game({"solution": [[], [], [1], [], [3], [], [], [2], [], [], [], [], [0], [1], [2], [3]]})
+	
+
 func load_game(json_data: Dictionary) -> void:
 	var solution = json_data["solution"]
-	var export_arr = []
-	var ring_grids = []
 	for index in solution.size():
 		var orb_arr = solution[index]
 		if(orb_arr.size() == 0):
@@ -294,16 +295,31 @@ func load_game(json_data: Dictionary) -> void:
 			0:
 				pass
 			1:
-				_rings[2].set_orb_at_slot(index, orb_arr[0])
+				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
 				pass
 			2:
-				_rings[2].set_orb_at_slot(index, orb_arr[0])
-				_rings[1].set_orb_at_slot(index, orb_arr[1])
+				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
+				add_orb_to_slot(_rings[1].get_slots()[index], orb_arr[1])
 				pass
 			3:
-				_rings[2].set_orb_at_slot(index, orb_arr[0])
-				_rings[1].set_orb_at_slot(index, orb_arr[1])
-				_rings[0].set_orb_at_slot(index, orb_arr[2])
+				add_orb_to_slot(_rings[2].get_slots()[index], orb_arr[0])
+				add_orb_to_slot(_rings[1].get_slots()[index], orb_arr[1])
+				add_orb_to_slot(_rings[0].get_slots()[index], orb_arr[2])
 				pass
 		
 	print("loaded")
+
+func add_orb_to_slot(slot: Slot, index: int) -> void:
+	var curr_orb = generate_orb(index)
+	if curr_orb == null:
+		return
+	slot.add_child(curr_orb)
+	slot.receive_orb(curr_orb)
+	
+	
+
+func generate_orb(orb_type_index: int = -1) -> Orb:
+	if(orb_type_index == -1):
+		orb_type_index = randi() % Orb.OrbType.size()
+	var random_type: Orb.OrbType = Orb.OrbType.values()[orb_type_index]
+	return OrbRegistry.spawn(random_type)
