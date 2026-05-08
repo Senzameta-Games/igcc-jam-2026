@@ -26,13 +26,13 @@ const MAX_BPM: float = 90.0
 @onready var _rings_container: Node2D = $Rings
 
 # Dev tools
-@onready var _tools: Control = $Tools
-@onready var _bpm_field: TextEdit = $Tools/Panel/Layout/Timing/BPM/BPM
-@onready var _ring0_interval: OptionButton = $Tools/Panel/Layout/Timing/Intervals/Interval1/Option
-@onready var _ring1_interval: OptionButton = $Tools/Panel/Layout/Timing/Intervals/Interval2/Option
-@onready var _ring2_interval: OptionButton = $Tools/Panel/Layout/Timing/Intervals/Interval3/Option
-@onready var _rotation_model_select: OptionButton = $Tools/Panel/Layout/Timing/Rotation/Option
-@onready var _custom_multipliers_field: TextEdit = $Tools/Panel/Layout/Timing/Rotation/Field
+@onready var _tools: Control = $Tools/Layout/Form
+@onready var _bpm_field: TextEdit = $Tools/Layout/Form/Timing/BPM/BPM
+@onready var _ring0_interval: OptionButton = $Tools/Layout/Form/Timing/Intervals/Interval1/Option
+@onready var _ring1_interval: OptionButton = $Tools/Layout/Form/Timing/Intervals/Interval2/Option
+@onready var _ring2_interval: OptionButton = $Tools/Layout/Form/Timing/Intervals/Interval3/Option
+@onready var _rotation_model_select: OptionButton = $Tools/Layout/Form/Timing/Rotation/Option
+@onready var _custom_multipliers_field: TextEdit = $Tools/Layout/Form/Timing/Rotation/Field
 
 var _rings: Array[Ring] = []
 var _rotations: Array[float] = [0.0, 0.0, 0.0]
@@ -184,6 +184,7 @@ func _on_export_pressed() -> void:
 # --- Dev Tools ---
 
 func _setup_dev_tools() -> void:
+	_tools.visible = false
 	_bpm_field.text = str(bpm)
 	_bpm_field.focus_exited.connect(_on_bpm_committed)
 
@@ -211,14 +212,15 @@ func _setup_dev_tools() -> void:
 	_custom_multipliers_field.visible = rotation_model == RotationModel.CUSTOM
 	_custom_multipliers_field.focus_exited.connect(_on_custom_multipliers_committed)
 
-	var reset_btn := $Tools/Panel/Layout/MiscUtils/Reset as Button
-	var export_btn := $Tools/Panel/Layout/LevelData/Export as Button
-	var fill_btn := $Tools/Panel/Layout/MiscUtils/FillSlots as Button
-	var load_btn := $Tools/Panel/Layout/LevelData/Load/Load as Button
+	var reset_btn := $Tools/Layout/Form/MiscUtils/Reset as Button
+	var export_btn := $Tools/Layout/Form/LevelData/Export as Button
+	var fill_btn := $Tools/Layout/Form/MiscUtils/FillSlots as Button
+	var load_btn := $Tools/Layout/Form/LevelData/Load/Load as Button
 	reset_btn.pressed.connect(_on_reset_pressed)
 	export_btn.pressed.connect(_on_export_pressed)
 	fill_btn.pressed.connect(_on_fill_slots_pressed)
 	load_btn.pressed.connect(_on_load_slots_pressed)
+	
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("hide_tools"):

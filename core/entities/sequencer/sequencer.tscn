@@ -23,6 +23,10 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_t7dap"]
+color = Color(0.1148968, 0.11489681, 0.1148968, 1)
+thickness = 2
+
 [node name="Sequencer" type="Node2D" unique_id=1975801920]
 script = ExtResource("1_7ojyt")
 bpm = 40.0
@@ -55,205 +59,209 @@ offset_top = 514.0
 offset_right = 1040.0
 offset_bottom = 674.0
 
-[node name="Tools" type="Control" parent="." unique_id=616792806]
-z_index = 20
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Panel" type="PanelContainer" parent="Tools" unique_id=333190472]
+[node name="Tools" type="PanelContainer" parent="." unique_id=333190472]
+z_index = 12
 custom_minimum_size = Vector2(400, 0)
-layout_mode = 1
-anchors_preset = 4
+anchors_preset = -1
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 41.0
-offset_top = 127.0
+offset_top = 43.0
 offset_right = 677.0
-offset_bottom = 1009.0
-grow_vertical = 2
+offset_bottom = 156.0
+size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_t7dap")
 
-[node name="Layout" type="VBoxContainer" parent="Tools/Panel" unique_id=196089343]
+[node name="Layout" type="VBoxContainer" parent="Tools" unique_id=196089343]
 layout_mode = 2
+size_flags_vertical = 0
 theme_override_constants/separation = 24
 
-[node name="Title" type="Label" parent="Tools/Panel/Layout" unique_id=1361608674]
+[node name="Title" type="Label" parent="Tools/Layout" unique_id=1361608674]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94744676, 0.41838992, 1, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 16
 text = "Dev Tools
-Use ` (tilde) to hide"
+Use ` (tilde) to show/hide"
 
-[node name="Timing" type="VBoxContainer" parent="Tools/Panel/Layout" unique_id=1040760415]
+[node name="Form" type="VBoxContainer" parent="Tools/Layout" unique_id=1728004408]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 16
+
+[node name="Timing" type="VBoxContainer" parent="Tools/Layout/Form" unique_id=1040760415]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing" unique_id=1342773520]
+[node name="Label" type="Label" parent="Tools/Layout/Form/Timing" unique_id=1342773520]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 16
 text = "Timing and sequencer settings"
 
-[node name="BPM" type="VBoxContainer" parent="Tools/Panel/Layout/Timing" unique_id=1233602553]
+[node name="BPM" type="VBoxContainer" parent="Tools/Layout/Form/Timing" unique_id=1233602553]
 layout_mode = 2
 
-[node name="BPMLabel" type="Label" parent="Tools/Panel/Layout/Timing/BPM" unique_id=1271297089]
+[node name="BPMLabel" type="Label" parent="Tools/Layout/Form/Timing/BPM" unique_id=1271297089]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Beats per minute (commits on blur)"
 
-[node name="BPM" type="TextEdit" parent="Tools/Panel/Layout/Timing/BPM" unique_id=2142725685]
+[node name="BPM" type="TextEdit" parent="Tools/Layout/Form/Timing/BPM" unique_id=2142725685]
 custom_minimum_size = Vector2(160, 40)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 placeholder_text = "Beats per minute"
 
-[node name="Intervals" type="HBoxContainer" parent="Tools/Panel/Layout/Timing" unique_id=712160145]
+[node name="Intervals" type="HBoxContainer" parent="Tools/Layout/Form/Timing" unique_id=712160145]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Interval1" type="VBoxContainer" parent="Tools/Panel/Layout/Timing/Intervals" unique_id=756806189]
+[node name="Interval1" type="VBoxContainer" parent="Tools/Layout/Form/Timing/Intervals" unique_id=756806189]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing/Intervals/Interval1" unique_id=588700541]
+[node name="Label" type="Label" parent="Tools/Layout/Form/Timing/Intervals/Interval1" unique_id=588700541]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring1 Interval"
 
-[node name="Option" type="OptionButton" parent="Tools/Panel/Layout/Timing/Intervals/Interval1" unique_id=2090710639]
+[node name="Option" type="OptionButton" parent="Tools/Layout/Form/Timing/Intervals/Interval1" unique_id=2090710639]
 custom_minimum_size = Vector2(180, 40)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Interval2" type="VBoxContainer" parent="Tools/Panel/Layout/Timing/Intervals" unique_id=612017228]
+[node name="Interval2" type="VBoxContainer" parent="Tools/Layout/Form/Timing/Intervals" unique_id=612017228]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing/Intervals/Interval2" unique_id=217006808]
+[node name="Label" type="Label" parent="Tools/Layout/Form/Timing/Intervals/Interval2" unique_id=217006808]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring2 Interval"
 
-[node name="Option" type="OptionButton" parent="Tools/Panel/Layout/Timing/Intervals/Interval2" unique_id=1650489552]
+[node name="Option" type="OptionButton" parent="Tools/Layout/Form/Timing/Intervals/Interval2" unique_id=1650489552]
 custom_minimum_size = Vector2(180, 40)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Interval3" type="VBoxContainer" parent="Tools/Panel/Layout/Timing/Intervals" unique_id=562703353]
+[node name="Interval3" type="VBoxContainer" parent="Tools/Layout/Form/Timing/Intervals" unique_id=562703353]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing/Intervals/Interval3" unique_id=2022252772]
+[node name="Label" type="Label" parent="Tools/Layout/Form/Timing/Intervals/Interval3" unique_id=2022252772]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Ring3 Interval"
 
-[node name="Option" type="OptionButton" parent="Tools/Panel/Layout/Timing/Intervals/Interval3" unique_id=1021885382]
+[node name="Option" type="OptionButton" parent="Tools/Layout/Form/Timing/Intervals/Interval3" unique_id=1021885382]
 custom_minimum_size = Vector2(180, 40)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Rotation" type="VBoxContainer" parent="Tools/Panel/Layout/Timing" unique_id=1368528883]
+[node name="Rotation" type="VBoxContainer" parent="Tools/Layout/Form/Timing" unique_id=1368528883]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Tools/Panel/Layout/Timing/Rotation" unique_id=850408348]
+[node name="Label" type="Label" parent="Tools/Layout/Form/Timing/Rotation" unique_id=850408348]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Rotation Model"
 
-[node name="Option" type="OptionButton" parent="Tools/Panel/Layout/Timing/Rotation" unique_id=2131848746]
+[node name="Option" type="OptionButton" parent="Tools/Layout/Form/Timing/Rotation" unique_id=2131848746]
 custom_minimum_size = Vector2(240, 40)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 
-[node name="Field" type="TextEdit" parent="Tools/Panel/Layout/Timing/Rotation" unique_id=1048511240]
+[node name="Field" type="TextEdit" parent="Tools/Layout/Form/Timing/Rotation" unique_id=1048511240]
 custom_minimum_size = Vector2(320, 40)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
 theme_override_constants/outline_size = 4
 placeholder_text = "1.0, 1.0, 1.0"
 
-[node name="MiscUtils" type="VBoxContainer" parent="Tools/Panel/Layout" unique_id=1921937481]
+[node name="separator" type="HSeparator" parent="Tools/Layout/Form" unique_id=847575657]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_t7dap")
+
+[node name="MiscUtils" type="VBoxContainer" parent="Tools/Layout/Form" unique_id=1921937481]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Label" type="Label" parent="Tools/Panel/Layout/MiscUtils" unique_id=2028353018]
+[node name="Label" type="Label" parent="Tools/Layout/Form/MiscUtils" unique_id=2028353018]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 16
 text = "Misc. utilities"
 
-[node name="Reset" type="Button" parent="Tools/Panel/Layout/MiscUtils" unique_id=1006395446]
+[node name="Reset" type="Button" parent="Tools/Layout/Form/MiscUtils" unique_id=1006395446]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Reset scene"
 
-[node name="FillSlots" type="Button" parent="Tools/Panel/Layout/MiscUtils" unique_id=445448621]
+[node name="FillSlots" type="Button" parent="Tools/Layout/Form/MiscUtils" unique_id=445448621]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Fill all slots with 1 random orb"
 
-[node name="LevelData" type="VBoxContainer" parent="Tools/Panel/Layout" unique_id=1011192238]
+[node name="separator2" type="HSeparator" parent="Tools/Layout/Form" unique_id=1195503003]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_t7dap")
+
+[node name="LevelData" type="VBoxContainer" parent="Tools/Layout/Form" unique_id=1011192238]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Label" type="Label" parent="Tools/Panel/Layout/LevelData" unique_id=491579240]
+[node name="Label" type="Label" parent="Tools/Layout/Form/LevelData" unique_id=491579240]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 16
 text = "Level data tools"
 
-[node name="Export" type="Button" parent="Tools/Panel/Layout/LevelData" unique_id=79612990]
+[node name="Export" type="Button" parent="Tools/Layout/Form/LevelData" unique_id=79612990]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Print current config as solution"
 
-[node name="Load" type="VBoxContainer" parent="Tools/Panel/Layout/LevelData" unique_id=1915839187]
+[node name="Load" type="VBoxContainer" parent="Tools/Layout/Form/LevelData" unique_id=1915839187]
 layout_mode = 2
 
-[node name="SolutionLabel" type="Label" parent="Tools/Panel/Layout/LevelData/Load" unique_id=57698057]
+[node name="SolutionLabel" type="Label" parent="Tools/Layout/Form/LevelData/Load" unique_id=57698057]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 12
 text = "Solution data"
 
-[node name="LoadText" type="TextEdit" parent="Tools/Panel/Layout/LevelData/Load" unique_id=964112327]
+[node name="LoadText" type="TextEdit" parent="Tools/Layout/Form/LevelData/Load" unique_id=964112327]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 text = "{\"solution\": [[], [], [1,2], [], [1,2,3], [], [], [2], [1,2,3], [], [], [], [0,3,2], [1], [2], [3]]}"
 wrap_mode = 1
 
-[node name="Load" type="Button" parent="Tools/Panel/Layout/LevelData/Load" unique_id=618998357]
+[node name="Load" type="Button" parent="Tools/Layout/Form/LevelData/Load" unique_id=618998357]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
