@@ -21,6 +21,8 @@ var _hovered: bool = false
 @onready var _drophint: Sprite2D = $DropHint
 @onready var _badge: Sprite2D = $Badge
 
+@export var in_tray = false
+
 func _ready() -> void:
 	add_to_group("slots")
 	_drophint.visible = false
@@ -45,7 +47,8 @@ func receive_orb(incoming: Orb) -> Orb:
 		_refresh_visual()
 		return null
 	# Matching type path. Stack it if under max (currently 8).
-	if incoming.orb_id == _orb.orb_id:
+	
+	if in_tray and incoming.orb_id == _orb.orb_id:
 		if _count < 8:
 			_count += 1
 			incoming.queue_free()
@@ -108,7 +111,7 @@ func _refresh_visual() -> void:
 	_refresh_badge()
 
 func _refresh_badge() -> void:
-	if _count <= 0 or badge_textures.size() < _count:
+	if _count <= 0 or badge_textures.size() < _count or not in_tray:
 		_badge.visible = false
 		return
 	_badge.texture = badge_textures[_count - 1]
