@@ -3,16 +3,44 @@
 [ext_resource type="Script" uid="uid://vx6v8iqa4anf" path="res://core/main.gd" id="1_csopv"]
 [ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/sequencer/sequencer.tscn" id="1_xiose"]
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
+[ext_resource type="Texture2D" uid="uid://dvqrc1mtpjbd4" path="res://core/assets/layout/frame.png" id="2_jsmgm"]
 [ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="5_xa854"]
+[ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
+[ext_resource type="Texture2D" uid="uid://cp83ckcybx1an" path="res://core/assets/background/sky.png" id="7_cus2n"]
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
 
+[node name="Frame" type="Sprite2D" parent="." unique_id=1065424529]
+z_index = 5
+position = Vector2(481.99997, 538.7332)
+scale = Vector2(0.5015291, 0.5009577)
+texture = ExtResource("2_jsmgm")
+
+[node name="TestRotate" type="Button" parent="." unique_id=2107144106]
+z_index = 5
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 1487.0
+offset_top = 943.0
+offset_right = 1843.0
+offset_bottom = 985.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "Test Background Rotation"
+
 [node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
 
 [node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
+position = Vector2(0, -43)
 
 [node name="Background" type="Sprite2D" parent="." unique_id=80829557]
 z_index = -1
@@ -21,26 +49,27 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_r77kf")
 
 [node name="Tray" parent="." unique_id=835271133 instance=ExtResource("5_xa854")]
-position = Vector2(960, 1068)
-rotation = 1.5707964
+z_index = 5
+position = Vector2(380, 791)
 
 [node name="DetectionFeedback" type="Node2D" parent="." unique_id=1631393910]
 
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
+position = Vector2(960, 552)
+rotation = 1.3962634
+script = ExtResource("6_brq4u")
+
+[node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]
+z_index = -1
+texture = ExtResource("7_cus2n")
 
 [node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 461.0
-offset_top = 64.0
-offset_right = 461.0
-offset_bottom = 64.0
-grow_horizontal = 1
-grow_vertical = 1
-fan_radius_inner = 580.0
-fan_radius_outer = 775.0
-fan_angle_span = 90.0
-fan_origin = Vector2(500, 750)
+z_index = 4
+position = Vector2(-419.49097, -638.5448)
+rotation = 0.17453294
+fan_radius_inner = 540.0
+fan_radius_outer = 800.0
+fan_angle_span = 80.0
+fan_origin = Vector2(521, 556)
+
+[editable path="Sequencer"]

@@ -10,7 +10,7 @@ signal arrived
 const ARRIVAL_SCALE: float = 0.5
  
 @export var travel_duration: float = 0.4
-@export var arc_height: float = 80.0
+@export var arc_height: float = -80.0
  
 var _from: Vector2
 var _to: Vector2
@@ -19,7 +19,7 @@ var _elapsed: float = 0.0
  
 @onready var _sprite: Sprite2D = $Sprite
  
-func setup(texture: Texture2D, from: Vector2, to: Vector2) -> void:
+func setup(texture: Texture2D, from: Vector2, to: Vector2, sequencer_center: Vector2) -> void:
 	_from = from
 	_to = to
 	var mid: Vector2 = (_from + _to) * 0.5

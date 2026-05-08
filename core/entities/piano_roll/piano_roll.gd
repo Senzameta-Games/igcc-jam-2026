@@ -1,5 +1,5 @@
 class_name PianoRoll
-extends Control
+extends Node2D
 
 ## Piano roll display. 16 columns (ticks) x N rows (unique notes, high to low).
 ## Laid out as a radial fan — rows are concentric arcs, columns are radial lines.
@@ -19,15 +19,15 @@ extends Control
 ## Number of rows to preview in editor (since notes are populated at runtime).
 @export var debug_row_count: int = 4
 
-@onready var _dots_container: Control = $Dots
-@onready var _playhead: Control = $Playhead
+@onready var _dots_container: Node2D = $Dots
+@onready var _playhead: Node2D = $Playhead
 
 const TICKS: int = 16
 const ARRIVAL_SCALE: float = 0.5
 
-const _DEBUG_ARC_COLOR: Color = Color(1.0, 0.0, 1.0, 0.4)
-const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.15)
-const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.6)
+const _DEBUG_ARC_COLOR: Color = Color(1.0, 1.0, 1.0, 0.1)
+const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.1)
+const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.1)
 const _DEBUG_ARC_SEGMENTS: int = 48
 
 ## Ordered high to low — index 0 is highest pitch, index N-1 is lowest.
@@ -62,7 +62,7 @@ func get_cell_position(tick: int, orb_id: Orb.OrbType) -> Vector2:
 	var note_row: int = notes.find(orb_id)
 	if note_row == -1:
 		return global_position
-	return global_position + _cell_pos(tick, note_row)
+	return to_global(_cell_pos(tick, note_row))
 
 ## Places a dot at (tick, orb_id). Called when an orb trail arrives.
 func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, measure_duration: float) -> void:
@@ -109,6 +109,7 @@ func _update_playhead(tick: float) -> void:
 	var angle_rad: float = _tick_angle_rad(tick)
 	var mid_radius: float = (fan_radius_inner + fan_radius_outer) * 0.5
 	_playhead.position = fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * mid_radius
+	_playhead.rotation = angle_rad + PI * 0.5
 
 ## Returns local position for a cell in fan/polar space.
 func _cell_pos(tick: int, note_row: int) -> Vector2:
