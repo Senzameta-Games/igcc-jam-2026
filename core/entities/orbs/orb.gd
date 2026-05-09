@@ -45,11 +45,9 @@ func play_note() -> void:
 func lift() -> void:
 	_state = State.HELD
 	_lift.play()
-	z_index = 10
 
 func land() -> void:
 	# Called by Slot.receive_orb after reparenting.
 	# position is now in Slot local space. Lerp to center.
 	_state = State.LERPING
 	_land.play()
-	z_index = 5

@@ -18,8 +18,10 @@ signal dismiss_complete
 @onready var _sprite: Sprite2D = $Sprite
 @onready var _area: Area2D = $Area
 
-var _key_targets: Array[Vector2] = []
+var _piano_roll: PianoRoll = null
 var _piano_roll_keys: Node2D = null
+var _solution: Array = []
+var _unique_orbs: Array[Orb.OrbType] = []
 var _resting_position: Vector2 = Vector2.ZERO
 var _dismissed: bool = false
 
@@ -28,9 +30,11 @@ func _ready() -> void:
 	visible = false
 	_area.input_event.connect(_on_area_input_event)
 
-func setup(key_targets: Array[Vector2], piano_roll_keys: Node2D) -> void:
-	_key_targets = key_targets
+func setup(piano_roll: PianoRoll, solution: Array, unique_orbs: Array[Orb.OrbType], piano_roll_keys: Node2D) -> void:
+	_piano_roll = piano_roll
 	_piano_roll_keys = piano_roll_keys
+	_solution = solution
+	_unique_orbs = unique_orbs
 	_dismissed = false
 	scale = Vector2.ONE
 	global_position = _resting_position
@@ -64,11 +68,16 @@ func dismiss() -> void:
 	if _dismissed:
 		return
 	_dismissed = true
-	if _key_targets.is_empty() or _piano_roll_keys == null:
+
+	# Build targets now, when the sky layer is at its final resting rotation
+	var key_targets: Array[Vector2] = _build_key_targets()
+
+	if key_targets.is_empty() or _piano_roll_keys == null:
 		_minimize()
 		return
+
 	var keys: Array[Node] = _keys_container.get_children()
-	var launch_count: int = mini(keys.size(), _key_targets.size())
+	var launch_count: int = mini(keys.size(), key_targets.size())
 	var completed: int = 0
 	for i: int in range(launch_count):
 		var original := keys[i] as Sprite2D
@@ -78,11 +87,11 @@ func dismiss() -> void:
 		var dupe := Sprite2D.new()
 		dupe.texture = original.texture
 		dupe.modulate = Color.WHITE
+		dupe.z_index = 15
 		_piano_roll_keys.add_child(dupe)
 		dupe.global_position = original.global_position
 		dupe.scale = original.scale
-		dupe.z_index = 12
-		var target: Vector2 = _key_targets[i]
+		var target: Vector2 = key_targets[i]
 		var delay: float = i * key_launch_stagger
 		var tween := dupe.create_tween()
 		tween.tween_interval(delay)
@@ -90,6 +99,7 @@ func dismiss() -> void:
 			.set_ease(key_launch_ease) \
 			.set_trans(key_launch_trans)
 		tween.tween_callback(func() -> void:
+			dupe.z_index = -1
 			completed += 1
 			if completed >= launch_count:
 				keys_launched.emit()
@@ -107,3 +117,19 @@ func _minimize() -> void:
 	tween.tween_callback(func() -> void:
 		dismiss_complete.emit()
 	)
+
+func _build_key_targets() -> Array[Vector2]:
+	var targets: Array[Vector2] = []
+	var key_count: int = _keys_container.get_child_count()
+	for tick: int in range(_solution.size()):
+		if targets.size() >= key_count:
+			break
+		var orb_arr: Array = _solution[tick]
+		for orb_type_int: int in orb_arr:
+			if targets.size() >= key_count:
+				break
+			var orb_id := orb_type_int as Orb.OrbType
+			if _unique_orbs.find(orb_id) == -1:
+				continue
+			targets.append(_piano_roll.get_cell_position(tick, orb_id))
+	return targets

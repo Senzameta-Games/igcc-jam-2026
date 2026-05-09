@@ -36,6 +36,7 @@ extends Node2D
 @onready var _keys_container: Node2D = $Keys
 @onready var _dots_container: Node2D = $Dots
 @onready var _playhead: Node2D = $Playhead
+@export var playhead_fade_speed: float = 8.0
 
 const TICKS: int = 16
 const ARRIVAL_SCALE: float = 0.5
@@ -45,34 +46,46 @@ const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.15)
 const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.6)
 const _DEBUG_ARC_SEGMENTS: int = 48
 
-## Ordered high to low — index 0 is highest pitch, index N-1 is lowest.
+## Ordered high to low. index 0 is highest pitch, index N-1 is lowest.
 var notes: Array[Orb.OrbType] = []
 
 ## Sparse map of placed dots: key = tick * 100 + note_row, value = Sprite2D node.
 var _dots: Dictionary = {}
 
-var _playhead_target_tick: float = 0.0
-var _playhead_current_tick: float = 0.0
+var _sequencer: Sequencer = null
+var _playing: bool = false
 
 func _ready() -> void:
-	Playback.tick_advanced.connect(_on_tick_advanced)
 	Playback.stopped.connect(_on_playback_stopped)
+	Playback.started.connect(_on_playback_started)
 
 ## Called by Main after tray is available. Must be called before first use.
 ## Re-rolls the star field each call.
 func setup(tray: Tray) -> void:
 	notes = tray.get_unique_orbs()
-	_playhead_current_tick = 0.0
-	_playhead_target_tick = 0.0
-	_update_playhead(_playhead_current_tick)
 	_rebuild_stars()
 	queue_redraw()
 
 func _process(delta: float) -> void:
-	if _playhead == null:
+	if _playhead == null or _sequencer == null:
 		return
-	_playhead_current_tick = lerpf(_playhead_current_tick, _playhead_target_tick, playhead_lerp_speed * delta)
-	_update_playhead(_playhead_current_tick)
+
+	var t: float = _sequencer.get_measure_t() if _playing else 0.0
+
+	# Fade out from 0.9→1.0, snap, fade in from 0.0→0.1
+	if t >= 0.9:
+		var fade_t: float = (t - 0.9) / 0.1
+		_playhead.modulate.a = lerpf(1.0, 0.0, fade_t)
+	elif t <= 0.1:
+		var fade_t: float = t / 0.1
+		_playhead.modulate.a = lerpf(0.0, 1.0, fade_t)
+	else:
+		_playhead.modulate.a = 1.0
+
+	_update_playhead(t * float(TICKS - 1))
+
+func set_sequencer(sequencer: Sequencer) -> void:
+	_sequencer = sequencer
 
 ## Returns the world position of the center of the cell at (tick, orb_id).
 func get_cell_position(tick: int, orb_id: Orb.OrbType) -> Vector2:
@@ -80,6 +93,10 @@ func get_cell_position(tick: int, orb_id: Orb.OrbType) -> Vector2:
 	if note_row == -1:
 		return global_position
 	return to_global(_cell_pos(tick, note_row))
+
+func clear_keys() -> void:
+	for child: Node in _keys_container.get_children():
+		child.queue_free()
 
 ## Places a dot at (tick, orb_id). Called when an orb trail arrives.
 func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, measure_duration: float) -> void:
@@ -105,13 +122,13 @@ func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, measure_dur
 		dot.queue_free()
 	)
 
-func _on_tick_advanced(tick_index: int) -> void:
-	_playhead_target_tick = float(tick_index)
+func _on_playback_started() -> void:
+	_playing = true
 
 func _on_playback_stopped() -> void:
 	_clear_dots()
-	_playhead_current_tick = 0.0
-	_playhead_target_tick = 0.0
+	_playing = false
+	_playhead.modulate.a = 1.0
 	_update_playhead(0.0)
 
 func _clear_dots() -> void:
@@ -179,13 +196,13 @@ func _cell_key(tick: int, note_row: int) -> int:
 #func _draw() -> void:
 	#var row_count: int = notes.size() if notes.size() > 0 else debug_row_count
 #
-	## Concentric arcs — one per note row
+	## Concentric arcs. One per note row
 	#for row: int in range(row_count):
 		#var radius: float = lerpf(fan_radius_outer, fan_radius_inner,
 			#float(row) / float(max(row_count - 1, 1)))
 		#_draw_arc_segment(radius, _DEBUG_ARC_COLOR)
 #
-	## Radial lines — one per tick
+	## Radial lines. One per tick
 	#for tick: int in range(TICKS):
 		#var angle_rad: float = _tick_angle_rad(float(tick))
 		#var dir: Vector2 = Vector2(cos(angle_rad), sin(angle_rad))

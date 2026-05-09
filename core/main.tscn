@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
 [ext_resource type="Texture2D" uid="uid://dvqrc1mtpjbd4" path="res://core/assets/layout/frame.png" id="2_jsmgm"]
 [ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
+[ext_resource type="Script" uid="uid://0x2x5jmtfaov" path="res://core/managers/level_manager.gd" id="2_rayt5"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="5_xa854"]
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
@@ -13,6 +14,10 @@
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
+
+[node name="LevelManager" type="Node" parent="." unique_id=531121199]
+script = ExtResource("2_rayt5")
+metadata/_custom_type_script = "uid://0x2x5jmtfaov"
 
 [node name="Frame" type="Sprite2D" parent="." unique_id=1065424529]
 z_index = 5
@@ -26,7 +31,7 @@ position = Vector2(448, 346)
 minimized_position = Vector2(-300, 0)
 key_launch_duration = 1.8
 
-[node name="TestRotate" type="Button" parent="." unique_id=2107144106]
+[node name="NextLevel" type="Button" parent="." unique_id=2107144106]
 z_index = 5
 anchors_preset = 8
 anchor_left = 0.5
@@ -71,7 +76,6 @@ z_index = -1
 texture = ExtResource("7_cus2n")
 
 [node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
-z_index = 4
 position = Vector2(-419.49097, -638.5448)
 rotation = 0.17453294
 fan_radius_inner = 540.0

@@ -1,0 +1,16 @@
+{
+	"id": 1,
+	"name": "test",
+	"bpm": 40,
+	"rings": [
+		{ "interval": "QUARTER" },
+		{ "interval": "EIGHTH" },
+		{ "interval": "SIXTEENTH" }
+	],
+	"solution": [
+		[1, 2], [], [1], [],
+		[1, 2], [], [1], [],
+		[1, 2], [], [1], [],
+		[1, 2], [], [1], []
+	]
+}
