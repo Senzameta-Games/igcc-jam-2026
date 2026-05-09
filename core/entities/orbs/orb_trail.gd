@@ -19,7 +19,7 @@ var _elapsed: float = 0.0
  
 @onready var _sprite: Sprite2D = $Sprite
  
-func setup(texture: Texture2D, from: Vector2, to: Vector2, sequencer_center: Vector2) -> void:
+func setup(texture: Texture2D, from: Vector2, to: Vector2) -> void:
 	_from = from
 	_to = to
 	var mid: Vector2 = (_from + _to) * 0.5
