@@ -11,7 +11,6 @@ signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Ve
 
 enum RotationModel { QUANTIZED, CUSTOM }
 
-const RING_COUNT: int = 3
 const BEATS_PER_MEASURE: float = 4.0
 const TICKS_PER_MEASURE: int = 16
 const MAX_BPM: float = 90.0
@@ -239,15 +238,6 @@ func _on_interval_selected(ring_index: int, item_index: int) -> void:
 		return
 	_rings[ring_index].interval_type = Ring.IntervalType.values()[item_index]
 
-func _on_ring0_interval_selected(item_index: int) -> void:
-	_on_interval_selected(0, item_index)
-
-func _on_ring1_interval_selected(item_index: int) -> void:
-	_on_interval_selected(1, item_index)
-
-func _on_ring2_interval_selected(item_index: int) -> void:
-	_on_interval_selected(2, item_index)
-
 func _on_rotation_model_selected(item_index: int) -> void:
 	rotation_model = RotationModel.values()[item_index]
 	_custom_multipliers_field.visible = rotation_model == RotationModel.CUSTOM
@@ -284,7 +274,7 @@ func _multipliers_to_string(multipliers: Array[float]) -> String:
 	return ", ".join(parts)
 
 func _on_load_slots_pressed() -> void:
-	var load_obj = JSON.parse_string($Tools/Panel/Layout/LevelData/Load/LoadText.text)
+	var load_obj = JSON.parse_string($Tools/Layout/Form/LevelData/Load/LoadText.text)
 	if(load_obj == null):
 		return
 	load_game(load_obj)

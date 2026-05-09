@@ -23,8 +23,10 @@ star_color = Color(1, 1, 1, 0.7176471)
 [node name="Stars" type="Node2D" parent="." unique_id=1316850787]
 
 [node name="Keys" type="Node2D" parent="." unique_id=2068998042]
+z_index = 5
 
 [node name="Dots" type="Node2D" parent="." unique_id=1664500733]
+z_index = 22
 
 [node name="Playhead" type="Sprite2D" parent="." unique_id=787794317]
 rotation = 3.1415927
