@@ -2,9 +2,11 @@ class_name PianoRoll
 extends Node2D
 
 ## Piano roll display. 16 columns (ticks) x N rows (unique notes, high to low).
-## Laid out as a radial fan — rows are concentric arcs, columns are radial lines.
-## Replaces Sequence. Receives orbs from Sequencer via receive_orb().
-## Playhead driven by Playback.tick_advanced.
+## Rows are concentric arcs, columns are radial lines.
+## Three child layers (bottom to top): Stars, Keys, Dots.
+## Stars: faint randomized star field at every grid vertex, re-rolled per level.
+## Keys: hint stars at solution positions (populated later).
+## Dots: player input orbs from sequencer playback.
 
 ## Radius of the innermost arc (lowest note row).
 @export var fan_radius_inner: float = 300.0
@@ -19,15 +21,28 @@ extends Node2D
 ## Number of rows to preview in editor (since notes are populated at runtime).
 @export var debug_row_count: int = 4
 
+## Star field configuration.
+## Pool of star textures to randomly sample from. Assign in inspector.
+@export var star_textures: Array[Texture2D] = []
+## Scale range for random star sizing (min, max). Stars are 2x res, scale down here.
+@export var star_scale_min: float = 0.15
+@export var star_scale_max: float = 0.35
+## Max positional jitter offset from exact grid vertex in pixels.
+@export var star_jitter: float = 8.0
+## Base modulate for faint stars. Alpha drives overall brightness.
+@export var star_color: Color = Color(1.0, 1.0, 1.0, 0.18)
+
+@onready var _stars_container: Node2D = $Stars
+@onready var _keys_container: Node2D = $Keys
 @onready var _dots_container: Node2D = $Dots
 @onready var _playhead: Node2D = $Playhead
 
 const TICKS: int = 16
 const ARRIVAL_SCALE: float = 0.5
 
-const _DEBUG_ARC_COLOR: Color = Color(1.0, 1.0, 1.0, 0.1)
-const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.1)
-const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.1)
+const _DEBUG_ARC_COLOR: Color = Color(1.0, 0.0, 1.0, 0.4)
+const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.15)
+const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.6)
 const _DEBUG_ARC_SEGMENTS: int = 48
 
 ## Ordered high to low — index 0 is highest pitch, index N-1 is lowest.
@@ -43,12 +58,14 @@ func _ready() -> void:
 	Playback.tick_advanced.connect(_on_tick_advanced)
 	Playback.stopped.connect(_on_playback_stopped)
 
-## Called by Sequencer after tray is available. Must be called before first use.
+## Called by Main after tray is available. Must be called before first use.
+## Re-rolls the star field each call.
 func setup(tray: Tray) -> void:
 	notes = tray.get_unique_orbs()
 	_playhead_current_tick = 0.0
 	_playhead_target_tick = 0.0
 	_update_playhead(_playhead_current_tick)
+	_rebuild_stars()
 	queue_redraw()
 
 func _process(delta: float) -> void:
@@ -57,7 +74,7 @@ func _process(delta: float) -> void:
 	_playhead_current_tick = lerpf(_playhead_current_tick, _playhead_target_tick, playhead_lerp_speed * delta)
 	_update_playhead(_playhead_current_tick)
 
-## Returns the global position of the center of the cell at (tick, orb_id).
+## Returns the world position of the center of the cell at (tick, orb_id).
 func get_cell_position(tick: int, orb_id: Orb.OrbType) -> Vector2:
 	var note_row: int = notes.find(orb_id)
 	if note_row == -1:
@@ -102,6 +119,30 @@ func _clear_dots() -> void:
 		(dot as Node).queue_free()
 	_dots.clear()
 
+## Clears and re-rolls the star field for all grid vertices.
+## Called at setup time (level load). Requires notes to be populated first.
+func _rebuild_stars() -> void:
+	for child: Node in _stars_container.get_children():
+		child.queue_free()
+	if star_textures.is_empty():
+		return
+	var row_count: int = notes.size() if notes.size() > 0 else debug_row_count
+	for tick: int in range(TICKS):
+		for row: int in range(row_count):
+			var base_pos: Vector2 = _cell_pos(tick, row)
+			var jitter: Vector2 = Vector2(
+				randf_range(-star_jitter, star_jitter),
+				randf_range(-star_jitter, star_jitter)
+			)
+			var star := Sprite2D.new()
+			star.texture = star_textures[randi() % star_textures.size()]
+			var scale_val: float = randf_range(star_scale_min, star_scale_max)
+			star.scale = Vector2(scale_val, scale_val)
+			star.rotation = randf_range(0.0, TAU)
+			star.position = base_pos + jitter
+			star.modulate = star_color
+			_stars_container.add_child(star)
+
 ## Moves the playhead to the radial line at a continuous tick position.
 func _update_playhead(tick: float) -> void:
 	if _playhead == null:
@@ -135,32 +176,32 @@ func _cell_key(tick: int, note_row: int) -> int:
 
 # --- Debug draw ---
 
-func _draw() -> void:
-	var row_count: int = notes.size() if notes.size() > 0 else debug_row_count
-
-	# Concentric arcs — one per note row
-	for row: int in range(row_count):
-		var radius: float = lerpf(fan_radius_outer, fan_radius_inner,
-			float(row) / float(max(row_count - 1, 1)))
-		_draw_arc_segment(radius, _DEBUG_ARC_COLOR)
-
-	# Radial lines — one per tick
-	for tick: int in range(TICKS):
-		var angle_rad: float = _tick_angle_rad(float(tick))
-		var dir: Vector2 = Vector2(cos(angle_rad), sin(angle_rad))
-		var from: Vector2 = fan_origin + dir * fan_radius_inner
-		var to: Vector2 = fan_origin + dir * fan_radius_outer
-		draw_line(from, to, _DEBUG_RADIAL_COLOR, 1.0)
-
-	# Fan origin marker
-	draw_circle(fan_origin, 6.0, _DEBUG_ORIGIN_COLOR)
-
-func _draw_arc_segment(radius: float, color: Color) -> void:
-	var points: PackedVector2Array = []
-	for i: int in range(_DEBUG_ARC_SEGMENTS + 1):
-		var t: float = float(i) / float(_DEBUG_ARC_SEGMENTS)
-		var angle_deg: float = -fan_angle_span * 0.5 + t * fan_angle_span
-		var angle_rad: float = deg_to_rad(angle_deg - 90.0)
-		points.append(fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * radius)
-	for i: int in range(points.size() - 1):
-		draw_line(points[i], points[i + 1], color, 1.5)
+#func _draw() -> void:
+	#var row_count: int = notes.size() if notes.size() > 0 else debug_row_count
+#
+	## Concentric arcs — one per note row
+	#for row: int in range(row_count):
+		#var radius: float = lerpf(fan_radius_outer, fan_radius_inner,
+			#float(row) / float(max(row_count - 1, 1)))
+		#_draw_arc_segment(radius, _DEBUG_ARC_COLOR)
+#
+	## Radial lines — one per tick
+	#for tick: int in range(TICKS):
+		#var angle_rad: float = _tick_angle_rad(float(tick))
+		#var dir: Vector2 = Vector2(cos(angle_rad), sin(angle_rad))
+		#var from: Vector2 = fan_origin + dir * fan_radius_inner
+		#var to: Vector2 = fan_origin + dir * fan_radius_outer
+		#draw_line(from, to, _DEBUG_RADIAL_COLOR, 1.0)
+#
+	## Fan origin marker
+	#draw_circle(fan_origin, 6.0, _DEBUG_ORIGIN_COLOR)
+#
+#func _draw_arc_segment(radius: float, color: Color) -> void:
+	#var points: PackedVector2Array = []
+	#for i: int in range(_DEBUG_ARC_SEGMENTS + 1):
+		#var t: float = float(i) / float(_DEBUG_ARC_SEGMENTS)
+		#var angle_deg: float = -fan_angle_span * 0.5 + t * fan_angle_span
+		#var angle_rad: float = deg_to_rad(angle_deg - 90.0)
+		#points.append(fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * radius)
+	#for i: int in range(points.size() - 1):
+		#draw_line(points[i], points[i + 1], color, 1.5)
