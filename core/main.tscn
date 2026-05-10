@@ -17,7 +17,7 @@
 shader = ExtResource("2_510js")
 shader_parameter/luma_threshold = 0.9250000439375
 shader_parameter/smoke_strength = 0.53200002527
-shader_parameter/smoke_speed = 1.9540000928149999
+shader_parameter/smoke_speed = 1.954000092815
 shader_parameter/smoke_scale = 10.0
 shader_parameter/smoke_height = 0.03200000152
 shader_parameter/turbulence_strength = 0.7950000377625
@@ -63,13 +63,14 @@ key_launch_duration = 1.8
 [node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
 position = Vector2(0, -100)
 
-[node name="RayCaster" parent="Sequencer" index="0" unique_id=724280312]
+[node name="Rings" parent="Sequencer" index="0" unique_id=123070447]
 rotation = -1.5707964
 
-[node name="Rings" parent="Sequencer" index="1" unique_id=123070447]
+[node name="RayCaster" parent="Sequencer" index="1" unique_id=724280312]
 rotation = -1.5707964
 
 [node name="Tools" parent="Sequencer" index="3" unique_id=333190472]
+anchors_preset = 4
 offset_top = -315.0
 offset_bottom = -202.0
 

@@ -38,7 +38,6 @@ const MAX_BPM: float = 90.0
 @onready var _export_form: ExportForm = $ExportForm
 
 var _rings: Array[Ring] = []
-var _rotations: Array[float] = [0.0, 0.0, 0.0]
 var _resetting: bool = false
 
 # Tick clock driven by absolute measure time, independent of ring multipliers
@@ -93,34 +92,23 @@ func _physics_process(delta: float) -> void:
 		_current_tick = tick_threshold
 		_tick_has_fired = true
 		Playback.tick_advanced.emit(_current_tick)
-	for i: int in range(_rings.size()):
-		var multiplier: float = _get_multiplier(i)
-		_rotations[i] = fmod(_rotations[i] + base_rate * multiplier * delta, 1.0)
 
 func _process(delta: float) -> void:
-	if Playback.is_playing:
-		var base_rate: float = bpm / BEATS_PER_MEASURE / 60.0
-		for i: int in range(_rings.size()):
-			var multiplier: float = _get_multiplier(i)
-			var extrapolated: float = fmod(_rotations[i] + base_rate * multiplier * delta, 1.0)
-			_rings[i].tick(extrapolated)
-	if not _resetting:
-		return
-
 	if not _resetting:
 		return
 	var all_done: bool = true
-	for i: int in range(_rings.size()):
-		var target: float = 0.0 if _rotations[i] <= 0.5 else 1.0
-		_rotations[i] = lerpf(_rotations[i], target, Ring.RESET_SPEED * delta)
-		_rings[i].apply_rotation(_rotations[i])
-		var close_enough: bool = abs(_rotations[i] - target) < Ring.RESET_THRESHOLD
-		var wrapped: bool = target == 1.0 and abs(_rotations[i] - 1.0) < Ring.RESET_THRESHOLD
-		if not (close_enough or wrapped):
+	for ring: Ring in _rings:
+		var current: float = ring.get_current_angle()
+		var normalized: float = fmod(current, TAU)
+		if normalized < 0.0:
+			normalized += TAU
+		var target: float = 0.0 if normalized <= PI else TAU
+		var lerped: float = lerpf(normalized, target, Ring.RESET_SPEED * delta)
+		ring.set_current_angle(lerped)
+		if abs(lerped - target) < Ring.RESET_THRESHOLD:
+			ring.set_current_angle(0.0)
+		else:
 			all_done = false
-		elif close_enough or wrapped:
-			_rotations[i] = 0.0
-			_rings[i].apply_rotation(0.0)
 	if all_done:
 		_resetting = false
 
@@ -140,8 +128,15 @@ func _on_playback_started() -> void:
 	_current_tick = 0
 	_last_tick_threshold = -1
 	_tick_has_fired = false
+	var base_rate: float = bpm / BEATS_PER_MEASURE / 60.0
+	for i: int in range(_rings.size()):
+		var multiplier: float = _get_multiplier(i)
+		# radians per second = full revolution (TAU) × rotations per second
+		_rings[i].set_rotation_speed(base_rate * multiplier * TAU)
 
 func _on_playback_stopped() -> void:
+	for ring: Ring in _rings:
+		ring.set_rotation_speed(0.0)
 	_resetting = true
 #
 #func _on_ring_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, ring_index: int) -> void:

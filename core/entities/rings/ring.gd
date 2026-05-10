@@ -31,6 +31,9 @@ const SLOT_SCENE: PackedScene = preload("res://core/entities/slot/slot.tscn")
 
 var load_modifier = _get_load_modifier()
 
+var _rotation_speed: float = 0.0
+var _current_angle: float = 0.0
+
 @onready var _slots_container: Node2D = $Slots
 
 var _slots: Array[Slot] = []
@@ -38,11 +41,11 @@ var _slots: Array[Slot] = []
 func _ready() -> void:
 	_rebuild_slots()
 
-func tick(rot_t: float) -> void:
-	rotation = rot_t * TAU
-
-func apply_rotation(rot_t: float) -> void:
-	rotation = rot_t * TAU
+func _process(delta: float) -> void:
+	if _rotation_speed == 0.0:
+		return
+	_current_angle += _rotation_speed * delta
+	rotation = _current_angle
 
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:
@@ -50,8 +53,18 @@ func eject_all_orbs() -> void:
 			var removed_orb = slot.eject_orb()
 			removed_orb.queue_free()
 
+func get_current_angle() -> float:
+	return _current_angle
+
+func set_current_angle(angle: float) -> void:
+	_current_angle = angle
+	rotation = angle
+
 func get_slots() -> Array[Slot]:
 	return _slots
+
+func set_rotation_speed(radians_per_second: float) -> void:
+	_rotation_speed = radians_per_second
 
 func get_slot_count() -> int:
 	return _slots.size()
