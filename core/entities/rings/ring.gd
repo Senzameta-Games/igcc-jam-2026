@@ -46,6 +46,8 @@ func _process(delta: float) -> void:
 		return
 	_current_angle += _rotation_speed * delta
 	rotation = _current_angle
+	for slot: Slot in _slots:
+		slot.rotation = -_current_angle
 
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:

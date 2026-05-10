@@ -77,7 +77,7 @@ offset_bottom = 674.0
 [node name="Tools" type="PanelContainer" parent="." unique_id=333190472]
 z_index = 12
 custom_minimum_size = Vector2(400, 0)
-anchors_preset = -1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 41.0

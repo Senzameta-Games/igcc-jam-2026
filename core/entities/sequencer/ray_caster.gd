@@ -13,12 +13,20 @@ signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Ve
 @onready var _line: Line2D = $Ray
 
 var _active: bool = false
+var _sweep_pending: bool = false
+var _pending_tick: int = 0
 
 func _ready() -> void:
 	Playback.started.connect(_on_playback_started)
 	Playback.stopped.connect(_on_playback_stopped)
 	Playback.tick_advanced.connect(_on_tick_advanced)
 	_update_visual()
+
+func _process(_delta: float) -> void:
+	if not _sweep_pending:
+		return
+	_sweep_pending = false
+	_sweep(_pending_tick)
 
 ## Called by Sequencer or externally to set world-space ray endpoints.
 ## Ray should point from outside the outermost ring toward the sequencer center.
@@ -36,7 +44,8 @@ func _on_playback_stopped() -> void:
 func _on_tick_advanced(tick: int) -> void:
 	if not _active:
 		return
-	_sweep(tick)
+	_pending_tick = tick
+	_sweep_pending = true
 
 func _sweep(tick: int) -> void:
 	var space := get_world_2d().direct_space_state
