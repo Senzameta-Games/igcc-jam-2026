@@ -90,23 +90,27 @@ func _physics_process(delta: float) -> void:
 	if not Playback.is_playing:
 		return
 	var base_rate: float = bpm / BEATS_PER_MEASURE / 60.0
-
-	# Tick clock driven by absolute measure time independent of ring multipliers
 	_measure_t = fmod(_measure_t + base_rate * delta, 1.0)
 	var tick_threshold: int = int(_measure_t * TICKS_PER_MEASURE)
 	if tick_threshold != _last_tick_threshold:
 		_last_tick_threshold = tick_threshold
 		_current_tick = tick_threshold
-		_tick_has_fired = true 
+		_tick_has_fired = true
 		Playback.tick_advanced.emit(_current_tick)
-
-	# Rings advance at their own multiplied rates
 	for i: int in range(_rings.size()):
 		var multiplier: float = _get_multiplier(i)
 		_rotations[i] = fmod(_rotations[i] + base_rate * multiplier * delta, 1.0)
-		_rings[i].tick(_rotations[i])
 
 func _process(delta: float) -> void:
+	if Playback.is_playing:
+		var base_rate: float = bpm / BEATS_PER_MEASURE / 60.0
+		for i: int in range(_rings.size()):
+			var multiplier: float = _get_multiplier(i)
+			var extrapolated: float = fmod(_rotations[i] + base_rate * multiplier * delta, 1.0)
+			_rings[i].tick(extrapolated)
+	if not _resetting:
+		return
+
 	if not _resetting:
 		return
 	var all_done: bool = true

@@ -2,12 +2,17 @@
 
 [ext_resource type="Script" uid="uid://bfpd0mdsk51y8" path="res://core/entities/sequencer/sequencer.gd" id="1_7ojyt"]
 [ext_resource type="PackedScene" uid="uid://qc0dwe3v7u2g" path="res://core/entities/button/button.tscn" id="2_ee14c"]
-[ext_resource type="PackedScene" uid="uid://c2ry2hofjuqey" path="res://core/entities/rings/ring-150r.tscn" id="2_y5shy"]
-[ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring-225r.tscn" id="3_rlxeh"]
-[ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring-300r.tscn" id="4_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://c2ry2hofjuqey" path="res://core/entities/rings/ring0.tscn" id="2_y5shy"]
+[ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring1.tscn" id="3_rlxeh"]
+[ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring2.tscn" id="4_pw2oc"]
 [ext_resource type="PackedScene" uid="uid://blkl088rhnod6" path="res://tools/export_form.tscn" id="7_y5shy"]
 [ext_resource type="Texture2D" uid="uid://dwe0ak00f8fht" path="res://core/assets/icons/empty.png" id="8_pw2oc"]
 [ext_resource type="Script" uid="uid://jpnvfasgpdy1" path="res://core/entities/sequencer/ray_caster.gd" id="8_rlxeh"]
+[ext_resource type="AudioStream" uid="uid://d32xohytt2g2d" path="res://core/assets/audio/background/measure_pad_1.wav" id="9_pxt5q"]
+[ext_resource type="AudioStream" uid="uid://3k4li513dt4h" path="res://core/assets/audio/background/measure_pad_2.wav" id="10_52j4s"]
+[ext_resource type="AudioStream" uid="uid://qml0luw2u2dx" path="res://core/assets/audio/background/measure_pad_3.wav" id="11_3o0k2"]
+[ext_resource type="AudioStream" uid="uid://1odt55oru0gy" path="res://core/assets/audio/background/measure_pad_4.wav" id="12_aen4v"]
+[ext_resource type="Script" uid="uid://31exyxhqqk4i" path="res://core/entities/sequencer/measure_pad.gd" id="13_uioqo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t7dap"]
 content_margin_left = 32.0
@@ -29,6 +34,14 @@ corner_radius_bottom_left = 16
 color = Color(0.1148968, 0.11489681, 0.1148968, 1)
 thickness = 2
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_3v2xn"]
+playback_mode = 2
+streams_count = 4
+stream_0/stream = ExtResource("9_pxt5q")
+stream_1/stream = ExtResource("10_52j4s")
+stream_2/stream = ExtResource("11_3o0k2")
+stream_3/stream = ExtResource("12_aen4v")
+
 [node name="Sequencer" type="Node2D" unique_id=1975801920]
 script = ExtResource("1_7ojyt")
 bpm = 40.0
@@ -36,15 +49,15 @@ bpm = 40.0
 [node name="Rings" type="Node2D" parent="." unique_id=123070447]
 position = Vector2(960, 593)
 
-[node name="Ring0" parent="Rings" unique_id=109522518 instance=ExtResource("2_y5shy")]
+[node name="Ring2" parent="Rings" unique_id=817166058 instance=ExtResource("4_pw2oc")]
+ring_index = 2
+interval_type = 2
 
 [node name="Ring1" parent="Rings" unique_id=1636516408 instance=ExtResource("3_rlxeh")]
 ring_index = 1
 interval_type = 1
 
-[node name="Ring2" parent="Rings" unique_id=817166058 instance=ExtResource("4_pw2oc")]
-ring_index = 2
-interval_type = 2
+[node name="Ring0" parent="Rings" unique_id=109522518 instance=ExtResource("2_y5shy")]
 
 [node name="StartStop" parent="." unique_id=1939683072 instance=ExtResource("2_ee14c")]
 offset_left = 880.0
@@ -273,3 +286,10 @@ script = ExtResource("8_rlxeh")
 
 [node name="Caster" type="Sprite2D" parent="RayCaster" unique_id=1009913363]
 texture = ExtResource("8_pw2oc")
+
+[node name="PassiveSound" type="Node2D" parent="." unique_id=33464343]
+
+[node name="MeasurePad" type="AudioStreamPlayer" parent="PassiveSound" unique_id=960092840]
+stream = SubResource("AudioStreamRandomizer_3v2xn")
+max_polyphony = 2
+script = ExtResource("13_uioqo")

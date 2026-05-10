@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cxh0tse6o5o01"]
 
 [ext_resource type="Script" uid="uid://brnouifiwqqwo" path="res://core/entities/slot/slot.gd" id="1_l5duc"]
-[ext_resource type="Texture2D" uid="uid://dwe0ak00f8fht" path="res://core/assets/icons/empty.png" id="2_wt1ix"]
+[ext_resource type="Texture2D" uid="uid://bd0fyuixkqg2i" path="res://core/assets/slots/empty.png" id="2_jflvu"]
+[ext_resource type="Texture2D" uid="uid://dj4bikfs8pqve" path="res://core/assets/slots/hover.png" id="3_4ycc5"]
 [ext_resource type="Texture2D" uid="uid://d4lkk2ypkeaaa" path="res://core/assets/badges/1.png" id="3_jflvu"]
 [ext_resource type="Texture2D" uid="uid://blekbahwr8wcy" path="res://core/assets/rings/drop_hint.png" id="3_rs7tw"]
 [ext_resource type="Texture2D" uid="uid://bj6p876mg8oiq" path="res://core/assets/badges/2.png" id="4_4ycc5"]
@@ -20,10 +21,13 @@ radius = 48.0
 
 [node name="Slot" type="Node2D" unique_id=136360553]
 script = ExtResource("1_l5duc")
-texture_empty = ExtResource("2_wt1ix")
+texture_empty = ExtResource("2_jflvu")
+texture_occupied = ExtResource("3_4ycc5")
+texture_hover = ExtResource("3_4ycc5")
 badge_textures = Array[Texture2D]([ExtResource("3_jflvu"), ExtResource("4_4ycc5"), ExtResource("5_sq7fr"), ExtResource("6_l312x"), ExtResource("7_15a3k"), ExtResource("8_a6m3b"), ExtResource("9_bpcd8"), ExtResource("10_ke13t")])
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1311755148]
+scale = Vector2(0.6, 0.6)
 
 [node name="DropHint" type="Sprite2D" parent="." unique_id=1495767581]
 z_index = 4

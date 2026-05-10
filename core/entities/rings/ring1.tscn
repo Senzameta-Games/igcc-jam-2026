@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://kuho8o104lte"]
 
 [ext_resource type="PackedScene" uid="uid://bwl6tavj5b088" path="res://core/entities/rings/ring.tscn" id="1_ti6yj"]
-[ext_resource type="Texture2D" uid="uid://s5ovvwjc8y8m" path="res://core/assets/rings/ring-225r.png" id="2_db3es"]
+[ext_resource type="Texture2D" uid="uid://xom2dow2q2ii" path="res://core/assets/rings/ring1.png" id="2_ajxtm"]
 
 [node name="Ring" unique_id=1939568862 instance=ExtResource("1_ti6yj")]
 radius = 225.0
 
 [node name="Ring" parent="." index="0" unique_id=294359418]
-texture = ExtResource("2_db3es")
+scale = Vector2(0.52, 0.52)
+texture = ExtResource("2_ajxtm")
