@@ -269,15 +269,6 @@ func _on_interval_selected(ring_index: int, item_index: int) -> void:
 		return
 	_rings[ring_index].interval_type = Ring.IntervalType.values()[item_index]
 
-func _on_ring0_interval_selected(item_index: int) -> void:
-	_on_interval_selected(0, item_index)
-
-func _on_ring1_interval_selected(item_index: int) -> void:
-	_on_interval_selected(1, item_index)
-
-func _on_ring2_interval_selected(item_index: int) -> void:
-	_on_interval_selected(2, item_index)
-
 func _on_rotation_model_selected(item_index: int) -> void:
 	rotation_model = RotationModel.values()[item_index]
 	_custom_multipliers_field.visible = rotation_model == RotationModel.CUSTOM
