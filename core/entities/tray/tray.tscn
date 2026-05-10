@@ -8,8 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://bspubr8kdmch8" path="res://core/entities/orbs/F4_orb.tscn" id="6_jn6ln"]
 [ext_resource type="PackedScene" uid="uid://b63vf8wsa5o8l" path="res://core/entities/orbs/G4_orb.tscn" id="7_0vinb"]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_jn6ln"]
-points = PackedVector2Array(-284.5, 250.5, -231.5, -249.5, 50, -250, 90, 0, 240, 250, 0, 250)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jn6ln"]
+size = Vector2(267, 445)
 
 [node name="Tray" type="Node2D" unique_id=835271133]
 script = ExtResource("1_5r44a")
@@ -65,5 +65,6 @@ position = Vector2(-54, 150)
 [node name="Area" type="Area2D" parent="." unique_id=484502034]
 
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1107463542]
-position = Vector2(2.5, -6.5)
-shape = SubResource("ConvexPolygonShape2D_jn6ln")
+position = Vector2(-50, -20)
+rotation = -0.28972465
+shape = SubResource("RectangleShape2D_jn6ln")
