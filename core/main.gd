@@ -71,7 +71,3 @@ func _update_next_button() -> void:
 		_next_level_btn.text = "Return to Level 000 (%s)" % next_filename
 	else:
 		_next_level_btn.text = "Next Level (%s)" % next_filename
-
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("dev_quit"):
-		get_tree().quit()
