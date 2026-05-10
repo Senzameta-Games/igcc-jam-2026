@@ -34,6 +34,7 @@ func _ready() -> void:
 	_piano_roll.set_sequencer(_sequencer)
 	_level_manager.load_level()
 	_update_next_button()
+	_sequencer.set_tray(_tray)
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int) -> void:
 	var target: Vector2 = _piano_roll.get_cell_position(tick, orb_id)

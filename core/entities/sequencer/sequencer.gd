@@ -37,6 +37,8 @@ const MAX_BPM: float = 90.0
 @onready var _custom_multipliers_field: TextEdit = $Tools/Layout/Form/Timing/Rotation/Field
 @onready var _export_form: ExportForm = $ExportForm
 
+var _tray: Tray = null
+
 var _rings: Array[Ring] = []
 var _rotations: Array[float] = [0.0, 0.0, 0.0]
 var _resetting: bool = false
@@ -81,6 +83,8 @@ func get_rings() -> Array[Ring]:
 func eject_orbs() -> void:
 	for ring: Ring in _rings:
 		ring.eject_all_orbs()
+	if(_tray != null):
+		_tray.refill_orbs()
 
 func _physics_process(delta: float) -> void:
 	if not Playback.is_playing:
@@ -327,3 +331,6 @@ func _generate_orb(orb_type_index: int = -1) -> Orb:
 		orb_type_index = randi() % Orb.OrbType.size()
 	var orb_type: Orb.OrbType = Orb.OrbType.values()[orb_type_index]
 	return OrbRegistry.spawn(orb_type)
+
+func set_tray(tray: Tray) -> void:
+	_tray = tray
