@@ -71,3 +71,7 @@ func _update_next_button() -> void:
 		_next_level_btn.text = "Return to Level 000 (%s)" % next_filename
 	else:
 		_next_level_btn.text = "Next Level (%s)" % next_filename
+
+func _on_export_form_file_added(file_name: String) -> void:
+	_level_manager.add_file_name(file_name)
+	_update_next_button()

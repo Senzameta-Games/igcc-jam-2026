@@ -13,6 +13,8 @@ extends Node2D
 
 const SAVE_DIR: String = "res://core/levels/dev/"
 
+signal file_added(file_name: String)
+
 @onready var _id_label: Label = $Panel/Form/ID
 @onready var _name_field: LineEdit = $Panel/Form/Name
 @onready var _bpm_field: LineEdit = $Panel/Form/BPM
@@ -26,11 +28,14 @@ const SAVE_DIR: String = "res://core/levels/dev/"
 
 var _pending_data: Dictionary = {}
 
+var _saved_files: Array[Dictionary] = []
+
 func _ready() -> void:
 	visible = false
 	_save_btn.pressed.connect(_on_save_pressed)
 	_close_btn.pressed.connect(_on_close_pressed)
 	_status_label.text = ""
+	_read_save_dir()
 
 ## Called by Sequencer export() with the current state.
 ## solution: the 16-element solution array
@@ -122,31 +127,49 @@ func _on_save_pressed() -> void:
 		return
 	file.store_string(JSON.stringify(data, "\t"))
 	file.close()
+	_saved_files.append({"fileName": filename, "fileContent": data})
 
 	_status_label.text = "Level saved to %s" % full_path
+	file_added.emit(filename)
 
 func _on_close_pressed() -> void:
 	_pending_data = {}
 	_status_label.text = ""
 	visible = false
 
-## Returns the next available 3-digit ID by scanning existing files.
-func _next_id() -> int:
+func _read_save_dir() -> void:
+	_saved_files = []
 	var dir := DirAccess.open(SAVE_DIR)
 	if dir == null:
-		return 0
-	var highest: int = -1
+		return
 	dir.list_dir_begin()
 	var fname: String = dir.get_next()
 	while fname != "":
 		if fname.ends_with(".json"):
-			var parts: PackedStringArray = fname.split("_", false, 1)
-			if parts.size() >= 1 and parts[0].is_valid_int():
-				var id: int = parts[0].to_int()
-				if id > highest:
-					highest = id
+			var file_details: Dictionary = { "fileName": fname, "fileContent": null }
+			var path: String = SAVE_DIR + fname
+			var file := FileAccess.open(path, FileAccess.READ)
+			if file != null:
+				var existing = JSON.parse_string(file.get_as_text())
+				file.close()
+				if existing is Dictionary:
+					file_details["fileContent"] = existing
+					
+			_saved_files.append(file_details)
 		fname = dir.get_next()
 	dir.list_dir_end()
+
+## Returns the next available 3-digit ID by scanning existing files.
+func _next_id() -> int:
+	var highest: int = -1
+	for file in _saved_files:
+		var file_name = file["fileName"]
+		var parts: PackedStringArray = file_name.split("_", false, 1)
+		if parts.size() >= 1 and parts[0].is_valid_int():
+			var id: int = parts[0].to_int()
+			if id > highest:
+				highest = id
+
 	return highest + 1
 
 ## Returns true if any existing file has the same solution, bpm, and rings
@@ -157,21 +180,14 @@ func _is_duplicate(candidate: Dictionary) -> bool:
 		return false
 	dir.list_dir_begin()
 	var fname: String = dir.get_next()
-	while fname != "":
-		if fname.ends_with(".json"):
-			var path: String = SAVE_DIR + fname
-			var file := FileAccess.open(path, FileAccess.READ)
-			if file != null:
-				var existing = JSON.parse_string(file.get_as_text())
-				file.close()
-				if existing is Dictionary:
-					if (
-						JSON.stringify(existing.get("solution")) == JSON.stringify(candidate["solution"])
-						and existing.get("bpm") == candidate["bpm"]
-						and JSON.stringify(existing.get("rings")) == JSON.stringify(candidate["rings"])
-					):
-						dir.list_dir_end()
-						return true
-		fname = dir.get_next()
-	dir.list_dir_end()
+	
+	for file in _saved_files:
+		var existing = file["fileContent"]
+		if existing is Dictionary:
+			if (
+				JSON.stringify(existing.get("solution")) == JSON.stringify(candidate["solution"])
+				and existing.get("bpm") == candidate["bpm"]
+				and JSON.stringify(existing.get("rings")) == JSON.stringify(candidate["rings"])
+			):
+				return true
 	return false
