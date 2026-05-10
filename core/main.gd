@@ -74,3 +74,8 @@ func _update_next_button() -> void:
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("dev_quit"):
 		get_tree().quit()
+
+
+func _on_export_form_file_added(file_name: String) -> void:
+	_level_manager.add_file_name(file_name)
+	_update_next_button()

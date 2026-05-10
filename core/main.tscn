@@ -83,4 +83,6 @@ fan_radius_outer = 800.0
 fan_angle_span = 80.0
 fan_origin = Vector2(521, 556)
 
+[connection signal="file_added" from="Sequencer/ExportForm" to="." method="_on_export_form_file_added"]
+
 [editable path="Sequencer"]
