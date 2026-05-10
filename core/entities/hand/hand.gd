@@ -68,7 +68,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			if slot_to_handle == null:
 				continue
 			var held_type: Orb.OrbType = _held_orb.orb_id
-			var shift_held: bool = Input.is_key_pressed(KEY_SHIFT)
+			var shift_held: bool = Input.is_key_pressed(KEY_SHIFT) and not slot_to_handle.in_tray
 			try_drop(slot_to_handle)
 			if shift_held and _held_orb == null and _tray != null:
 				var refill_slot: Slot = _tray.get_slot_for_type(held_type)
