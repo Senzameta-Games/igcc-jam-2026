@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://blkl088rhnod6"]
+
+[ext_resource type="Script" uid="uid://craijgv2tliup" path="res://tools/export_form.gd" id="1_r63oj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r63oj"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.24115604, 0.24115607, 0.24115595, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 2
+shadow_offset = Vector2(0, 4)
+
+[node name="ExportForm" type="Node2D" unique_id=422840756]
+script = ExtResource("1_r63oj")
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=349105882]
+custom_minimum_size = Vector2(480, 0)
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_r63oj")
+
+[node name="Form" type="VBoxContainer" parent="Panel" unique_id=1996477065]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Panel/Form" unique_id=165930702]
+layout_mode = 2
+text = "Export configuration as level JSON"
+
+[node name="ID" type="Label" parent="Panel/Form" unique_id=1096618351]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72464263, 0.7246426, 0.7246426, 1)
+theme_override_font_sizes/font_size = 14
+
+[node name="FieldLabel" type="Label" parent="Panel/Form" unique_id=1068964470]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6255971, 0.6255971, 0.6255971, 1)
+theme_override_font_sizes/font_size = 12
+text = "Level name"
+
+[node name="Name" type="LineEdit" parent="Panel/Form" unique_id=2011341183]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+placeholder_text = "Level name"
+
+[node name="FieldLabel2" type="Label" parent="Panel/Form" unique_id=1244692773]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6255971, 0.6255971, 0.6255971, 1)
+theme_override_font_sizes/font_size = 12
+text = "Level BPM"
+
+[node name="BPM" type="LineEdit" parent="Panel/Form" unique_id=1435070633]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+placeholder_text = "BPM"
+
+[node name="FieldLabel3" type="Label" parent="Panel/Form" unique_id=1824124284]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6255971, 0.6255971, 0.6255971, 1)
+theme_override_font_sizes/font_size = 12
+text = "Ring0 Interval Type"
+
+[node name="Ring0Interval" type="OptionButton" parent="Panel/Form" unique_id=339556205]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="FieldLabel4" type="Label" parent="Panel/Form" unique_id=778383087]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6255971, 0.6255971, 0.6255971, 1)
+theme_override_font_sizes/font_size = 12
+text = "Ring1 Interval Type"
+
+[node name="Ring1Interval" type="OptionButton" parent="Panel/Form" unique_id=2096335175]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="FieldLabel5" type="Label" parent="Panel/Form" unique_id=1214817990]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6255971, 0.6255971, 0.6255971, 1)
+theme_override_font_sizes/font_size = 12
+text = "Ring2 Interval Type"
+
+[node name="Ring2Interval" type="OptionButton" parent="Panel/Form" unique_id=1484617705]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="FieldLabel6" type="Label" parent="Panel/Form" unique_id=1954445319]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6255971, 0.6255971, 0.6255971, 1)
+theme_override_font_sizes/font_size = 12
+text = "Current solution array"
+
+[node name="Solution" type="TextEdit" parent="Panel/Form" unique_id=1939113250]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+placeholder_text = "Solution array"
+
+[node name="Save" type="Button" parent="Panel/Form" unique_id=259650618]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Save as JSON"
+
+[node name="Close" type="Button" parent="Panel/Form" unique_id=1100331285]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Cancel"
+flat = true
+
+[node name="Status" type="Label" parent="Panel/Form" unique_id=1365733046]
+layout_mode = 2

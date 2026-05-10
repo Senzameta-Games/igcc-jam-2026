@@ -5,7 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://c2ry2hofjuqey" path="res://core/entities/rings/ring-150r.tscn" id="2_y5shy"]
 [ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring-225r.tscn" id="3_rlxeh"]
 [ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring-300r.tscn" id="4_pw2oc"]
-[ext_resource type="PackedScene" uid="uid://dp33fjwy0hngv" path="res://core/entities/detector/detector.tscn" id="6_pw2oc"]
+[ext_resource type="PackedScene" uid="uid://blkl088rhnod6" path="res://tools/export_form.tscn" id="7_y5shy"]
+[ext_resource type="Texture2D" uid="uid://dwe0ak00f8fht" path="res://core/assets/icons/empty.png" id="8_pw2oc"]
+[ext_resource type="Script" uid="uid://jpnvfasgpdy1" path="res://core/entities/sequencer/ray_caster.gd" id="8_rlxeh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t7dap"]
 content_margin_left = 32.0
@@ -36,22 +38,13 @@ position = Vector2(960, 593)
 
 [node name="Ring0" parent="Rings" unique_id=109522518 instance=ExtResource("2_y5shy")]
 
-[node name="Detector0" parent="Rings/Ring0" unique_id=1231722912 instance=ExtResource("6_pw2oc")]
-position = Vector2(147, 0)
-
 [node name="Ring1" parent="Rings" unique_id=1636516408 instance=ExtResource("3_rlxeh")]
 ring_index = 1
 interval_type = 1
 
-[node name="Detector1" parent="Rings/Ring1" unique_id=311348791 instance=ExtResource("6_pw2oc")]
-position = Vector2(222, -8)
-
 [node name="Ring2" parent="Rings" unique_id=817166058 instance=ExtResource("4_pw2oc")]
 ring_index = 2
 interval_type = 2
-
-[node name="Detector2" parent="Rings/Ring2" unique_id=1481402410 instance=ExtResource("6_pw2oc")]
-position = Vector2(297, -14)
 
 [node name="StartStop" parent="." unique_id=1939683072 instance=ExtResource("2_ee14c")]
 offset_left = 880.0
@@ -243,7 +236,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
-text = "Print current config as solution"
+text = "Export configuration as level JSON"
 
 [node name="Load" type="VBoxContainer" parent="Tools/Layout/Form/LevelData" unique_id=1915839187]
 layout_mode = 2
@@ -267,3 +260,16 @@ theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
 text = "Load this solution"
+
+[node name="ExportForm" parent="." unique_id=422840756 instance=ExtResource("7_y5shy")]
+z_index = 30
+position = Vector2(1378, 92)
+
+[node name="RayCaster" type="Node2D" parent="." unique_id=724280312]
+position = Vector2(960, 593)
+script = ExtResource("8_rlxeh")
+
+[node name="Ray" type="Line2D" parent="RayCaster" unique_id=1219976118]
+
+[node name="Caster" type="Sprite2D" parent="RayCaster" unique_id=1009913363]
+texture = ExtResource("8_pw2oc")

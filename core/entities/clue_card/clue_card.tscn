@@ -96,3 +96,23 @@ texture = ExtResource("3_v52qp")
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1872269837]
 position = Vector2(-2, -6)
 shape = SubResource("RectangleShape2D_v52qp")
+
+[node name="Label" type="Label" parent="." unique_id=624698231]
+offset_left = -161.0
+offset_top = -141.0
+offset_right = 173.0
+offset_bottom = -64.0
+theme_override_colors/font_color = Color(0.05490196, 0.043137256, 0.09803922, 1)
+theme_override_font_sizes/font_size = 12
+text = "Currently has 14 manually placed stars in indexed order.
+
+
+
+
+
+
+
+
+
+Click to send the # of stars in the current level solution
+to their indexed positions on the piano roll."

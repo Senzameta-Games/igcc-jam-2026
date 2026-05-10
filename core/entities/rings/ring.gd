@@ -5,8 +5,6 @@ extends Node2D
 ## Slots are spawned at runtime based on interval_type.
 ## ring_index maps this ring to its entry in Sequencer._rotations.
 
-signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_pos: Vector2, ring_index: int)
-
 enum IntervalType { QUARTER, EIGHTH, SIXTEENTH }
 
 const SLOT_COUNTS: Dictionary = {
@@ -39,7 +37,6 @@ var _slots: Array[Slot] = []
 
 func _ready() -> void:
 	_rebuild_slots()
-	_connect_detectors()
 
 func tick(rot_t: float) -> void:
 	rotation = rot_t * TAU
@@ -68,17 +65,6 @@ func get_orbs() -> Array:
 	for slot: Slot in sorted_slots:
 		ret.append(slot.get_orb())
 	return ret
-
-func _connect_detectors() -> void:
-	for child: Node in get_children():
-		var detector := child as Detector
-		if detector == null:
-			continue
-		if not detector.orb_passed.is_connected(_on_detector_orb_passed):
-			detector.orb_passed.connect(_on_detector_orb_passed)
-
-func _on_detector_orb_passed(orb_id: Orb.OrbType, texture: Texture2D, from_pos: Vector2) -> void:
-	note_triggered.emit(orb_id, texture, from_pos, ring_index)
 
 func _rebuild_slots() -> void:
 	if _slots_container == null:

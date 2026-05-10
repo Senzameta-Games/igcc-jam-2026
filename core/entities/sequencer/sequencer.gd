@@ -8,9 +8,11 @@ extends Node2D
 ## Main listens to note_triggered and owns the trail + piano roll flow.
 
 signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int)
+signal dev_load_requested(data: Dictionary)
 
 enum RotationModel { QUANTIZED, CUSTOM }
 
+const RING_COUNT: int = 3
 const BEATS_PER_MEASURE: float = 4.0
 const TICKS_PER_MEASURE: int = 16
 const MAX_BPM: float = 90.0
@@ -23,6 +25,7 @@ const MAX_BPM: float = 90.0
 
 @onready var _button: Button = $StartStop/Button
 @onready var _rings_container: Node2D = $Rings
+@onready var _ray_caster: RayCaster = $RayCaster
 
 # Dev tools
 @onready var _tools: Control = $Tools/Layout/Form
@@ -32,15 +35,17 @@ const MAX_BPM: float = 90.0
 @onready var _ring2_interval: OptionButton = $Tools/Layout/Form/Timing/Intervals/Interval3/Option
 @onready var _rotation_model_select: OptionButton = $Tools/Layout/Form/Timing/Rotation/Option
 @onready var _custom_multipliers_field: TextEdit = $Tools/Layout/Form/Timing/Rotation/Field
+@onready var _export_form: ExportForm = $ExportForm
 
 var _rings: Array[Ring] = []
 var _rotations: Array[float] = [0.0, 0.0, 0.0]
 var _resetting: bool = false
 
-# Tick clock — driven by absolute measure time, independent of ring multipliers
+# Tick clock driven by absolute measure time, independent of ring multipliers
 var _measure_t: float = 0.0
 var _current_tick: int = 0
 var _last_tick_threshold: int = 0
+var _tick_has_fired: bool = false
 
 # Pending crossings per physics frame, sorted by ring_index before dispatch
 var _pending: Array[Dictionary] = []
@@ -55,27 +60,40 @@ func _ready() -> void:
 		if ring == null:
 			continue
 		_rings.append(ring)
-		ring.note_triggered.connect(_on_ring_note_triggered)
 	_rings.sort_custom(func(a: Ring, b: Ring) -> bool:
 		return a.ring_index < b.ring_index
 	)
+	_ray_caster.note_triggered.connect(_on_ray_caster_note_triggered)
 	_setup_dev_tools()
 
 ## Returns the current BPM measure duration in seconds. Used by Main for trail timing.
 func get_measure_duration() -> float:
 	return (60.0 / bpm) * BEATS_PER_MEASURE
 
+## Returns the 0->1 value of measure progress
+func get_measure_t() -> float:
+	return _measure_t
+
+## Returns the ordered list of rings. Used by LevelManager for slot population.
+func get_rings() -> Array[Ring]:
+	return _rings
+
+func eject_orbs() -> void:
+	for ring: Ring in _rings:
+		ring.eject_all_orbs()
+
 func _physics_process(delta: float) -> void:
 	if not Playback.is_playing:
 		return
 	var base_rate: float = bpm / BEATS_PER_MEASURE / 60.0
 
-	# Tick clock driven by absolute measure time — independent of ring multipliers
+	# Tick clock driven by absolute measure time independent of ring multipliers
 	_measure_t = fmod(_measure_t + base_rate * delta, 1.0)
 	var tick_threshold: int = int(_measure_t * TICKS_PER_MEASURE)
 	if tick_threshold != _last_tick_threshold:
 		_last_tick_threshold = tick_threshold
 		_current_tick = tick_threshold
+		_tick_has_fired = true 
 		Playback.tick_advanced.emit(_current_tick)
 
 	# Rings advance at their own multiplied rates
@@ -116,30 +134,37 @@ func _on_playback_started() -> void:
 	_resetting = false
 	_measure_t = 0.0
 	_current_tick = 0
-	_last_tick_threshold = 0
+	_last_tick_threshold = -1
+	_tick_has_fired = false
 
 func _on_playback_stopped() -> void:
 	_resetting = true
+#
+#func _on_ring_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, ring_index: int) -> void:
+	#_pending.append({
+		#"orb_id": orb_id,
+		#"texture": texture,
+		#"from": from_position,
+		#"ring_idx": ring_index,
+		#"tick": _current_tick
+	#})
+	#if not _process_queued:
+		#_process_queued = true
+		#call_deferred("_flush_pending")
 
-func _on_ring_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, ring_index: int) -> void:
+func _on_ray_caster_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int) -> void:
 	_pending.append({
 		"orb_id": orb_id,
 		"texture": texture,
 		"from": from_position,
-		"ring_idx": ring_index,
-		"tick": _current_tick
+		"tick": tick
 	})
 	if not _process_queued:
 		_process_queued = true
 		call_deferred("_flush_pending")
 
-## Sorts pending detections by ring_index and emits note_triggered for each.
-## Deferred so multiple detections in one physics frame are batched.
 func _flush_pending() -> void:
 	_process_queued = false
-	_pending.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return a.ring_idx < b.ring_idx
-	)
 	for entry: Dictionary in _pending:
 		note_triggered.emit(
 			entry.orb_id as Orb.OrbType,
@@ -148,7 +173,7 @@ func _flush_pending() -> void:
 			entry.tick as int
 		)
 	_pending.clear()
-
+	
 func _on_reset_pressed() -> void:
 	Playback.stop()
 	get_tree().reload_current_scene()
@@ -172,10 +197,19 @@ func export() -> void:
 			if ring_grid[i] != null:
 				curr_pos.push_front((ring_grid[i] as Orb).orb_id)
 		export_arr.append(curr_pos)
-	var export_obj = {
-		"solution": export_arr
-	}
-	$Tools/LoadText.text = JSON.stringify(export_obj)
+
+	# Also write to LoadText for the existing dev load flow
+	var export_obj: Dictionary = {"solution": export_arr}
+	$Tools/Layout/Form/LevelData/Load/LoadText.text = JSON.stringify(export_obj)
+
+	# Build rings data for ExportForm
+	var rings_data: Array = []
+	for ring: Ring in _rings:
+		rings_data.append({
+			"interval": Ring.IntervalType.keys()[ring.interval_type]
+		})
+
+	_export_form.present(export_arr, bpm, rings_data)
 
 func _on_export_pressed() -> void:
 	export()
@@ -248,7 +282,7 @@ func _on_fill_slots_pressed() -> void:
 		for slot: Slot in ring.get_slots():
 			if slot.is_occupied():
 				continue
-			add_orb_to_slot(slot)
+			_add_orb_to_slot(slot)
 
 func _on_custom_multipliers_committed() -> void:
 	var parts: Array[String] = []
@@ -275,39 +309,21 @@ func _multipliers_to_string(multipliers: Array[float]) -> String:
 
 func _on_load_slots_pressed() -> void:
 	var load_obj = JSON.parse_string($Tools/Layout/Form/LevelData/Load/LoadText.text)
-	if(load_obj == null):
+	if load_obj == null:
 		return
-	load_game(load_obj)
-	
+	dev_load_requested.emit(load_obj)
 
-func load_game(json_data: Dictionary) -> void:
-	for ring: Ring in _rings:
-		ring.eject_all_orbs()
-	var solution = json_data["solution"]
-	for index in solution.size():
-		var orb_arr = solution[index]
-		match orb_arr.size():
-			1:
-				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
-			2:
-				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
-				add_orb_to_slot(_rings[1].slot_at_modified_index(index), orb_arr[1])
-			3:
-				add_orb_to_slot(_rings[2].slot_at_modified_index(index), orb_arr[0])
-				add_orb_to_slot(_rings[1].slot_at_modified_index(index), orb_arr[1])
-				add_orb_to_slot(_rings[0].slot_at_modified_index(index), orb_arr[2])
-	
-	print("loaded")
+# --- Dev-only helpers for now (used by fill slots tool) ---
 
-func add_orb_to_slot(slot: Slot, index: int = -1) -> void:
-	var curr_orb = generate_orb(index)
-	if curr_orb == null or slot == null:
+func _add_orb_to_slot(slot: Slot, orb_type_index: int = -1) -> void:
+	var orb: Orb = _generate_orb(orb_type_index)
+	if orb == null or slot == null:
 		return
-	slot.add_child(curr_orb)
-	slot.receive_orb(curr_orb)
+	slot.add_child(orb)
+	slot.receive_orb(orb)
 
-func generate_orb(orb_type_index: int = -1) -> Orb:
-	if(orb_type_index == -1):
+func _generate_orb(orb_type_index: int = -1) -> Orb:
+	if orb_type_index == -1:
 		orb_type_index = randi() % Orb.OrbType.size()
-	var random_type: Orb.OrbType = Orb.OrbType.values()[orb_type_index]
-	return OrbRegistry.spawn(random_type)
+	var orb_type: Orb.OrbType = Orb.OrbType.values()[orb_type_index]
+	return OrbRegistry.spawn(orb_type)
