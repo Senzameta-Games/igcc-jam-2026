@@ -176,3 +176,7 @@ func _build_key_targets(solution: Array) -> Array[Vector2]:
 				continue
 			targets.append(_piano_roll.get_cell_position(tick, orb_id))
 	return targets
+
+func add_file_name(name: String) -> void:
+	_level_files.append(LEVELS_DIR + name)
+	_level_files.sort()
