@@ -59,6 +59,15 @@ interval_type = 1
 
 [node name="Ring0" parent="Rings" unique_id=109522518 instance=ExtResource("2_y5shy")]
 
+[node name="RayCaster" type="Node2D" parent="." unique_id=724280312]
+position = Vector2(960, 593)
+script = ExtResource("8_rlxeh")
+
+[node name="Ray" type="Line2D" parent="RayCaster" unique_id=1219976118]
+
+[node name="Caster" type="Sprite2D" parent="RayCaster" unique_id=1009913363]
+texture = ExtResource("8_pw2oc")
+
 [node name="StartStop" parent="." unique_id=1939683072 instance=ExtResource("2_ee14c")]
 offset_left = 880.0
 offset_top = 514.0
@@ -68,7 +77,7 @@ offset_bottom = 674.0
 [node name="Tools" type="PanelContainer" parent="." unique_id=333190472]
 z_index = 12
 custom_minimum_size = Vector2(400, 0)
-anchors_preset = -1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 41.0
@@ -277,15 +286,6 @@ text = "Load this solution"
 [node name="ExportForm" parent="." unique_id=422840756 instance=ExtResource("7_y5shy")]
 z_index = 30
 position = Vector2(1378, 92)
-
-[node name="RayCaster" type="Node2D" parent="." unique_id=724280312]
-position = Vector2(960, 593)
-script = ExtResource("8_rlxeh")
-
-[node name="Ray" type="Line2D" parent="RayCaster" unique_id=1219976118]
-
-[node name="Caster" type="Sprite2D" parent="RayCaster" unique_id=1009913363]
-texture = ExtResource("8_pw2oc")
 
 [node name="PassiveSound" type="Node2D" parent="." unique_id=33464343]
 

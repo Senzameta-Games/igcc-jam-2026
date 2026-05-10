@@ -41,8 +41,6 @@ func _ready() -> void:
 			break
 	_refresh_visual()
 
-func _process(delta: float) -> void:
-	global_rotation = 0
 
 func receive_orb(incoming: Orb) -> Orb:
 	# Empty slot path. Accept and seat it.

@@ -5,6 +5,14 @@ extends Node2D
 ## lifecycle to LevelManager. Owns the orb trail spawning flow
 ## since it bridges Sequencer (source) and PianoRoll (destination).
 
+@export var sequencer_position_default: Vector2 = Vector2(0, -100)
+@export var sequencer_position_playback: Vector2 = Vector2(0, 341)
+@export var sequencer_transition_duration: float = 0.5
+@export var sequencer_ease: Tween.EaseType = Tween.EASE_IN_OUT
+@export var sequencer_trans: Tween.TransitionType = Tween.TRANS_CUBIC
+
+var _sequencer_tween: Tween = null
+
 @onready var _hand: Hand = $Hand
 @onready var _sequencer: Sequencer = $Sequencer
 @onready var _tray: Tray = $Tray
@@ -29,6 +37,8 @@ func _ready() -> void:
 	_next_level_btn.pressed.connect(_on_next_level_pressed)
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_sky_layer.transition_finished.connect(_on_sky_transition_finished)
+	Playback.started.connect(func() -> void: _move_sequencer(sequencer_position_playback))
+	Playback.stopped.connect(func() -> void: _move_sequencer(sequencer_position_default))
 	_level_manager.initialize(_sequencer, _tray, _piano_roll, _clue_card)
 	_hand.set_tray(_tray)
 	_piano_roll.set_sequencer(_sequencer)
@@ -39,12 +49,20 @@ func _ready() -> void:
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int) -> void:
 	var target: Vector2 = _piano_roll.get_cell_position(tick, orb_id)
 	var trail := ORB_TRAIL_SCENE.instantiate() as OrbTrail
-	_feedback.add_child(trail)
 	trail.setup(texture, from_position, target)
+	_feedback.add_child(trail)
 	var measure_duration: float = _sequencer.get_measure_duration()
 	trail.arrived.connect(func() -> void:
 		_piano_roll.receive_orb(orb_id, texture, tick, measure_duration)
 	)
+
+func _move_sequencer(target: Vector2) -> void:
+	if _sequencer_tween != null and _sequencer_tween.is_running():
+		_sequencer_tween.kill()
+	_sequencer_tween = create_tween()
+	_sequencer_tween.set_ease(sequencer_ease)
+	_sequencer_tween.set_trans(sequencer_trans)
+	_sequencer_tween.tween_property(_sequencer, "position", target, sequencer_transition_duration)
 
 func _on_dev_load_requested(data: Dictionary) -> void:
 	_level_manager.load_level_data(data)
