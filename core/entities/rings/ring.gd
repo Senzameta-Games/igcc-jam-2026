@@ -88,7 +88,7 @@ func _calculate_slot_positions() -> void:
 		return
 	for i: int in range(count):
 		_slots[i].index = i
-		var angle: float = (TAU / float(count)) * float(i)
+		var angle: float = (TAU / float(count)) * float(i) * -1
 		_slots[i].position = Vector2(cos(angle), sin(angle)) * radius
 
 

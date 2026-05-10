@@ -10,6 +10,7 @@ signal dropped
 
 var _held_orb: Orb = null
 var _pointing: bool = false
+var _tray: Tray = null
 
 @onready var _area: Area2D = $Area
 @onready var _sprite: Sprite2D = $Sprite
@@ -29,10 +30,32 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:
 		return
 	var mb := event as InputEventMouseButton
-	if not mb.pressed or mb.button_index != MOUSE_BUTTON_LEFT:
+	if not mb.pressed:
 		return
 	if Playback.is_playing:
 		return
+	# Right click
+	if mb.button_index == MOUSE_BUTTON_RIGHT:
+		for area: Area2D in _area.get_overlapping_areas():
+			var slot := area.get_parent() as Slot
+			if slot == null or slot.in_tray or not slot.is_occupied():
+				continue
+			var orb: Orb = slot.eject_orb()
+			if orb == null:
+				continue
+			if _tray != null:
+				var tray_slot: Slot = _tray.get_slot_for_orb(orb)
+				if tray_slot != null:
+					tray_slot.receive_orb(orb)
+				else:
+					# No tray slot to put the orb
+					slot.receive_orb(orb)
+			get_viewport().set_input_as_handled()
+			return
+	
+	if mb.button_index != MOUSE_BUTTON_LEFT:
+		return
+	
 	if _held_orb != null:
 		for area: Area2D in _area.get_overlapping_areas():
 			var parent = area.get_parent()
@@ -42,11 +65,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			elif(parent is Tray):
 				var tray := parent as Tray
 				slot_to_handle = tray.get_slot_for_orb(_held_orb)
-				pass
-			
 			if slot_to_handle == null:
 				continue
+			var held_type: Orb.OrbType = _held_orb.orb_id
+			var shift_held: bool = Input.is_key_pressed(KEY_SHIFT)
 			try_drop(slot_to_handle)
+			if shift_held and _held_orb == null and _tray != null:
+				var refill_slot: Slot = _tray.get_slot_for_type(held_type)
+				if refill_slot != null:
+					pick_up(refill_slot.eject_orb())
 			get_viewport().set_input_as_handled()
 			return
 	else:
@@ -58,6 +85,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				pick_up(slot.eject_orb())
 				get_viewport().set_input_as_handled()
 				return
+
+func set_tray(tray: Tray) -> void:
+	_tray = tray
 
 func connect_button(button: PlaybackButton) -> void:
 	picked_up.connect(button._on_picked_up)

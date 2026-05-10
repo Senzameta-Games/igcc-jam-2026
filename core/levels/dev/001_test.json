@@ -1,16 +1,42 @@
 {
+	"bpm": 40.0,
 	"id": 1,
 	"name": "test",
-	"bpm": 40,
 	"rings": [
-		{ "interval": "QUARTER" },
-		{ "interval": "EIGHTH" },
-		{ "interval": "SIXTEENTH" }
+		{
+			"interval": "QUARTER"
+		},
+		{
+			"interval": "EIGHTH"
+		},
+		{
+			"interval": "SIXTEENTH"
+		}
 	],
 	"solution": [
-		[1, 2], [], [1], [],
-		[1, 2], [], [1], [],
-		[1, 2], [], [1], [],
-		[1, 2], [], [1], []
+		[
+			2.0
+		],
+		[
+			3.0
+		],
+		[
+			1.0
+		],
+		[
+			0.0
+		],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[]
 	]
 }

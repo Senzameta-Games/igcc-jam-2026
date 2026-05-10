@@ -30,6 +30,7 @@ func _ready() -> void:
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_sky_layer.transition_finished.connect(_on_sky_transition_finished)
 	_level_manager.initialize(_sequencer, _tray, _piano_roll, _clue_card)
+	_hand.set_tray(_tray)
 	_piano_roll.set_sequencer(_sequencer)
 	_level_manager.load_level()
 	_update_next_button()
