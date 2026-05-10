@@ -78,6 +78,9 @@ func get_measure_t() -> float:
 func get_rings() -> Array[Ring]:
 	return _rings
 
+func eject_orbs() -> void:
+	for ring: Ring in _rings:
+		ring.eject_all_orbs()
 
 func _physics_process(delta: float) -> void:
 	if not Playback.is_playing:

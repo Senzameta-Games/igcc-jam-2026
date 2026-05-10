@@ -123,14 +123,11 @@ func _present_level(data: Dictionary) -> void:
 ## solution is a 16-element array where each entry is an array of OrbType ints.
 ## Ring order in solution: index 0 = outermost ring, index 2 = innermost ring.
 func _load_game(json_data: Dictionary) -> void:
-	var rings: Array[Ring] = _sequencer.get_rings()
-	for ring: Ring in rings:
-		ring.eject_all_orbs()
+	_sequencer.eject_orbs()
 
 func _load_solution(json_data: Dictionary) -> void:
+	_sequencer.eject_orbs()
 	var rings: Array[Ring] = _sequencer.get_rings()
-	for ring: Ring in rings:
-		ring.eject_all_orbs()
 	var solution: Array = json_data["solution"]
 	for index: int in range(solution.size()):
 		var orb_arr: Array = solution[index]
