@@ -30,6 +30,7 @@ func _ready() -> void:
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_sky_layer.transition_finished.connect(_on_sky_transition_finished)
 	_level_manager.initialize(_sequencer, _tray, _piano_roll, _clue_card)
+	_hand.set_tray(_tray)
 	_piano_roll.set_sequencer(_sequencer)
 	_level_manager.load_level()
 	_update_next_button()
@@ -70,11 +71,6 @@ func _update_next_button() -> void:
 		_next_level_btn.text = "Return to Level 000 (%s)" % next_filename
 	else:
 		_next_level_btn.text = "Next Level (%s)" % next_filename
-
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("dev_quit"):
-		get_tree().quit()
-
 
 func _on_export_form_file_added(file_name: String) -> void:
 	_level_manager.add_file_name(file_name)
