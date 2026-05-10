@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://qml0luw2u2dx" path="res://core/assets/audio/background/measure_pad_3.wav" id="11_3o0k2"]
 [ext_resource type="AudioStream" uid="uid://1odt55oru0gy" path="res://core/assets/audio/background/measure_pad_4.wav" id="12_aen4v"]
 [ext_resource type="Script" uid="uid://31exyxhqqk4i" path="res://core/entities/sequencer/measure_pad.gd" id="13_uioqo"]
+[ext_resource type="AudioStream" uid="uid://bjt8dxbjy7i0f" path="res://core/assets/audio/ring/playbackSpin.wav" id="14_52j4s"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t7dap"]
 content_margin_left = 32.0
@@ -291,5 +292,11 @@ position = Vector2(1378, 92)
 
 [node name="MeasurePad" type="AudioStreamPlayer" parent="PassiveSound" unique_id=960092840]
 stream = SubResource("AudioStreamRandomizer_3v2xn")
+volume_db = -12.0
 max_polyphony = 2
 script = ExtResource("13_uioqo")
+
+[node name="RingRotate" type="AudioStreamPlayer" parent="PassiveSound" unique_id=7909675]
+stream = ExtResource("14_52j4s")
+volume_db = 8.0
+pitch_scale = 0.5

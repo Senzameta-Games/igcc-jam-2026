@@ -26,6 +26,7 @@ const MAX_BPM: float = 90.0
 @onready var _button: Button = $StartStop/Button
 @onready var _rings_container: Node2D = $Rings
 @onready var _ray_caster: RayCaster = $RayCaster
+@onready var _ring_spin_sfx: AudioStreamPlayer = $PassiveSound/RingRotate
 
 # Dev tools
 @onready var _tools: Control = $Tools/Layout/Form
@@ -124,6 +125,7 @@ func _get_multiplier(ring_index: int) -> float:
 
 func _on_playback_started() -> void:
 	_resetting = false
+	_ring_spin_sfx.play()
 	_measure_t = 0.0
 	_current_tick = 0
 	_last_tick_threshold = -1
@@ -135,6 +137,7 @@ func _on_playback_started() -> void:
 		_rings[i].set_rotation_speed(base_rate * multiplier * TAU)
 
 func _on_playback_stopped() -> void:
+	_ring_spin_sfx.stop()
 	for ring: Ring in _rings:
 		ring.set_rotation_speed(0.0)
 	_resetting = true
