@@ -3,12 +3,13 @@
 [ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_g6dl0"]
 [ext_resource type="Texture2D" uid="uid://cn6t58g3qe3wv" path="res://core/assets/icons/f-note.png" id="2_y1m8o"]
 [ext_resource type="AudioStream" uid="uid://duqrvvpdo5djv" path="res://core/assets/audio/notes/G4orb.wav" id="3_st0p7"]
+[ext_resource type="Texture2D" uid="uid://bobq68qeyve50" path="res://core/assets/orbs/blue.png" id="4_y1m8o"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_xexi0"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_y1m8o")
+"texture": ExtResource("4_y1m8o")
 }],
 "loop": true,
 "name": &"default",
@@ -21,4 +22,5 @@ note = ExtResource("3_st0p7")
 orb_id = 3
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]
+scale = Vector2(0.55, 0.55)
 sprite_frames = SubResource("SpriteFrames_xexi0")
