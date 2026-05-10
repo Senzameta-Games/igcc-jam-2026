@@ -39,7 +39,7 @@ extends Node2D
 @export var playhead_fade_speed: float = 8.0
 
 const TICKS: int = 16
-const ARRIVAL_SCALE: float = 0.5
+const ARRIVAL_SCALE: float = 0.18
 
 const _DEBUG_ARC_COLOR: Color = Color(1.0, 0.0, 1.0, 0.4)
 const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.15)

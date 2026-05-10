@@ -17,6 +17,9 @@ var _tray: Tray = null
 
 func _ready() -> void:
 	_refresh_texture()
+	var mouse: Vector2 = get_global_mouse_position()
+	_area.global_position = mouse
+	_sprite.global_position = mouse
 
 func _process(_delta: float) -> void:
 	var mouse: Vector2 = get_global_mouse_position()
@@ -99,7 +102,9 @@ func pick_up(orb: Orb) -> void:
 	if orb == null:
 		return
 	_held_orb = orb
+	var actual_pos: Vector2 = orb.global_position
 	_held_orb.reparent(self, true)
+	_held_orb.global_position = actual_pos
 	_held_orb.lift()
 	_refresh_texture()
 	_show_all_drophints()

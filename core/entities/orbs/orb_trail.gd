@@ -7,7 +7,8 @@ extends Node2D
  
 signal arrived
 
-const ARRIVAL_SCALE: float = 0.5
+const ARRIVAL_SCALE: float = 0.18
+const LAUNCH_SCALE: float = 0.29
  
 @export var travel_duration: float = 0.4
 @export var arc_height: float = -80.0
@@ -16,15 +17,15 @@ var _from: Vector2
 var _to: Vector2
 var _control: Vector2
 var _elapsed: float = 0.0
- 
-@onready var _sprite: Sprite2D = $Sprite
+var _sprite: Sprite2D
  
 func setup(texture: Texture2D, from: Vector2, to: Vector2) -> void:
 	_from = from
 	_to = to
 	var mid: Vector2 = (_from + _to) * 0.5
 	_control = mid + Vector2(0.0, -arc_height)
-	_sprite.texture = texture
+	_sprite = $Sprite
+	_sprite.scale = Vector2(LAUNCH_SCALE, LAUNCH_SCALE)
 	global_position = _from
  
 func _process(delta: float) -> void:

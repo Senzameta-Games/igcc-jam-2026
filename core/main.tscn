@@ -4,9 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/sequencer/sequencer.tscn" id="1_xiose"]
 [ext_resource type="Shader" uid="uid://xeu5hmfr8vto" path="res://core/screenspace_shader.gdshader" id="2_510js"]
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
-[ext_resource type="Texture2D" uid="uid://dvqrc1mtpjbd4" path="res://core/assets/layout/frame.png" id="2_jsmgm"]
 [ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
 [ext_resource type="Script" uid="uid://0x2x5jmtfaov" path="res://core/managers/level_manager.gd" id="2_rayt5"]
+[ext_resource type="Texture2D" uid="uid://brctjjt72mrxc" path="res://core/assets/layout/bottom_frame.png" id="4_510js"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="5_xa854"]
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
@@ -15,9 +15,6 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ua4h"]
 shader = ExtResource("2_510js")
-shader_parameter/dither_strength = 0.0
-shader_parameter/dither_scale = 1.0
-shader_parameter/vignette_strength = 0.10000000475
 shader_parameter/luma_threshold = 0.9250000439375
 shader_parameter/smoke_strength = 0.53200002527
 shader_parameter/smoke_speed = 1.9540000928149999
@@ -34,6 +31,7 @@ script = ExtResource("1_csopv")
 
 [node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
 layer = 100
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="SSShader" unique_id=1170456765]
 material = SubResource("ShaderMaterial_7ua4h")
@@ -50,15 +48,40 @@ metadata/_custom_type_script = "uid://0x2x5jmtfaov"
 
 [node name="Frame" type="Sprite2D" parent="." unique_id=1065424529]
 z_index = 5
-position = Vector2(481.99997, 538.7332)
-scale = Vector2(0.5015291, 0.5009577)
-texture = ExtResource("2_jsmgm")
+position = Vector2(960, 1048)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("4_510js")
 
 [node name="ClueCard" parent="." unique_id=1129193832 instance=ExtResource("10_xhu5d")]
 z_index = 12
-position = Vector2(448, 346)
-minimized_position = Vector2(-300, 0)
+position = Vector2(960, 589)
+minimized_position = Vector2(-600, 360)
 key_launch_duration = 1.8
+
+[node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
+
+[node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
+position = Vector2(0, -100)
+
+[node name="RayCaster" parent="Sequencer" index="0" unique_id=724280312]
+rotation = -1.5707964
+
+[node name="Rings" parent="Sequencer" index="1" unique_id=123070447]
+rotation = -1.5707964
+
+[node name="Tools" parent="Sequencer" index="3" unique_id=333190472]
+offset_top = -315.0
+offset_bottom = -202.0
+
+[node name="Background" type="Sprite2D" parent="." unique_id=80829557]
+z_index = -1
+position = Vector2(960, 540)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_r77kf")
+
+[node name="Tray" parent="." unique_id=835271133 instance=ExtResource("5_xa854")]
+z_index = 5
+position = Vector2(960, 1110)
 
 [node name="NextLevel" type="Button" parent="." unique_id=2107144106]
 z_index = 5
@@ -76,28 +99,13 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 24
-text = "Test Background Rotation"
-
-[node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
-
-[node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
-position = Vector2(0, -43)
-
-[node name="Background" type="Sprite2D" parent="." unique_id=80829557]
-z_index = -1
-position = Vector2(960, 540)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_r77kf")
-
-[node name="Tray" parent="." unique_id=835271133 instance=ExtResource("5_xa854")]
-z_index = 5
-position = Vector2(380, 791)
+text = "Next Level"
 
 [node name="DetectionFeedback" type="Node2D" parent="." unique_id=1631393910]
 
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
-position = Vector2(960, 552)
-rotation = 1.3962634
+position = Vector2(960, 900)
+rotation = -0.17453292
 script = ExtResource("6_brq4u")
 
 [node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]

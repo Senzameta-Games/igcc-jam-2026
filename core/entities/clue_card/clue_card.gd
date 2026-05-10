@@ -4,7 +4,7 @@ extends Node2D
 signal keys_launched
 signal dismiss_complete
 
-@export var slide_in_offset: Vector2 = Vector2(-300.0, 0.0)
+@export var slide_in_offset: Vector2 = Vector2(0.0, 800.0)
 @export var slide_in_duration: float = 0.5
 @export var minimized_position: Vector2 = Vector2(-120.0, 0.0)
 @export var minimized_scale: Vector2 = Vector2(0.5, 0.5)
@@ -26,8 +26,9 @@ var _resting_position: Vector2 = Vector2.ZERO
 var _dismissed: bool = false
 
 func _ready() -> void:
-	_resting_position = global_position
 	visible = false
+	await get_tree().process_frame
+	_resting_position = global_position
 	_area.input_event.connect(_on_area_input_event)
 
 func setup(piano_roll: PianoRoll, solution: Array, unique_orbs: Array[Orb.OrbType], piano_roll_keys: Node2D) -> void:
@@ -45,13 +46,14 @@ func setup(piano_roll: PianoRoll, solution: Array, unique_orbs: Array[Orb.OrbTyp
 		key.modulate = Color.BLACK
 
 func present() -> void:
+	await get_tree().process_frame
 	global_position = _resting_position + slide_in_offset
 	visible = true
 	modulate.a = 0.0
 	var tween := create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(self, "global_position", _resting_position, slide_in_duration) \
-		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 	tween.tween_property(self, "modulate:a", 1.0, slide_in_duration * 0.6)
 
 func get_key_count() -> int:
@@ -84,18 +86,21 @@ func dismiss() -> void:
 		if original == null:
 			completed += 1
 			continue
+		var start_pos: Vector2 = original.global_position
+		var target: Vector2 = key_targets[i]
+		var delay: float = i * key_launch_stagger
+
 		var dupe := Sprite2D.new()
 		dupe.texture = original.texture
 		dupe.modulate = Color.WHITE
 		dupe.z_index = 15
-		_piano_roll_keys.add_child(dupe)
-		dupe.global_position = original.global_position
+		dupe.position = _piano_roll_keys.to_local(start_pos)
 		dupe.scale = original.scale
-		var target: Vector2 = key_targets[i]
-		var delay: float = i * key_launch_stagger
+		_piano_roll_keys.add_child(dupe)  # add AFTER setting position
+		var local_target: Vector2 = _piano_roll_keys.to_local(target)
 		var tween := dupe.create_tween()
 		tween.tween_interval(delay)
-		tween.tween_property(dupe, "global_position", target, key_launch_duration) \
+		tween.tween_property(dupe, "position", local_target, key_launch_duration) \
 			.set_ease(key_launch_ease) \
 			.set_trans(key_launch_trans)
 		tween.tween_callback(func() -> void:
