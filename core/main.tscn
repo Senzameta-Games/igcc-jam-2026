@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
 [ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
 [ext_resource type="Script" uid="uid://0x2x5jmtfaov" path="res://core/managers/level_manager.gd" id="2_rayt5"]
+[ext_resource type="Script" uid="uid://0jy8je4f7jdl" path="res://core/managers/console_mode.gd" id="4_7ua4h"]
 [ext_resource type="Texture2D" uid="uid://brctjjt72mrxc" path="res://core/assets/layout/bottom_frame.png" id="4_510js"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="5_xa854"]
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
@@ -26,8 +27,17 @@ shader_parameter/turbulence_scale = 4.5010001662975
 shader_parameter/blur_radius = 0.0010000000475
 shader_parameter/smoke_color = Color(0.95173925, 0.84316486, 0.8871049, 0.34901962)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ntwa4"]
+size = Vector2(1920, 945)
+
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
+sequencer_position_desk = Vector2(0, -20)
+sequencer_position_sky = Vector2(0, 340)
+sequencer_transition_duration = 1.4
+sequencer_trans = 3
+sequencer_z_index_desk = 1
+sequencer_z_index_sky = 0
 
 [node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
 layer = 100
@@ -46,10 +56,13 @@ mouse_filter = 2
 script = ExtResource("2_rayt5")
 metadata/_custom_type_script = "uid://0x2x5jmtfaov"
 
+[node name="ConsoleMode" type="Node" parent="." unique_id=978732142]
+script = ExtResource("4_7ua4h")
+
 [node name="Frame" type="Sprite2D" parent="." unique_id=1065424529]
-z_index = 5
-position = Vector2(960, 1048)
-scale = Vector2(0.7, 0.7)
+z_index = 10
+position = Vector2(975.99994, 875.99994)
+scale = Vector2(0.55, 0.55)
 texture = ExtResource("4_510js")
 
 [node name="ClueCard" parent="." unique_id=1129193832 instance=ExtResource("10_xhu5d")]
@@ -61,7 +74,7 @@ key_launch_duration = 1.8
 [node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
 
 [node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
-position = Vector2(0, -100)
+position = Vector2(0, -60)
 
 [node name="Rings" parent="Sequencer" index="0" unique_id=123070447]
 rotation = -1.5707964
@@ -70,9 +83,11 @@ rotation = -1.5707964
 rotation = -1.5707964
 
 [node name="Tools" parent="Sequencer" index="3" unique_id=333190472]
-anchors_preset = 4
+offset_left = 0.0
 offset_top = -315.0
+offset_right = 636.0
 offset_bottom = -202.0
+grow_vertical = 2
 
 [node name="Background" type="Sprite2D" parent="." unique_id=80829557]
 z_index = -1
@@ -81,8 +96,12 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_r77kf")
 
 [node name="Tray" parent="." unique_id=835271133 instance=ExtResource("5_xa854")]
-z_index = 5
-position = Vector2(960, 1110)
+z_index = 4
+position = Vector2(960, 552)
+tray_pivot = Vector2(960, 552)
+angle_sky_deg = -90.0
+arc_transition_duration = 0.9
+arc_trans = 4
 
 [node name="NextLevel" type="Button" parent="." unique_id=2107144106]
 z_index = 5
@@ -105,21 +124,32 @@ text = "Next Level"
 [node name="DetectionFeedback" type="Node2D" parent="." unique_id=1631393910]
 
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
-position = Vector2(960, 900)
-rotation = -0.17453292
+position = Vector2(960, 520)
 script = ExtResource("6_brq4u")
+position_active = Vector2(960, 780)
+position_minimized = Vector2(960, 360)
+mode_transition_duration = 1.2
+mode_trans = 4
 
 [node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]
 z_index = -1
 texture = ExtResource("7_cus2n")
 
 [node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
-position = Vector2(-419.49097, -638.5448)
-rotation = 0.17453294
+position = Vector2(-524.0001, -349)
+scale = Vector2(0.99999994, 0.99999994)
 fan_radius_inner = 540.0
 fan_radius_outer = 800.0
 fan_angle_span = 80.0
 fan_origin = Vector2(521, 556)
+
+[node name="HitArea" type="Area2D" parent="SkyLayer" unique_id=1211724838]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="SkyLayer/HitArea" unique_id=815866661]
+position = Vector2(0, -304.5)
+shape = SubResource("RectangleShape2D_ntwa4")
 
 [connection signal="file_added" from="Sequencer/ExportForm" to="." method="_on_export_form_file_added"]
 

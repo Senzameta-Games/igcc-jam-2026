@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://0kkxevqigqm"]
+
+[ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_opbta"]
+[ext_resource type="AudioStream" uid="uid://banbnhmwoa01i" path="res://core/assets/audio/orb notes/play/G3/G3.wav" id="2_b56gk"]
+[ext_resource type="AudioStream" uid="uid://cng41rdi3fo8t" path="res://core/assets/audio/orb notes/play/G3/G3_2.wav" id="3_0dred"]
+[ext_resource type="AudioStream" uid="uid://d0nktpfimj3c4" path="res://core/assets/audio/orb notes/play/G3/G3_3.wav" id="4_3o115"]
+[ext_resource type="AudioStream" uid="uid://1mr0vtjtiqt7" path="res://core/assets/audio/orb notes/pick-up/G3_pickup.wav" id="5_ni0p8"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_bndwn"]
+streams_count = 3
+stream_0/stream = ExtResource("2_b56gk")
+stream_1/stream = ExtResource("3_0dred")
+stream_2/stream = ExtResource("4_3o115")
+
+[node name="Orb" unique_id=552011164 instance=ExtResource("1_opbta")]
+note = SubResource("AudioStreamRandomizer_bndwn")
+orb_id = 2
+
+[node name="PitchHint" parent="." index="5" unique_id=1478975366]
+stream = ExtResource("5_ni0p8")

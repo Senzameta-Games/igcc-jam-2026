@@ -23,7 +23,7 @@ func _process(delta: float) -> void:
 		volume_db -= 0.2
 
 func _on_playback_started() -> void:
-	volume_db = -14.0
+	volume_db = -18.0
 	await get_tree().process_frame
 	play()
 	is_playing = true

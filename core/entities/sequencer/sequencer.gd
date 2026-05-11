@@ -27,6 +27,9 @@ const MAX_BPM: float = 90.0
 @onready var _rings_container: Node2D = $Rings
 @onready var _ray_caster: RayCaster = $RayCaster
 @onready var _ring_spin_sfx: AudioStreamPlayer = $PassiveSound/RingRotate
+@onready var _playback_button_sfx: AudioStreamPlayer = $StartStop/ButtonPress
+@onready var _wind_up_sfx: AudioStreamPlayer = $PassiveSound/WindUp
+@onready var _wind_down_sfx: AudioStreamPlayer = $PassiveSound/WindDown
 
 # Dev tools
 @onready var _tools: Control = $Tools/Layout/Form
@@ -124,6 +127,8 @@ func _get_multiplier(ring_index: int) -> float:
 	return 1.0
 
 func _on_playback_started() -> void:
+	_playback_button_sfx.play()
+	_wind_up_sfx.play()
 	_resetting = false
 	_ring_spin_sfx.play()
 	_measure_t = 0.0
@@ -137,6 +142,8 @@ func _on_playback_started() -> void:
 		_rings[i].set_rotation_speed(base_rate * multiplier * TAU)
 
 func _on_playback_stopped() -> void:
+	_playback_button_sfx.play()
+	_wind_down_sfx.play()
 	_ring_spin_sfx.stop()
 	for ring: Ring in _rings:
 		ring.set_rotation_speed(0.0)

@@ -5,14 +5,6 @@ extends Node2D
 ## lifecycle to LevelManager. Owns the orb trail spawning flow
 ## since it bridges Sequencer (source) and PianoRoll (destination).
 
-@export var sequencer_position_default: Vector2 = Vector2(0, -100)
-@export var sequencer_position_playback: Vector2 = Vector2(0, 341)
-@export var sequencer_transition_duration: float = 0.5
-@export var sequencer_ease: Tween.EaseType = Tween.EASE_IN_OUT
-@export var sequencer_trans: Tween.TransitionType = Tween.TRANS_CUBIC
-
-var _sequencer_tween: Tween = null
-
 @onready var _hand: Hand = $Hand
 @onready var _sequencer: Sequencer = $Sequencer
 @onready var _tray: Tray = $Tray
@@ -24,6 +16,17 @@ var _sequencer_tween: Tween = null
 @onready var _clue_card: ClueCard = $ClueCard
 @onready var _level_manager: LevelManager = $LevelManager
 @onready var _next_level_btn: Button = $NextLevel
+@onready var _console_mode: ConsoleMode = $ConsoleMode
+
+@export var sequencer_position_desk: Vector2 = Vector2(0, -100)
+@export var sequencer_position_sky: Vector2 = Vector2(0, 341)
+@export var sequencer_transition_duration: float = 0.5
+@export var sequencer_ease: Tween.EaseType = Tween.EASE_IN_OUT
+@export var sequencer_trans: Tween.TransitionType = Tween.TRANS_CUBIC
+@export var sequencer_z_index_desk: int = 0
+@export var sequencer_z_index_sky: int = -1
+
+var _sequencer_tween: Tween = null
 
 const ORB_TRAIL_SCENE: PackedScene = preload("res://core/entities/orbs/orb_trail.tscn")
 
@@ -31,19 +34,44 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	_background.position = get_viewport_rect().size / 2
 	await get_tree().process_frame
+
+	# Wire all mode_changed listeners before initializing state.
+	_console_mode.mode_changed.connect(_on_mode_changed)
+	_console_mode.mode_changed.connect(_sky_layer.on_mode_changed)
+	_console_mode.mode_changed.connect(_tray.on_mode_changed)
+	_sky_layer.focus_requested.connect(_console_mode.request_sky)
+
 	_hand.connect_button(_playback_button)
 	_sequencer.note_triggered.connect(_on_note_triggered)
 	_sequencer.dev_load_requested.connect(_on_dev_load_requested)
 	_next_level_btn.pressed.connect(_on_next_level_pressed)
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_sky_layer.transition_finished.connect(_on_sky_transition_finished)
-	Playback.started.connect(func() -> void: _move_sequencer(sequencer_position_playback))
-	Playback.stopped.connect(func() -> void: _move_sequencer(sequencer_position_default))
 	_level_manager.initialize(_sequencer, _tray, _piano_roll, _clue_card)
 	_hand.set_tray(_tray)
 	_piano_roll.set_sequencer(_sequencer)
 	_level_manager.load_level()
 	_update_next_button()
+
+	# Broadcast initial DESK state to all listeners — snaps everything into place.
+	_console_mode.initialize()
+
+func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
+	match mode:
+		ConsoleMode.Mode.SKY:
+			_move_sequencer(sequencer_position_sky)
+			_sequencer.z_index = sequencer_z_index_sky
+		ConsoleMode.Mode.DESK:
+			_move_sequencer(sequencer_position_desk)
+			_sequencer.z_index = sequencer_z_index_desk
+
+func _move_sequencer(target: Vector2) -> void:
+	if _sequencer_tween != null and _sequencer_tween.is_running():
+		_sequencer_tween.kill()
+	_sequencer_tween = create_tween()
+	_sequencer_tween.set_ease(sequencer_ease)
+	_sequencer_tween.set_trans(sequencer_trans)
+	_sequencer_tween.tween_property(_sequencer, "position", target, sequencer_transition_duration)
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int) -> void:
 	var target: Vector2 = _piano_roll.get_cell_position(tick, orb_id)
@@ -55,22 +83,13 @@ func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: 
 		_piano_roll.receive_orb(orb_id, texture, tick, measure_duration)
 	)
 
-func _move_sequencer(target: Vector2) -> void:
-	if _sequencer_tween != null and _sequencer_tween.is_running():
-		_sequencer_tween.kill()
-	_sequencer_tween = create_tween()
-	_sequencer_tween.set_ease(sequencer_ease)
-	_sequencer_tween.set_trans(sequencer_trans)
-	_sequencer_tween.tween_property(_sequencer, "position", target, sequencer_transition_duration)
-
 func _on_dev_load_requested(data: Dictionary) -> void:
 	_level_manager.load_level_data(data)
 
 func _on_next_level_pressed() -> void:
 	_next_level_btn.disabled = true
-	
 	_sky_layer.rotate_to_next()
-	
+
 func _on_sky_transition_midpoint() -> void:
 	_piano_roll.clear_keys()
 	if _level_manager.is_last_level():
