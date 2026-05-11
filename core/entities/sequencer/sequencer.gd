@@ -21,14 +21,10 @@ const MAX_BPM: float = 90.0
 @onready var _device: Node2D = $Device
 @onready var _ring_spin_sfx: AudioStreamPlayer = $PassiveSound/RingRotate
 @onready var _playback_button_sfx: AudioStreamPlayer = $Device/StartStop/ButtonPress
-@onready var _wind_up_sfx: AudioStreamPlayer = $PassiveSound/WindUp
-@onready var _wind_down_sfx: AudioStreamPlayer = $PassiveSound/WindDown
 
 
 var _rings: Array[Ring] = []
 var _resetting: bool = false
-var _prev_mode: ConsoleMode.Mode = ConsoleMode.Mode.DESK
-var _mode_initialized: bool = false
 var _frame_glow_tween: Tween = null
 
 # Tick clock driven by absolute measure time, independent of ring multipliers
@@ -67,6 +63,35 @@ func get_rings() -> Array[Ring]:
 func eject_orbs() -> void:
 	for ring: Ring in _rings:
 		ring.eject_all_orbs()
+
+func snapshot_rings() -> Array:
+	var snap: Array = []
+	for ring: Ring in _rings:
+		var ring_snap: Array = []
+		for slot: Slot in ring.get_slots():
+			if slot.is_occupied():
+				var orb: Orb = slot.get_orb()
+				ring_snap.append({"type": int(orb.orb_id), "source": orb.source_level})
+			else:
+				ring_snap.append(null)
+		snap.append(ring_snap)
+	return snap
+
+func restore_rings(snapshot: Array) -> void:
+	for i: int in range(mini(snapshot.size(), _rings.size())):
+		var ring: Ring = _rings[i]
+		var ring_snap: Array = snapshot[i]
+		var slots: Array[Slot] = ring.get_slots()
+		for j: int in range(mini(ring_snap.size(), slots.size())):
+			var entry: Variant = ring_snap[j]
+			if entry == null:
+				continue
+			var orb_type: Orb.OrbType = (entry as Dictionary)["type"] as Orb.OrbType
+			var orb: Orb = OrbRegistry.spawn(orb_type)
+			if orb == null:
+				continue
+			orb.source_level = (entry as Dictionary)["source"]
+			slots[j].populate_with_orb(orb)
 
 func _physics_process(delta: float) -> void:
 	if not Playback.is_playing:
@@ -117,19 +142,6 @@ func set_frame_glow(active: bool) -> void:
 	_frame_glow_tween.set_trans(Tween.TRANS_QUAD)
 	var target: Color = Color(1.35, 1.25, 0.95, 1.0) if active else Color.WHITE
 	_frame_glow_tween.tween_property(_device, "modulate", target, 0.35)
-
-func on_mode_changed(mode: ConsoleMode.Mode) -> void:
-	if not _mode_initialized:
-		_mode_initialized = true
-		_prev_mode = mode
-		return
-	var was_desk: bool = _prev_mode == ConsoleMode.Mode.DESK
-	var going_desk: bool = mode == ConsoleMode.Mode.DESK
-	_prev_mode = mode
-	if going_desk:
-		_wind_down_sfx.play()
-	elif was_desk:
-		_wind_up_sfx.play()
 
 func _on_playback_started() -> void:
 	_playback_button_sfx.play()

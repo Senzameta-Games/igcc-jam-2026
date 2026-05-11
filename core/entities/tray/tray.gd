@@ -10,9 +10,12 @@ extends Node2D
 @export var arc_trans: Tween.TransitionType = Tween.TRANS_BACK
 
 @onready var _slots_container: Node2D = $Slots
+@onready var _wind_up_sfx: AudioStreamPlayer = $WindUp
+@onready var _wind_down_sfx: AudioStreamPlayer = $WindDown
 
 var _current_angle_rad: float = 0.0
 var _arc_tween: Tween = null
+var _was_at_desk: bool = true
 
 ## Maps Orb.OrbType → Array[Slot]. Supports multiple same-type slots per level.
 var _slots_by_type: Dictionary = {}
@@ -23,6 +26,11 @@ func _ready() -> void:
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	var is_desk := mode == ConsoleMode.Mode.DESK
+	if is_desk and not _was_at_desk:
+		_wind_down_sfx.play()
+	elif not is_desk and _was_at_desk:
+		_wind_up_sfx.play()
+	_was_at_desk = is_desk
 	var target_deg: float = angle_desk_deg if is_desk else angle_sky_deg
 	var target_pos: Vector2 = desk_pos if is_desk else sky_pos
 	_animate_to(deg_to_rad(target_deg), target_pos)

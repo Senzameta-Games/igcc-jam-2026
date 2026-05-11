@@ -171,15 +171,19 @@ func _unhandled_input(event: InputEvent) -> void:
 	var mb := event as InputEventMouseButton
 	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
 		return
+	var viewport_y: float = get_viewport().get_mouse_position().y
 	match _current_mode:
 		ConsoleMode.Mode.DESK:
-			if mb.position.y < sky_click_threshold_y:
+			if viewport_y < sky_click_threshold_y:
 				focus_requested.emit()
 		ConsoleMode.Mode.SKY:
-			if _peek_active and not Playback.is_playing:
+			if viewport_y < sky_click_threshold_y:
 				level_select_requested.emit()
-			elif not _peek_active:
+			else:
 				desk_requested.emit()
+		ConsoleMode.Mode.LEVEL_SELECT:
+			if viewport_y >= sky_click_threshold_y:
+				focus_requested.emit()
 
 func _on_transition_midpoint() -> void:
 	transition_midpoint.emit()

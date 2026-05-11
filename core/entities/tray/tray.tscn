@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://dajstln6add1p" path="res://core/entities/tray/tray.gd" id="1_5r44a"]
 [ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="1_ulkqu"]
 [ext_resource type="Texture2D" uid="uid://c484hh6i751pt" path="res://core/assets/tray/tray.png" id="2_d5w34"]
+[ext_resource type="AudioStream" uid="uid://dpvx4kpf7drcl" path="res://core/assets/audio/tray/wind-up.wav" id="4_olegs"]
+[ext_resource type="AudioStream" uid="uid://cca60e3n1wncq" path="res://core/assets/audio/tray/wind-down.wav" id="5_1dufa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jn6ln"]
 size = Vector2(829, 94)
@@ -58,3 +60,11 @@ position = Vector2(0, -297)
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1107463542]
 position = Vector2(-0.5, -95)
 shape = SubResource("RectangleShape2D_jn6ln")
+
+[node name="WindUp" type="AudioStreamPlayer" parent="." unique_id=500931271]
+stream = ExtResource("4_olegs")
+volume_db = -16.0
+
+[node name="WindDown" type="AudioStreamPlayer" parent="." unique_id=1617385415]
+stream = ExtResource("5_1dufa")
+volume_db = -16.0

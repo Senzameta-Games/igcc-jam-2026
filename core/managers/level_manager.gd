@@ -18,6 +18,10 @@ var _current_index: int = 0
 ## Key: level index (int). Value: Array from Tray.snapshot_slots().
 var _tray_states: Dictionary = {}
 
+## Per-level sequencer ring snapshots. Saved when navigating away; restored on return.
+## Key: level index (int). Value: Array from Sequencer.snapshot_rings().
+var _sequencer_states: Dictionary = {}
+
 func initialize(sequencer: Sequencer, tray: Tray, piano_roll: PianoRoll) -> void:
 	_sequencer = sequencer
 	_tray = tray
@@ -61,6 +65,7 @@ func load_level_at_index(index: int) -> void:
 	if index < 0 or index >= _level_files.size():
 		return
 	_tray_states[_current_index] = _tray.snapshot_slots()
+	_sequencer_states[_current_index] = _sequencer.snapshot_rings()
 	_current_index = index
 	_load_file(_level_files[_current_index])
 
@@ -128,6 +133,8 @@ func _load_game(json_data: Dictionary) -> void:
 		for i: int in range(mini(ring_data.size(), rings.size())):
 			var interval_str: String = ring_data[i].get("interval", "QUARTER")
 			rings[i].interval_type = Ring.IntervalType.get(interval_str, Ring.IntervalType.QUARTER)
+	if _sequencer_states.has(_current_index):
+		_sequencer.restore_rings(_sequencer_states[_current_index])
 	if json_data.has("solution"):
 		if _tray_states.has(_current_index):
 			_tray.restore_snapshot(_tray_states[_current_index])

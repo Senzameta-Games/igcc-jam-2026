@@ -1,16 +1,13 @@
 {
 	"id": 0,
-	"name": "test",
+	"name": "snake",
 	"bpm": 40,
 	"rings": [
 		{ "interval": "QUARTER" },
 		{ "interval": "EIGHTH" },
-		{ "interval": "SIXTEENTH" }
+		{ "interval": "EIGHTH" }
 	],
 	"solution": [
-		[1], [], [], [],
-		[1], [], [], [],
-		[1], [], [], [],
-		[1], [], [], []
+		[], [], [], [], [1], [], [], [], [1], [], [1], [], [], [], [], []
 	]
 }

@@ -15,8 +15,6 @@
 [ext_resource type="AudioStream" uid="uid://1odt55oru0gy" path="res://core/assets/audio/background/measure_pad_4.wav" id="12_aen4v"]
 [ext_resource type="Script" uid="uid://31exyxhqqk4i" path="res://core/entities/sequencer/measure_pad.gd" id="13_uioqo"]
 [ext_resource type="AudioStream" uid="uid://bjt8dxbjy7i0f" path="res://core/assets/audio/ring/playbackSpin.wav" id="14_52j4s"]
-[ext_resource type="AudioStream" uid="uid://bf21odswpuqlb" path="res://core/assets/audio/ring/upShift.wav" id="17_3v2xn"]
-[ext_resource type="AudioStream" uid="uid://c78bb41wefo5u" path="res://core/assets/audio/ring/downShift.wav" id="18_sxubq"]
 [ext_resource type="Texture2D" uid="uid://brctjjt72mrxc" path="res://core/assets/layout/bottom_frame.png" id="19_sxubq"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="20_oyf0e"]
 [ext_resource type="PackedScene" uid="uid://u3aqduwfjcbo" path="res://core/entities/stash/stash.tscn" id="20_toom1"]
@@ -98,14 +96,6 @@ script = ExtResource("13_uioqo")
 [node name="RingRotate" type="AudioStreamPlayer" parent="PassiveSound" unique_id=7909675]
 stream = ExtResource("14_52j4s")
 volume_db = 8.0
-
-[node name="WindUp" type="AudioStreamPlayer" parent="PassiveSound" unique_id=1347834994]
-stream = ExtResource("17_3v2xn")
-volume_db = -12.0
-
-[node name="WindDown" type="AudioStreamPlayer" parent="PassiveSound" unique_id=801126227]
-stream = ExtResource("18_sxubq")
-volume_db = -12.0
 
 [node name="Frame" type="Sprite2D" parent="." unique_id=1633339244]
 z_index = 10

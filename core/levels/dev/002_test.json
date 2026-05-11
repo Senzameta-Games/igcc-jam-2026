@@ -1,6 +1,6 @@
 {
 	"id": 2,
-	"name": "ascent",
+	"name": "mountain",
 	"bpm": 64,
 	"rings": [
 		{ "interval": "QUARTER" },

@@ -1,13 +1,11 @@
 shader_type canvas_item;
 
-// Slow breathe between pulse_min and pulse_max brightness.
-uniform float pulse_speed : hint_range(0.2, 5.0) = 1.4;
-uniform float pulse_min : hint_range(0.0, 1.0) = 1.2;
-uniform float pulse_max : hint_range(1.0, 3.0) = 3.0;
+uniform float pulse_speed : hint_range(0.2, 5.0) = 3.0;
+uniform float pulse_min : hint_range(0.0, 3.0) = 2.0;
+uniform float pulse_max : hint_range(1.0, 5.0) = 5.0;
 
-// Fast per-pixel shimmer layered on top of the pulse.
-uniform float shimmer_speed : hint_range(0.0, 20.0) = 12.0;
-uniform float shimmer_strength : hint_range(0.0, 0.5) = 0.32;
+uniform float shimmer_speed : hint_range(0.0, 20.0) = 10.0;
+uniform float shimmer_strength : hint_range(0.0, 0.5) = 0.5;
 
 void fragment() {
 	vec4 tex = texture(TEXTURE, UV);

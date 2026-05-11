@@ -1,42 +1,13 @@
 {
-	"bpm": 40.0,
 	"id": 1,
-	"name": "test",
+	"name": "crane",
+	"bpm": 40,
 	"rings": [
-		{
-			"interval": "QUARTER"
-		},
-		{
-			"interval": "EIGHTH"
-		},
-		{
-			"interval": "SIXTEENTH"
-		}
+		{ "interval": "QUARTER" },
+		{ "interval": "EIGHTH" },
+		{ "interval": "SIXTEENTH" }
 	],
 	"solution": [
-		[
-			2.0
-		],
-		[
-			3.0
-		],
-		[
-			1.0
-		],
-		[
-			0.0
-		],
-		[],
-		[],
-		[],
-		[],
-		[],
-		[],
-		[],
-		[],
-		[],
-		[],
-		[],
-		[]
+		[2], [3], [1], [0], [], [], [], [], [], [], [], [], [], [], [], []
 	]
 }
