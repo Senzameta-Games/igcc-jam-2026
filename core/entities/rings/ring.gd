@@ -33,13 +33,23 @@ var load_modifier = _get_load_modifier()
 
 var _rotation_speed: float = 0.0
 var _current_angle: float = 0.0
+var _pending_snaps: Array[Dictionary] = []
 
 @onready var _slots_container: Node2D = $Slots
 
 var _slots: Array[Slot] = []
 
 func _ready() -> void:
+	Playback.stopped.connect(_on_playback_stopped)
 	_rebuild_slots()
+
+func register_snap_back(orb: Orb) -> void:
+	_pending_snaps.append({"orb": orb, "target_angle": _current_angle + PI})
+
+func _on_playback_stopped() -> void:
+	for snap: Dictionary in _pending_snaps:
+		(snap.orb as Orb).restore_scale()
+	_pending_snaps.clear()
 
 func _process(delta: float) -> void:
 	if _rotation_speed == 0.0:
@@ -47,7 +57,17 @@ func _process(delta: float) -> void:
 	_current_angle += _rotation_speed * delta
 	rotation = _current_angle
 	for slot: Slot in _slots:
-		slot.rotation = -_current_angle
+		if not slot.is_occupied():
+			slot.rotation = -_current_angle
+	if _pending_snaps.is_empty():
+		return
+	var i: int = _pending_snaps.size() - 1
+	while i >= 0:
+		var snap: Dictionary = _pending_snaps[i]
+		if _current_angle >= snap.target_angle:
+			(snap.orb as Orb).restore_scale()
+			_pending_snaps.remove_at(i)
+		i -= 1
 
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:

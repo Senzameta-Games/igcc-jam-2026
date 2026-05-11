@@ -1,0 +1,13 @@
+{
+	"id": 3,
+	"name": "stagger",
+	"bpm": 80,
+	"rings": [
+		{ "interval": "QUARTER" },
+		{ "interval": "EIGHTH" },
+		{ "interval": "SIXTEENTH" }
+	],
+	"solution": [
+		[], [1], [], [3], [], [2], [], [6], [], [1], [], [3], [], [2], [], []
+	]
+}

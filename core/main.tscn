@@ -4,15 +4,15 @@
 [ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/sequencer/sequencer.tscn" id="1_xiose"]
 [ext_resource type="Shader" uid="uid://xeu5hmfr8vto" path="res://core/screenspace_shader.gdshader" id="2_510js"]
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
-[ext_resource type="Texture2D" uid="uid://btsf1af05yisx" path="res://core/assets/background/background.png" id="2_r77kf"]
 [ext_resource type="Script" uid="uid://0x2x5jmtfaov" path="res://core/managers/level_manager.gd" id="2_rayt5"]
 [ext_resource type="Script" uid="uid://0jy8je4f7jdl" path="res://core/managers/console_mode.gd" id="4_7ua4h"]
-[ext_resource type="Texture2D" uid="uid://brctjjt72mrxc" path="res://core/assets/layout/bottom_frame.png" id="4_510js"]
-[ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="5_xa854"]
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
 [ext_resource type="Texture2D" uid="uid://cp83ckcybx1an" path="res://core/assets/background/sky.png" id="7_cus2n"]
 [ext_resource type="PackedScene" uid="uid://dmelyoceesneg" path="res://core/entities/clue_card/clue_card.tscn" id="10_xhu5d"]
+[ext_resource type="PackedScene" uid="uid://esgkju3uf5pp" path="res://core/levels/level_select.tscn" id="11_7ua4h"]
+[ext_resource type="Script" uid="uid://xtcepy8y6mch" path="res://core/managers/tools.gd" id="11_510js"]
+[ext_resource type="PackedScene" uid="uid://blkl088rhnod6" path="res://tools/export_form.tscn" id="12_7ua4h"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ua4h"]
 shader = ExtResource("2_510js")
@@ -28,12 +28,35 @@ shader_parameter/blur_radius = 0.0010000000475
 shader_parameter/smoke_color = Color(0.95173925, 0.84316486, 0.8871049, 0.34901962)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ntwa4"]
-size = Vector2(1920, 945)
+size = Vector2(1920, 1501)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7ua4h"]
+size = Vector2(1920, 100)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ntwa4"]
+content_margin_left = 32.0
+content_margin_top = 32.0
+content_margin_right = 32.0
+content_margin_bottom = 32.0
+bg_color = Color(0.047557652, 0.047557652, 0.047557607, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0, 0.8, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ge7io"]
+color = Color(0.1148968, 0.11489681, 0.1148968, 1)
+thickness = 2
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
 sequencer_position_desk = Vector2(0, -20)
-sequencer_position_sky = Vector2(0, 340)
+sequencer_position_sky = Vector2(0, 380)
 sequencer_transition_duration = 1.4
 sequencer_trans = 3
 sequencer_z_index_desk = 1
@@ -59,12 +82,6 @@ metadata/_custom_type_script = "uid://0x2x5jmtfaov"
 [node name="ConsoleMode" type="Node" parent="." unique_id=978732142]
 script = ExtResource("4_7ua4h")
 
-[node name="Frame" type="Sprite2D" parent="." unique_id=1065424529]
-z_index = 10
-position = Vector2(975.99994, 875.99994)
-scale = Vector2(0.55, 0.55)
-texture = ExtResource("4_510js")
-
 [node name="ClueCard" parent="." unique_id=1129193832 instance=ExtResource("10_xhu5d")]
 z_index = 12
 position = Vector2(960, 589)
@@ -76,52 +93,11 @@ key_launch_duration = 1.8
 [node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
 position = Vector2(0, -60)
 
-[node name="Rings" parent="Sequencer" index="0" unique_id=123070447]
+[node name="Rings" parent="Sequencer/Device" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="0" unique_id=123070447]
 rotation = -1.5707964
 
-[node name="RayCaster" parent="Sequencer" index="1" unique_id=724280312]
+[node name="RayCaster" parent="Sequencer/Device" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="1" unique_id=724280312]
 rotation = -1.5707964
-
-[node name="Tools" parent="Sequencer" index="3" unique_id=333190472]
-offset_left = 0.0
-offset_top = -315.0
-offset_right = 636.0
-offset_bottom = -202.0
-grow_vertical = 2
-
-[node name="Background" type="Sprite2D" parent="." unique_id=80829557]
-z_index = -1
-position = Vector2(960, 540)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_r77kf")
-
-[node name="Tray" parent="." unique_id=835271133 instance=ExtResource("5_xa854")]
-z_index = 4
-position = Vector2(960, 552)
-tray_pivot = Vector2(960, 552)
-angle_sky_deg = -90.0
-arc_transition_duration = 0.9
-arc_trans = 4
-
-[node name="NextLevel" type="Button" parent="." unique_id=2107144106]
-z_index = 5
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 1487.0
-offset_top = 943.0
-offset_right = 1843.0
-offset_bottom = 985.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Next Level"
-
-[node name="DetectionFeedback" type="Node2D" parent="." unique_id=1631393910]
 
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
 position = Vector2(960, 520)
@@ -133,6 +109,8 @@ mode_trans = 4
 
 [node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]
 z_index = -1
+position = Vector2(0, -615)
+scale = Vector2(0.75, 0.75)
 texture = ExtResource("7_cus2n")
 
 [node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
@@ -144,13 +122,237 @@ fan_angle_span = 80.0
 fan_origin = Vector2(521, 556)
 
 [node name="HitArea" type="Area2D" parent="SkyLayer" unique_id=1211724838]
+position = Vector2(0, -386)
 collision_layer = 0
 collision_mask = 0
 
 [node name="Shape" type="CollisionShape2D" parent="SkyLayer/HitArea" unique_id=815866661]
-position = Vector2(0, -304.5)
+position = Vector2(0, -582.5)
 shape = SubResource("RectangleShape2D_ntwa4")
 
-[connection signal="file_added" from="Sequencer/ExportForm" to="." method="_on_export_form_file_added"]
+[node name="LevelSelect" parent="SkyLayer" unique_id=302540498 instance=ExtResource("11_7ua4h")]
+position = Vector2(-960, -1600)
+
+[node name="SkyPeek" type="Area2D" parent="SkyLayer" unique_id=951453775]
+position = Vector2(0, -562)
+collision_layer = 0
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="SkyLayer/SkyPeek" unique_id=26485703]
+shape = SubResource("RectangleShape2D_7ua4h")
+
+[node name="Tools" type="Node" parent="." unique_id=321753963]
+script = ExtResource("11_510js")
+
+[node name="Tools" type="PanelContainer" parent="Tools" unique_id=1832995140]
+visible = false
+z_index = 12
+custom_minimum_size = Vector2(400, 0)
+offset_right = 636.0
+offset_bottom = 113.0
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ntwa4")
+
+[node name="Layout" type="VBoxContainer" parent="Tools/Tools" unique_id=935155070]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Tools/Tools/Layout" unique_id=1494831237]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94744676, 0.41838992, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Dev Tools
+Use ` (tilde) to show/hide"
+
+[node name="Form" type="VBoxContainer" parent="Tools/Tools/Layout" unique_id=1539661882]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 16
+
+[node name="Timing" type="VBoxContainer" parent="Tools/Tools/Layout/Form" unique_id=2006432130]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing" unique_id=1510948181]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Timing and sequencer settings"
+
+[node name="BPM" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing" unique_id=1665004885]
+layout_mode = 2
+
+[node name="BPMLabel" type="Label" parent="Tools/Tools/Layout/Form/Timing/BPM" unique_id=1462496]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 12
+text = "Beats per minute (commits on blur)"
+
+[node name="BPM" type="TextEdit" parent="Tools/Tools/Layout/Form/Timing/BPM" unique_id=390956020]
+custom_minimum_size = Vector2(160, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
+theme_override_constants/outline_size = 4
+placeholder_text = "Beats per minute"
+
+[node name="Intervals" type="HBoxContainer" parent="Tools/Tools/Layout/Form/Timing" unique_id=1452252405]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Interval1" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing/Intervals" unique_id=485397954]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval1" unique_id=990997635]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 12
+text = "Ring1 Interval"
+
+[node name="Option" type="OptionButton" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval1" unique_id=2003694440]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
+theme_override_constants/outline_size = 4
+
+[node name="Interval2" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing/Intervals" unique_id=2141314066]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval2" unique_id=25434665]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 12
+text = "Ring2 Interval"
+
+[node name="Option" type="OptionButton" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval2" unique_id=1442185639]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
+theme_override_constants/outline_size = 4
+
+[node name="Interval3" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing/Intervals" unique_id=207851851]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval3" unique_id=549512065]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 12
+text = "Ring3 Interval"
+
+[node name="Option" type="OptionButton" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval3" unique_id=1759189039]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
+theme_override_constants/outline_size = 4
+
+[node name="Rotation" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing" unique_id=1014294777]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing/Rotation" unique_id=478536695]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 12
+text = "Rotation Model"
+
+[node name="Option" type="OptionButton" parent="Tools/Tools/Layout/Form/Timing/Rotation" unique_id=1368835336]
+custom_minimum_size = Vector2(240, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
+theme_override_constants/outline_size = 4
+
+[node name="Field" type="TextEdit" parent="Tools/Tools/Layout/Form/Timing/Rotation" unique_id=958312223]
+custom_minimum_size = Vector2(320, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
+theme_override_constants/outline_size = 4
+placeholder_text = "1.0, 1.0, 1.0"
+
+[node name="separator" type="HSeparator" parent="Tools/Tools/Layout/Form" unique_id=559978457]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_ge7io")
+
+[node name="MiscUtils" type="VBoxContainer" parent="Tools/Tools/Layout/Form" unique_id=347444533]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/MiscUtils" unique_id=2032588547]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Misc. utilities"
+
+[node name="Reset" type="Button" parent="Tools/Tools/Layout/Form/MiscUtils" unique_id=1717802145]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "Reset scene"
+
+[node name="FillSlots" type="Button" parent="Tools/Tools/Layout/Form/MiscUtils" unique_id=1435891126]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "Fill all slots with 1 random orb"
+
+[node name="separator2" type="HSeparator" parent="Tools/Tools/Layout/Form" unique_id=1709124399]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_ge7io")
+
+[node name="LevelData" type="VBoxContainer" parent="Tools/Tools/Layout/Form" unique_id=1350022760]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/LevelData" unique_id=166415098]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "Level data tools"
+
+[node name="Export" type="Button" parent="Tools/Tools/Layout/Form/LevelData" unique_id=641890247]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "Export configuration as level JSON"
+
+[node name="Load" type="VBoxContainer" parent="Tools/Tools/Layout/Form/LevelData" unique_id=400812314]
+layout_mode = 2
+
+[node name="SolutionLabel" type="Label" parent="Tools/Tools/Layout/Form/LevelData/Load" unique_id=1816996568]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 12
+text = "Solution data"
+
+[node name="LoadText" type="TextEdit" parent="Tools/Tools/Layout/Form/LevelData/Load" unique_id=857557841]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+text = "{\"solution\": [[], [], [1,2], [], [1,2,3], [], [], [2], [1,2,3], [], [], [], [0,3,2], [1], [2], [3]]}"
+wrap_mode = 1
+
+[node name="Load" type="Button" parent="Tools/Tools/Layout/Form/LevelData/Load" unique_id=1700082254]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 24
+text = "Load this solution"
+
+[node name="ExportForm" parent="Tools" unique_id=422840756 instance=ExtResource("12_7ua4h")]
+z_index = 30
+position = Vector2(1417, 22)
+
+[connection signal="file_added" from="Tools/ExportForm" to="." method="_on_export_form_file_added"]
 
 [editable path="Sequencer"]

@@ -5,7 +5,7 @@ extends Node2D
 ## Rows are concentric arcs, columns are radial lines.
 ## Three child layers (bottom to top): Stars, Keys, Dots.
 ## Stars: faint randomized star field at every grid vertex, re-rolled per level.
-## Keys: hint stars at solution positions (populated later).
+## Keys: hint stars at solution positions.
 ## Dots: player input orbs from sequencer playback.
 
 ## Radius of the innermost arc (lowest note row).
@@ -31,6 +31,12 @@ extends Node2D
 @export var star_jitter: float = 8.0
 ## Base modulate for faint stars. Alpha drives overall brightness.
 @export var star_color: Color = Color(1.0, 1.0, 1.0, 0.18)
+
+## Key (hint) star appearance, placed at solution positions on level intro.
+@export var key_star_color: Color = Color(1.0, 0.95, 0.55, 0.9)
+@export var key_star_scale_min: float = 0.25
+@export var key_star_scale_max: float = 0.45
+@export var key_star_shader: Shader = null
 
 @onready var _stars_container: Node2D = $Stars
 @onready var _keys_container: Node2D = $Keys
@@ -59,8 +65,6 @@ func _ready() -> void:
 	Playback.stopped.connect(_on_playback_stopped)
 	Playback.started.connect(_on_playback_started)
 
-## Called by Main after tray is available. Must be called before first use.
-## Re-rolls the star field each call.
 func setup(tray: Tray) -> void:
 	notes = tray.get_unique_orbs()
 	_rebuild_stars()
@@ -82,12 +86,11 @@ func _process(delta: float) -> void:
 	else:
 		_playhead.modulate.a = 1.0
 
-	_update_playhead(t * float(TICKS - 1))
+	_update_playhead(t * float(TICKS))
 
 func set_sequencer(sequencer: Sequencer) -> void:
 	_sequencer = sequencer
 
-## Returns the world position of the center of the cell at (tick, orb_id).
 func get_cell_position(tick: int, orb_id: Orb.OrbType) -> Vector2:
 	var note_row: int = notes.find(orb_id)
 	if note_row == -1:
@@ -98,7 +101,30 @@ func clear_keys() -> void:
 	for child: Node in _keys_container.get_children():
 		child.queue_free()
 
-## Places a dot at (tick, orb_id). Called when an orb trail arrives.
+func show_keys(solution: Array) -> void:
+	clear_keys()
+	if star_textures.is_empty() or notes.is_empty():
+		return
+	var mat: ShaderMaterial = null
+	if key_star_shader != null:
+		mat = ShaderMaterial.new()
+		mat.shader = key_star_shader
+	for tick: int in range(solution.size()):
+		for orb_int: int in (solution[tick] as Array):
+			var note_row: int = notes.find(orb_int as Orb.OrbType)
+			if note_row == -1:
+				continue
+			var star := Sprite2D.new()
+			star.texture = star_textures[randi() % star_textures.size()]
+			var scale_val: float = randf_range(key_star_scale_min, key_star_scale_max)
+			star.scale = Vector2(scale_val, scale_val)
+			star.rotation = randf_range(0.0, TAU)
+			star.position = _cell_pos(tick, note_row)
+			star.modulate = key_star_color
+			if mat != null:
+				star.material = mat
+			_keys_container.add_child(star)
+
 func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, measure_duration: float) -> void:
 	var note_row: int = notes.find(orb_id)
 	if note_row == -1:
@@ -108,11 +134,14 @@ func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, measure_dur
 		(_dots[key] as Node).queue_free()
 	var dot := Sprite2D.new()
 	dot.texture = texture
-	dot.scale = Vector2(ARRIVAL_SCALE, ARRIVAL_SCALE)
+	dot.scale = Vector2.ZERO
 	dot.position = _cell_pos(tick, note_row)
 	_dots_container.add_child(dot)
 	_dots[key] = dot
 	var tween := dot.create_tween()
+	tween.tween_property(dot, "scale", Vector2(ARRIVAL_SCALE, ARRIVAL_SCALE), 0.1) \
+		.set_ease(Tween.EASE_OUT) \
+		.set_trans(Tween.TRANS_BACK)
 	tween.tween_property(dot, "scale", Vector2.ZERO, measure_duration) \
 		.set_ease(Tween.EASE_IN) \
 		.set_trans(Tween.TRANS_QUAD)
@@ -136,8 +165,6 @@ func _clear_dots() -> void:
 		(dot as Node).queue_free()
 	_dots.clear()
 
-## Clears and re-rolls the star field for all grid vertices.
-## Called at setup time (level load). Requires notes to be populated first.
 func _rebuild_stars() -> void:
 	for child: Node in _stars_container.get_children():
 		child.queue_free()
@@ -160,7 +187,6 @@ func _rebuild_stars() -> void:
 			star.modulate = star_color
 			_stars_container.add_child(star)
 
-## Moves the playhead to the radial line at a continuous tick position.
 func _update_playhead(tick: float) -> void:
 	if _playhead == null:
 		return
@@ -169,27 +195,62 @@ func _update_playhead(tick: float) -> void:
 	_playhead.position = fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * mid_radius
 	_playhead.rotation = angle_rad + PI * 0.5
 
-## Returns local position for a cell in fan/polar space.
 func _cell_pos(tick: int, note_row: int) -> Vector2:
 	var angle_rad: float = _tick_angle_rad(float(tick))
 	var radius: float = _note_radius(note_row)
 	return fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * radius
 
-## Converts a tick index (continuous) to a radial angle in radians.
-## Tick 0 = left edge, tick 15 = right edge. Arc points upward.
 func _tick_angle_rad(tick: float) -> float:
 	var t: float = tick / float(TICKS - 1)
 	var angle_deg: float = -fan_angle_span * 0.5 + t * fan_angle_span
 	return deg_to_rad(angle_deg - 90.0)
 
-## Returns the radius for a given note row.
-## Row 0 (highest pitch) = outermost. Row N-1 (lowest pitch) = innermost.
 func _note_radius(note_row: int) -> float:
 	var t: float = float(note_row) / float(max(notes.size() - 1, 1))
 	return lerpf(fan_radius_outer, fan_radius_inner, t)
 
 func _cell_key(tick: int, note_row: int) -> int:
 	return tick * 100 + note_row
+
+## Returns solution positions as normalized Vector2 values in [-1, 1] space.
+func get_constellation_points(solution: Array) -> Array[Vector2]:
+	var unique: Array[Orb.OrbType] = []
+	var seen: Dictionary = {}
+	for tick_data: Variant in solution:
+		for orb_int: int in (tick_data as Array):
+			if not seen.has(orb_int):
+				seen[orb_int] = true
+				unique.append(orb_int as Orb.OrbType)
+	unique.sort_custom(func(a: Orb.OrbType, b: Orb.OrbType) -> bool: return int(a) > int(b))
+
+	var row_count: int = max(unique.size(), 1)
+	var positions: Array[Vector2] = []
+	for tick: int in range(solution.size()):
+		for orb_int: int in (solution[tick] as Array):
+			var note_row: int = unique.find(orb_int as Orb.OrbType)
+			if note_row == -1:
+				continue
+			var angle_rad: float = _tick_angle_rad(float(tick))
+			var t: float = float(note_row) / float(max(row_count - 1, 1))
+			var radius: float = lerpf(fan_radius_outer, fan_radius_inner, t)
+			positions.append(fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * radius)
+
+	if positions.is_empty():
+		return positions
+
+	var centroid := Vector2.ZERO
+	for p: Vector2 in positions:
+		centroid += p
+	centroid /= float(positions.size())
+
+	var max_dist: float = 0.001
+	for p: Vector2 in positions:
+		max_dist = maxf(max_dist, (p - centroid).length())
+
+	var result: Array[Vector2] = []
+	for p: Vector2 in positions:
+		result.append((p - centroid) / max_dist)
+	return result
 
 # --- Debug draw ---
 

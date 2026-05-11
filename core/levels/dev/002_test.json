@@ -1,0 +1,13 @@
+{
+	"id": 2,
+	"name": "ascent",
+	"bpm": 64,
+	"rings": [
+		{ "interval": "QUARTER" },
+		{ "interval": "EIGHTH" },
+		{ "interval": "SIXTEENTH" }
+	],
+	"solution": [
+		[0], [], [], [5], [], [], [7], [], [0], [7], [], [5], [7], [], [], [7]
+	]
+}

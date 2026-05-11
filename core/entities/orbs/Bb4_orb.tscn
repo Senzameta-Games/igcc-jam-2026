@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_1170i"]
 [ext_resource type="AudioStream" uid="uid://coft3yp5awheu" path="res://core/assets/audio/orb notes/play/Bb4/A#4.wav" id="2_lcsq8"]
+[ext_resource type="Texture2D" uid="uid://dc8lr4bm2gu7" path="res://core/assets/orbs/pink.png" id="2_ucufd"]
 [ext_resource type="AudioStream" uid="uid://b4uepekmlars5" path="res://core/assets/audio/orb notes/play/Bb4/A#4_2.wav" id="3_ucufd"]
 [ext_resource type="AudioStream" uid="uid://dbfeers40h15p" path="res://core/assets/audio/orb notes/play/Bb4/A#4_3.wav" id="4_48f0v"]
 [ext_resource type="AudioStream" uid="uid://ctvcd65mfd1ea" path="res://core/assets/audio/orb notes/pick-up/A#4_pickup.wav" id="5_lr1b1"]
@@ -12,9 +13,25 @@ stream_0/stream = ExtResource("2_lcsq8")
 stream_1/stream = ExtResource("3_ucufd")
 stream_2/stream = ExtResource("4_48f0v")
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_48f0v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ucufd")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Orb" unique_id=552011164 instance=ExtResource("1_1170i")]
+texture = ExtResource("2_ucufd")
 note = SubResource("AudioStreamRandomizer_e0gi3")
 orb_id = 4
+
+[node name="Sprite" parent="." index="0" unique_id=1751710394]
+scale = Vector2(0.55, 0.55)
+sprite_frames = SubResource("SpriteFrames_48f0v")
 
 [node name="Land" parent="." index="3" unique_id=870009125]
 volume_db = -2.0
