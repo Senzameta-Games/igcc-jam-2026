@@ -15,6 +15,8 @@ var _hovered: bool = false
 @onready var _area: Area2D = $Handle
 @onready var _drophint: Sprite2D = $DropHint
 
+var _initial_orb_type: Orb.OrbType = -1
+
 func _ready() -> void:
 	add_to_group("slots")
 	_drophint.visible = false
@@ -88,3 +90,14 @@ func _on_area_mouse_entered() -> void:
 func _on_area_mouse_exited() -> void:
 	_hovered = false
 	_refresh_visual()
+
+func reset_max_count() -> void:
+	if (_orb == null and _initial_orb_type != -1):
+		var spawned: Orb = OrbRegistry.spawn(_initial_orb_type)
+		if spawned == null:
+			return
+		add_child(spawned)
+		_orb = spawned
+		
+	_count = MAX_COUNT
+	_refresh_badge()
