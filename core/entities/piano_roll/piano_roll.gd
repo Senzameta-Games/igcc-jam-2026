@@ -133,6 +133,7 @@ func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index:
 
 func _on_playback_started() -> void:
 	_playing = true
+	_clear_dots()
 
 func _on_playback_stopped() -> void:
 	_clear_dots()
