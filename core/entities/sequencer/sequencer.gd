@@ -23,8 +23,6 @@ const MAX_BPM: float = 90.0
 @onready var _playback_button_sfx: AudioStreamPlayer = $Device/StartStop/ButtonPress
 
 
-var _tray: Tray = null
-
 var _rings: Array[Ring] = []
 var _resetting: bool = false
 var _frame_glow_tween: Tween = null
@@ -65,8 +63,6 @@ func get_rings() -> Array[Ring]:
 func eject_orbs() -> void:
 	for ring: Ring in _rings:
 		ring.eject_all_orbs()
-	if(_tray != null):
-		_tray.refill_orbs()
 
 func snapshot_rings() -> Array:
 	var snap: Array = []

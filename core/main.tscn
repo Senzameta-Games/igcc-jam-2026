@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://xtcepy8y6mch" path="res://core/managers/tools.gd" id="11_510js"]
 [ext_resource type="PackedScene" uid="uid://blkl088rhnod6" path="res://tools/export_form.tscn" id="12_7ua4h"]
 [ext_resource type="AudioStream" uid="uid://bd4d1vpc26b1w" path="res://core/assets/audio/transitions/up-tone.wav" id="14_ge7io"]
+[ext_resource type="Script" uid="uid://bd3wbt6366r4m" path="res://core/managers/audio_manager.gd" id="14_lxu0y"]
 [ext_resource type="AudioStream" uid="uid://613o7gmkvqfj" path="res://core/assets/audio/transitions/down-tone.wav" id="15_jeqa8"]
 [ext_resource type="AudioStream" uid="uid://bmo4yn8e46gs4" path="res://core/assets/audio/music/spheres_1.wav" id="16_jeqa8"]
 [ext_resource type="AudioStream" uid="uid://cl3mfscv62x5k" path="res://core/assets/audio/background/noise.wav" id="17_g0q11"]
@@ -65,6 +66,7 @@ sequencer_transition_duration = 1.4
 sequencer_trans = 3
 sequencer_z_index_desk = 1
 sequencer_z_index_sky = 0
+audio_offset_db = 8.0
 
 [node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
 layer = 100
@@ -357,23 +359,26 @@ text = "Load this solution"
 z_index = 30
 position = Vector2(1417, 22)
 
-[node name="ScreenUp" type="AudioStreamPlayer" parent="." unique_id=1518849922]
-stream = ExtResource("14_ge7io")
-volume_db = -20.0
+[node name="AudioManager" type="Node" parent="." unique_id=468181767]
+script = ExtResource("14_lxu0y")
 
-[node name="ScreenDown" type="AudioStreamPlayer" parent="." unique_id=1263234912]
-stream = ExtResource("15_jeqa8")
-volume_db = -20.0
-
-[node name="BGM" type="AudioStreamPlayer" parent="." unique_id=2011721722]
+[node name="BGM" type="AudioStreamPlayer" parent="AudioManager" unique_id=2011721722]
 stream = ExtResource("16_jeqa8")
 volume_db = -12.0
 autoplay = true
 
-[node name="RoomTone" type="AudioStreamPlayer" parent="." unique_id=676740509]
+[node name="RoomTone" type="AudioStreamPlayer" parent="AudioManager" unique_id=676740509]
 stream = ExtResource("17_g0q11")
 volume_db = -4.0
 autoplay = true
+
+[node name="ScreenUp" type="AudioStreamPlayer" parent="AudioManager" unique_id=1518849922]
+stream = ExtResource("14_ge7io")
+volume_db = -20.0
+
+[node name="ScreenDown" type="AudioStreamPlayer" parent="AudioManager" unique_id=1263234912]
+stream = ExtResource("15_jeqa8")
+volume_db = -20.0
 
 [connection signal="file_added" from="Tools/ExportForm" to="." method="_on_export_form_file_added"]
 

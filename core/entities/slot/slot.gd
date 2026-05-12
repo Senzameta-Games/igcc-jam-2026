@@ -90,14 +90,3 @@ func _on_area_mouse_entered() -> void:
 func _on_area_mouse_exited() -> void:
 	_hovered = false
 	_refresh_visual()
-
-func reset_max_count() -> void:
-	if (_orb == null and _initial_orb_type != -1):
-		var spawned: Orb = OrbRegistry.spawn(_initial_orb_type)
-		if spawned == null:
-			return
-		add_child(spawned)
-		_orb = spawned
-		
-	_count = MAX_COUNT
-	_refresh_badge()

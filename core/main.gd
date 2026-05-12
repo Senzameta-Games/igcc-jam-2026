@@ -11,8 +11,7 @@ extends Node2D
 @onready var _stash: Stash = $Sequencer/Stash
 @onready var _console_mode: ConsoleMode = $ConsoleMode
 @onready var _tools: Tools = $Tools
-@onready var _screen_up_sfx: AudioStreamPlayer = $ScreenUp
-@onready var _screen_down_sfx: AudioStreamPlayer = $ScreenDown
+@onready var _audio_manager: AudioManager = $AudioManager
 
 @export var sequencer_position_desk: Vector2 = Vector2(0, -100)
 @export var sequencer_position_sky: Vector2 = Vector2(0, 341)
@@ -24,8 +23,6 @@ extends Node2D
 @export var sequencer_z_index_sky: int = -1
 
 var _sequencer_tween: Tween = null
-var _prev_mode: ConsoleMode.Mode = ConsoleMode.Mode.DESK
-var _mode_ready: bool = false
 
 
 func _ready() -> void:
@@ -33,6 +30,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 
 	_console_mode.mode_changed.connect(_on_mode_changed)
+	_console_mode.mode_changed.connect(_audio_manager.on_mode_changed)
 	_console_mode.mode_changed.connect(_sky_layer.on_mode_changed)
 	_console_mode.mode_changed.connect(_tray.on_mode_changed)
 	_console_mode.mode_changed.connect(_stash.on_mode_changed)
@@ -56,15 +54,6 @@ func _ready() -> void:
 	_console_mode.initialize()
 
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
-	if _mode_ready:
-		var prev_rank: int = _mode_rank(_prev_mode)
-		var new_rank: int = _mode_rank(mode)
-		if new_rank > prev_rank:
-			_screen_up_sfx.play()
-		elif new_rank < prev_rank:
-			_screen_down_sfx.play()
-	_prev_mode = mode
-	_mode_ready = true
 	match mode:
 		ConsoleMode.Mode.SKY:
 			_move_sequencer(sequencer_position_sky)
@@ -75,13 +64,6 @@ func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 		ConsoleMode.Mode.LEVEL_SELECT:
 			_move_sequencer(sequencer_position_level_select)
 			_sequencer.z_index = sequencer_z_index_sky
-
-func _mode_rank(mode: ConsoleMode.Mode) -> int:
-	match mode:
-		ConsoleMode.Mode.DESK: return 0
-		ConsoleMode.Mode.SKY: return 1
-		ConsoleMode.Mode.LEVEL_SELECT: return 2
-	return 0
 
 func _move_sequencer(target: Vector2) -> void:
 	if _sequencer_tween != null and _sequencer_tween.is_running():

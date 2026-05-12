@@ -10,11 +10,11 @@ const _TEXTURES: Dictionary = {
 }
 
 const _COLORS: Dictionary = {
-	Orb.OrbType.Bb3: Color(0.764, 0.997, 0.771, 1.0),
-	Orb.OrbType.F3:  Color(0.997, 0.936, 0.929, 1.0),
-	Orb.OrbType.G3:  Color(0.999, 0.902, 0.765, 1.0),
-	Orb.OrbType.A4:  Color(0.941, 0.902, 0.992, 1.0),
-	Orb.OrbType.D4:  Color(0.821, 0.978, 0.998, 1.0),
+	Orb.OrbType.Bb3: Color(0.165, 0.545, 0.220, 1.0),
+	Orb.OrbType.F3:  Color(0.545, 0.118, 0.118, 1.0),
+	Orb.OrbType.G3:  Color(0.831, 0.573, 0.039, 1.0),
+	Orb.OrbType.A4:  Color(0.482, 0.184, 0.722, 1.0),
+	Orb.OrbType.D4:  Color(0.082, 0.722, 0.784, 1.0),
 }
 
 @onready var _sprite: Sprite2D = $Sprite
