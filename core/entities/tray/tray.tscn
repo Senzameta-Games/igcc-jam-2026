@@ -3,67 +3,68 @@
 [ext_resource type="Script" uid="uid://dajstln6add1p" path="res://core/entities/tray/tray.gd" id="1_5r44a"]
 [ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="1_ulkqu"]
 [ext_resource type="Texture2D" uid="uid://c484hh6i751pt" path="res://core/assets/tray/tray.png" id="2_d5w34"]
-[ext_resource type="PackedScene" uid="uid://dmodddgtqr3fl" path="res://core/entities/orbs/F3_orb.tscn" id="4_olegs"]
-[ext_resource type="PackedScene" uid="uid://cx75inkvaagql" path="res://core/entities/orbs/C4_orb.tscn" id="5_1dufa"]
-[ext_resource type="PackedScene" uid="uid://bspubr8kdmch8" path="res://core/entities/orbs/F4_orb.tscn" id="6_jn6ln"]
-[ext_resource type="PackedScene" uid="uid://b63vf8wsa5o8l" path="res://core/entities/orbs/G4_orb.tscn" id="7_0vinb"]
+[ext_resource type="AudioStream" uid="uid://dpvx4kpf7drcl" path="res://core/assets/audio/tray/wind-up.wav" id="4_olegs"]
+[ext_resource type="AudioStream" uid="uid://cca60e3n1wncq" path="res://core/assets/audio/tray/wind-down.wav" id="5_1dufa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jn6ln"]
-size = Vector2(939, 162)
+size = Vector2(829, 94)
 
 [node name="Tray" type="Node2D" unique_id=835271133]
 script = ExtResource("1_5r44a")
+arc_transition_duration = 1.0
 metadata/_edit_vertical_guides_ = [49.0, -46.0]
 metadata/_edit_horizontal_guides_ = [-180.0, -60.0, 60.0, 181.0]
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1569164696]
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.295, 0.295)
 texture = ExtResource("2_d5w34")
 
 [node name="Slots" type="Node2D" parent="." unique_id=856576797]
+position = Vector2(0, 167)
 
 [node name="Slot0" parent="Slots" unique_id=136360553 instance=ExtResource("1_ulkqu")]
-position = Vector2(-327, -125)
-stack_count = 8
+position = Vector2(-366, -364)
 in_tray = true
-
-[node name="Orb" parent="Slots/Slot0" unique_id=552011164 instance=ExtResource("4_olegs")]
 
 [node name="Slot1" parent="Slots" unique_id=849978761 instance=ExtResource("1_ulkqu")]
-position = Vector2(-233, -113)
-stack_count = 8
+position = Vector2(-289, -452)
 in_tray = true
-
-[node name="Orb" parent="Slots/Slot1" unique_id=987454045 instance=ExtResource("5_1dufa")]
 
 [node name="Slot2" parent="Slots" unique_id=694147557 instance=ExtResource("1_ulkqu")]
-position = Vector2(-140, -108)
-stack_count = 8
+position = Vector2(-189, -521)
 in_tray = true
-
-[node name="Orb" parent="Slots/Slot2" unique_id=1316206388 instance=ExtResource("6_jn6ln")]
 
 [node name="Slot3" parent="Slots" unique_id=341874409 instance=ExtResource("1_ulkqu")]
-position = Vector2(-47, -99)
-stack_count = 8
+position = Vector2(-66, -559)
 in_tray = true
 
-[node name="Orb" parent="Slots/Slot3" unique_id=562958121 instance=ExtResource("7_0vinb")]
-
 [node name="Slot4" parent="Slots" unique_id=1912150730 instance=ExtResource("1_ulkqu")]
-position = Vector2(47, -102)
+position = Vector2(67, -559)
+in_tray = true
 
 [node name="Slot5" parent="Slots" unique_id=1700766379 instance=ExtResource("1_ulkqu")]
-position = Vector2(140, -106)
+position = Vector2(197, -521)
+in_tray = true
 
 [node name="Slot6" parent="Slots" unique_id=927165811 instance=ExtResource("1_ulkqu")]
-position = Vector2(234, -112)
+position = Vector2(295, -452)
+in_tray = true
 
 [node name="Slot7" parent="Slots" unique_id=2037920540 instance=ExtResource("1_ulkqu")]
-position = Vector2(327, -124)
+position = Vector2(372, -363)
+in_tray = true
 
 [node name="Area" type="Area2D" parent="." unique_id=484502034]
+position = Vector2(0, -297)
 
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1107463542]
 position = Vector2(-0.5, -95)
 shape = SubResource("RectangleShape2D_jn6ln")
+
+[node name="WindUp" type="AudioStreamPlayer" parent="." unique_id=500931271]
+stream = ExtResource("4_olegs")
+volume_db = -16.0
+
+[node name="WindDown" type="AudioStreamPlayer" parent="." unique_id=1617385415]
+stream = ExtResource("5_1dufa")
+volume_db = -16.0

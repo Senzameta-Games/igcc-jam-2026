@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://u3aqduwfjcbo"]
+
+[ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="1_7pus6"]
+
+[node name="Stash" type="Node2D" unique_id=1974781458]
+
+[node name="Slot" parent="." unique_id=136360553 instance=ExtResource("1_7pus6")]
+position = Vector2(-80, 0)
+
+[node name="Slot2" parent="." unique_id=1540309378 instance=ExtResource("1_7pus6")]
+position = Vector2(80, 0)

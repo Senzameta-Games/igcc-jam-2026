@@ -29,7 +29,7 @@ func _process(_delta: float) -> void:
 		return
 	_held_orb.global_position = mouse
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:
 		return
 	var mb := event as InputEventMouseButton
@@ -74,7 +74,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			var shift_held: bool = Input.is_key_pressed(KEY_SHIFT) and not slot_to_handle.in_tray
 			try_drop(slot_to_handle)
 			if shift_held and _held_orb == null and _tray != null:
-				var refill_slot: Slot = _tray.get_slot_for_type(held_type)
+				var refill_slot: Slot = _tray.get_occupied_slot_for_type(held_type)
 				if refill_slot != null:
 					pick_up(refill_slot.eject_orb())
 			get_viewport().set_input_as_handled()

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://coft3yp5awheu"
+path="res://.godot/imported/A#4.wav-cfbc8fc1dd189815fb21b90f4806b797.sample"
+
+[deps]
+
+source_file="res://core/assets/audio/orb notes/play/Bb4/A#4.wav"
+dest_files=["res://.godot/imported/A#4.wav-cfbc8fc1dd189815fb21b90f4806b797.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

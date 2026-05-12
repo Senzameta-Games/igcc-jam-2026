@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cuvm5hbm81rla"
+path="res://.godot/imported/A#3_pickup.wav-61ae04835e305f06c7420339204102cc.sample"
+
+[deps]
+
+source_file="res://core/assets/audio/orb notes/pick-up/A#3_pickup.wav"
+dest_files=["res://.godot/imported/A#3_pickup.wav-61ae04835e305f06c7420339204102cc.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

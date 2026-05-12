@@ -5,34 +5,26 @@
 [ext_resource type="PackedScene" uid="uid://c2ry2hofjuqey" path="res://core/entities/rings/ring0.tscn" id="2_y5shy"]
 [ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring1.tscn" id="3_rlxeh"]
 [ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring2.tscn" id="4_pw2oc"]
-[ext_resource type="PackedScene" uid="uid://blkl088rhnod6" path="res://tools/export_form.tscn" id="7_y5shy"]
+[ext_resource type="AudioStream" uid="uid://d2do0hfqxb4qt" path="res://core/assets/audio/button_press/playbackpress.wav" id="8_aen4v"]
 [ext_resource type="Texture2D" uid="uid://dwe0ak00f8fht" path="res://core/assets/icons/empty.png" id="8_pw2oc"]
 [ext_resource type="Script" uid="uid://jpnvfasgpdy1" path="res://core/entities/sequencer/ray_caster.gd" id="8_rlxeh"]
 [ext_resource type="AudioStream" uid="uid://d32xohytt2g2d" path="res://core/assets/audio/background/measure_pad_1.wav" id="9_pxt5q"]
+[ext_resource type="AudioStream" uid="uid://bqmk2a3lwlh16" path="res://core/assets/audio/button_press/playbackpress2.wav" id="9_uioqo"]
 [ext_resource type="AudioStream" uid="uid://3k4li513dt4h" path="res://core/assets/audio/background/measure_pad_2.wav" id="10_52j4s"]
 [ext_resource type="AudioStream" uid="uid://qml0luw2u2dx" path="res://core/assets/audio/background/measure_pad_3.wav" id="11_3o0k2"]
 [ext_resource type="AudioStream" uid="uid://1odt55oru0gy" path="res://core/assets/audio/background/measure_pad_4.wav" id="12_aen4v"]
 [ext_resource type="Script" uid="uid://31exyxhqqk4i" path="res://core/entities/sequencer/measure_pad.gd" id="13_uioqo"]
+[ext_resource type="AudioStream" uid="uid://bjt8dxbjy7i0f" path="res://core/assets/audio/ring/playbackSpin.wav" id="14_52j4s"]
+[ext_resource type="Texture2D" uid="uid://brctjjt72mrxc" path="res://core/assets/layout/bottom_frame.png" id="19_sxubq"]
+[ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="20_oyf0e"]
+[ext_resource type="PackedScene" uid="uid://u3aqduwfjcbo" path="res://core/entities/stash/stash.tscn" id="20_toom1"]
+[ext_resource type="Script" uid="uid://nn88q4x5gfeu" path="res://core/entities/stash/stash.gd" id="21_toom1"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t7dap"]
-content_margin_left = 32.0
-content_margin_top = 32.0
-content_margin_right = 32.0
-content_margin_bottom = 32.0
-bg_color = Color(0.047557652, 0.047557652, 0.047557607, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.8, 0, 0.8, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_t7dap"]
-color = Color(0.1148968, 0.11489681, 0.1148968, 1)
-thickness = 2
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_sxubq"]
+random_pitch = 1.122462
+streams_count = 2
+stream_0/stream = ExtResource("8_aen4v")
+stream_1/stream = ExtResource("9_uioqo")
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_3v2xn"]
 playback_mode = 2
@@ -42,254 +34,83 @@ stream_1/stream = ExtResource("10_52j4s")
 stream_2/stream = ExtResource("11_3o0k2")
 stream_3/stream = ExtResource("12_aen4v")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_toom1"]
+size = Vector2(1920, 640)
+
 [node name="Sequencer" type="Node2D" unique_id=1975801920]
 script = ExtResource("1_7ojyt")
 bpm = 40.0
 
-[node name="Rings" type="Node2D" parent="." unique_id=123070447]
-position = Vector2(960, 593)
+[node name="Device" type="Node2D" parent="." unique_id=1677363772]
+position = Vector2(960, 555)
+scale = Vector2(0.95, 0.95)
 
-[node name="Ring2" parent="Rings" unique_id=817166058 instance=ExtResource("4_pw2oc")]
+[node name="Rings" type="Node2D" parent="Device" unique_id=123070447]
+
+[node name="Ring2" parent="Device/Rings" unique_id=817166058 instance=ExtResource("4_pw2oc")]
 ring_index = 2
 interval_type = 2
 
-[node name="Ring1" parent="Rings" unique_id=1636516408 instance=ExtResource("3_rlxeh")]
+[node name="Ring1" parent="Device/Rings" unique_id=1636516408 instance=ExtResource("3_rlxeh")]
 ring_index = 1
 interval_type = 1
 
-[node name="Ring0" parent="Rings" unique_id=109522518 instance=ExtResource("2_y5shy")]
+[node name="Ring0" parent="Device/Rings" unique_id=109522518 instance=ExtResource("2_y5shy")]
 
-[node name="RayCaster" type="Node2D" parent="." unique_id=724280312]
-position = Vector2(960, 593)
+[node name="RayCaster" type="Node2D" parent="Device" unique_id=724280312]
 script = ExtResource("8_rlxeh")
 
-[node name="Ray" type="Line2D" parent="RayCaster" unique_id=1219976118]
+[node name="Ray" type="Line2D" parent="Device/RayCaster" unique_id=1219976118]
 
-[node name="Caster" type="Sprite2D" parent="RayCaster" unique_id=1009913363]
+[node name="Caster" type="Sprite2D" parent="Device/RayCaster" unique_id=1009913363]
 texture = ExtResource("8_pw2oc")
 
-[node name="StartStop" parent="." unique_id=1939683072 instance=ExtResource("2_ee14c")]
-offset_left = 880.0
-offset_top = 514.0
-offset_right = 1040.0
-offset_bottom = 674.0
+[node name="StartStop" parent="Device" unique_id=1939683072 instance=ExtResource("2_ee14c")]
+offset_left = -80.0
+offset_top = -80.0
+offset_right = 80.0
+offset_bottom = 80.0
 
-[node name="Tools" type="PanelContainer" parent="." unique_id=333190472]
-z_index = 12
-custom_minimum_size = Vector2(400, 0)
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 41.0
-offset_top = 43.0
-offset_right = 677.0
-offset_bottom = 156.0
-size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_t7dap")
+[node name="ButtonPress" type="AudioStreamPlayer" parent="Device/StartStop" unique_id=1043636136]
+stream = SubResource("AudioStreamRandomizer_sxubq")
+volume_db = -14.0
 
-[node name="Layout" type="VBoxContainer" parent="Tools" unique_id=196089343]
-layout_mode = 2
-size_flags_vertical = 0
-theme_override_constants/separation = 24
+[node name="DetectionFeedback" type="Node2D" parent="Device" unique_id=1697610570]
 
-[node name="Title" type="Label" parent="Tools/Layout" unique_id=1361608674]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.94744676, 0.41838992, 1, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
-text = "Dev Tools
-Use ` (tilde) to show/hide"
-
-[node name="Form" type="VBoxContainer" parent="Tools/Layout" unique_id=1728004408]
-visible = false
-layout_mode = 2
-size_flags_vertical = 0
-theme_override_constants/separation = 16
-
-[node name="Timing" type="VBoxContainer" parent="Tools/Layout/Form" unique_id=1040760415]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Label" type="Label" parent="Tools/Layout/Form/Timing" unique_id=1342773520]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
-text = "Timing and sequencer settings"
-
-[node name="BPM" type="VBoxContainer" parent="Tools/Layout/Form/Timing" unique_id=1233602553]
-layout_mode = 2
-
-[node name="BPMLabel" type="Label" parent="Tools/Layout/Form/Timing/BPM" unique_id=1271297089]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Beats per minute (commits on blur)"
-
-[node name="BPM" type="TextEdit" parent="Tools/Layout/Form/Timing/BPM" unique_id=2142725685]
-custom_minimum_size = Vector2(160, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-placeholder_text = "Beats per minute"
-
-[node name="Intervals" type="HBoxContainer" parent="Tools/Layout/Form/Timing" unique_id=712160145]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Interval1" type="VBoxContainer" parent="Tools/Layout/Form/Timing/Intervals" unique_id=756806189]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Tools/Layout/Form/Timing/Intervals/Interval1" unique_id=588700541]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Ring1 Interval"
-
-[node name="Option" type="OptionButton" parent="Tools/Layout/Form/Timing/Intervals/Interval1" unique_id=2090710639]
-custom_minimum_size = Vector2(180, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-
-[node name="Interval2" type="VBoxContainer" parent="Tools/Layout/Form/Timing/Intervals" unique_id=612017228]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Tools/Layout/Form/Timing/Intervals/Interval2" unique_id=217006808]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Ring2 Interval"
-
-[node name="Option" type="OptionButton" parent="Tools/Layout/Form/Timing/Intervals/Interval2" unique_id=1650489552]
-custom_minimum_size = Vector2(180, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-
-[node name="Interval3" type="VBoxContainer" parent="Tools/Layout/Form/Timing/Intervals" unique_id=562703353]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Tools/Layout/Form/Timing/Intervals/Interval3" unique_id=2022252772]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Ring3 Interval"
-
-[node name="Option" type="OptionButton" parent="Tools/Layout/Form/Timing/Intervals/Interval3" unique_id=1021885382]
-custom_minimum_size = Vector2(180, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-
-[node name="Rotation" type="VBoxContainer" parent="Tools/Layout/Form/Timing" unique_id=1368528883]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Tools/Layout/Form/Timing/Rotation" unique_id=850408348]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Rotation Model"
-
-[node name="Option" type="OptionButton" parent="Tools/Layout/Form/Timing/Rotation" unique_id=2131848746]
-custom_minimum_size = Vector2(240, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-
-[node name="Field" type="TextEdit" parent="Tools/Layout/Form/Timing/Rotation" unique_id=1048511240]
-custom_minimum_size = Vector2(320, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-placeholder_text = "1.0, 1.0, 1.0"
-
-[node name="separator" type="HSeparator" parent="Tools/Layout/Form" unique_id=847575657]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_t7dap")
-
-[node name="MiscUtils" type="VBoxContainer" parent="Tools/Layout/Form" unique_id=1921937481]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Label" type="Label" parent="Tools/Layout/Form/MiscUtils" unique_id=2028353018]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
-text = "Misc. utilities"
-
-[node name="Reset" type="Button" parent="Tools/Layout/Form/MiscUtils" unique_id=1006395446]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Reset scene"
-
-[node name="FillSlots" type="Button" parent="Tools/Layout/Form/MiscUtils" unique_id=445448621]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Fill all slots with 1 random orb"
-
-[node name="separator2" type="HSeparator" parent="Tools/Layout/Form" unique_id=1195503003]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_t7dap")
-
-[node name="LevelData" type="VBoxContainer" parent="Tools/Layout/Form" unique_id=1011192238]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Label" type="Label" parent="Tools/Layout/Form/LevelData" unique_id=491579240]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
-text = "Level data tools"
-
-[node name="Export" type="Button" parent="Tools/Layout/Form/LevelData" unique_id=79612990]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Export configuration as level JSON"
-
-[node name="Load" type="VBoxContainer" parent="Tools/Layout/Form/LevelData" unique_id=1915839187]
-layout_mode = 2
-
-[node name="SolutionLabel" type="Label" parent="Tools/Layout/Form/LevelData/Load" unique_id=57698057]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Solution data"
-
-[node name="LoadText" type="TextEdit" parent="Tools/Layout/Form/LevelData/Load" unique_id=964112327]
-custom_minimum_size = Vector2(0, 96)
-layout_mode = 2
-text = "{\"solution\": [[], [], [1,2], [], [1,2,3], [], [], [2], [1,2,3], [], [], [], [0,3,2], [1], [2], [3]]}"
-wrap_mode = 1
-
-[node name="Load" type="Button" parent="Tools/Layout/Form/LevelData/Load" unique_id=618998357]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Load this solution"
-
-[node name="ExportForm" parent="." unique_id=422840756 instance=ExtResource("7_y5shy")]
-z_index = 30
-position = Vector2(1378, 92)
+[node name="Tray" parent="." unique_id=835271133 instance=ExtResource("20_oyf0e")]
+z_index = 4
+position = Vector2(960, 552)
+angle_sky_deg = -90.0
+desk_pos = Vector2(960, 560)
+sky_pos = Vector2(960, 640)
+arc_transition_duration = 1.2
 
 [node name="PassiveSound" type="Node2D" parent="." unique_id=33464343]
 
 [node name="MeasurePad" type="AudioStreamPlayer" parent="PassiveSound" unique_id=960092840]
 stream = SubResource("AudioStreamRandomizer_3v2xn")
+volume_db = -12.0
 max_polyphony = 2
 script = ExtResource("13_uioqo")
+
+[node name="RingRotate" type="AudioStreamPlayer" parent="PassiveSound" unique_id=7909675]
+stream = ExtResource("14_52j4s")
+volume_db = 8.0
+
+[node name="Frame" type="Sprite2D" parent="." unique_id=1633339244]
+z_index = 10
+position = Vector2(975.99994, 875.99994)
+scale = Vector2(0.55, 0.55)
+texture = ExtResource("19_sxubq")
+
+[node name="Stash" parent="." unique_id=1974781458 instance=ExtResource("20_toom1")]
+z_index = 10
+position = Vector2(960, 964)
+script = ExtResource("21_toom1")
+
+[node name="HitArea" type="Area2D" parent="." unique_id=1132301635]
+z_index = 1
+position = Vector2(960, 559)
+
+[node name="Shape" type="CollisionShape2D" parent="HitArea" unique_id=1768295922]
+shape = SubResource("RectangleShape2D_toom1")

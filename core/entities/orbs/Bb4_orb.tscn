@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://b034q2prqjk1v"]
+
+[ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_1170i"]
+[ext_resource type="Texture2D" uid="uid://bec5ie4knlk2f" path="res://core/assets/orbs/Bb.png" id="2_48f0v"]
+[ext_resource type="AudioStream" uid="uid://coft3yp5awheu" path="res://core/assets/audio/orb notes/play/Bb4/A#4.wav" id="2_lcsq8"]
+[ext_resource type="AudioStream" uid="uid://b4uepekmlars5" path="res://core/assets/audio/orb notes/play/Bb4/A#4_2.wav" id="3_ucufd"]
+[ext_resource type="AudioStream" uid="uid://dbfeers40h15p" path="res://core/assets/audio/orb notes/play/Bb4/A#4_3.wav" id="4_48f0v"]
+[ext_resource type="AudioStream" uid="uid://ctvcd65mfd1ea" path="res://core/assets/audio/orb notes/pick-up/A#4_pickup.wav" id="5_lr1b1"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_e0gi3"]
+streams_count = 3
+stream_0/stream = ExtResource("2_lcsq8")
+stream_1/stream = ExtResource("3_ucufd")
+stream_2/stream = ExtResource("4_48f0v")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_48f0v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_48f0v")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Orb" unique_id=552011164 instance=ExtResource("1_1170i")]
+texture = ExtResource("2_48f0v")
+note = SubResource("AudioStreamRandomizer_e0gi3")
+orb_id = 4
+
+[node name="Sprite" parent="." index="0" unique_id=1751710394]
+position = Vector2(0, -0.9999999)
+scale = Vector2(0.28, 0.28)
+sprite_frames = SubResource("SpriteFrames_48f0v")
+
+[node name="Land" parent="." index="3" unique_id=870009125]
+volume_db = -2.0
+
+[node name="Lift" parent="." index="4" unique_id=1995781555]
+volume_db = -8.0
+
+[node name="PitchHint" parent="." index="5" unique_id=1478975366]
+stream = ExtResource("5_lr1b1")

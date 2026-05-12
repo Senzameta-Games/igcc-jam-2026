@@ -1,7 +1,6 @@
 class_name Orb
 extends Node2D
 
-## A orb. Owned by a Slot when placed and by Hand when held.
 ## State controls z-index and lerp behavior.
 
 enum State { IN_SLOT, HELD, LERPING }
@@ -9,18 +8,20 @@ enum State { IN_SLOT, HELD, LERPING }
 const LERP_SPEED: float = 12.0
 const LERP_THRESHOLD: float = 0.5
 
-enum OrbType { F3, C4, F4, G4 }
+enum OrbType { Bb3, F3, G3, A4, D4 }
 @export var texture: Texture2D
 @export var note: AudioStream
 
 @export var orb_id: OrbType = OrbType.F3
 
+var source_level: int = -1
 var _state: State = State.IN_SLOT
 
 @onready var _sprite: AnimatedSprite2D = $Sprite
 @onready var _note: AudioStreamPlayer = $Note
 @onready var _land: AudioStreamPlayer = $Land
 @onready var _lift: AudioStreamPlayer = $Lift
+@onready var _pitchhint: AudioStreamPlayer = $PitchHint
 
 func _ready() -> void:
 	_sprite.play("default")
@@ -42,12 +43,22 @@ func play_note() -> void:
 	_note.stream = note
 	_note.play()
 
+func tunnel() -> void:
+	var tween := create_tween()
+	tween.tween_property(self, "scale", Vector2.ZERO, 0.12) \
+		.set_ease(Tween.EASE_IN) \
+		.set_trans(Tween.TRANS_QUAD)
+
+func restore_scale() -> void:
+	scale = Vector2.ONE
+
 func lift() -> void:
 	_state = State.HELD
 	_lift.play()
+	_pitchhint.play()
 
 func land() -> void:
-	# Called by Slot.receive_orb after reparenting.
 	# position is now in Slot local space. Lerp to center.
 	_state = State.LERPING
 	_land.play()
+	_pitchhint.play()

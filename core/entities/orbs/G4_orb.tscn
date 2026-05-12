@@ -1,14 +1,23 @@
 [gd_scene format=3 uid="uid://b63vf8wsa5o8l"]
 
 [ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_g6dl0"]
-[ext_resource type="AudioStream" uid="uid://duqrvvpdo5djv" path="res://core/assets/audio/notes/G4orb.wav" id="3_st0p7"]
-[ext_resource type="Texture2D" uid="uid://bobq68qeyve50" path="res://core/assets/orbs/blue.png" id="4_y1m8o"]
+[ext_resource type="Texture2D" uid="uid://dqxecb4pqh6oj" path="res://core/assets/orbs/G.png" id="2_j1ine"]
+[ext_resource type="AudioStream" uid="uid://cw75br8nbt6ni" path="res://core/assets/audio/orb notes/play/G4/G4.wav" id="3_j1ine"]
+[ext_resource type="AudioStream" uid="uid://dmonfs46qygia" path="res://core/assets/audio/orb notes/play/G4/G4_2.wav" id="4_hbj25"]
+[ext_resource type="AudioStream" uid="uid://cmmi17ugv24nx" path="res://core/assets/audio/orb notes/play/G4/G4_3.wav" id="5_o0hib"]
+[ext_resource type="AudioStream" uid="uid://chu7a8gn4wone" path="res://core/assets/audio/orb notes/pick-up/G4_pickup.wav" id="6_pslhd"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_5p7tb"]
+streams_count = 3
+stream_0/stream = ExtResource("3_j1ine")
+stream_1/stream = ExtResource("4_hbj25")
+stream_2/stream = ExtResource("5_o0hib")
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_xexi0"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_y1m8o")
+"texture": ExtResource("2_j1ine")
 }],
 "loop": true,
 "name": &"default",
@@ -16,10 +25,13 @@ animations = [{
 }]
 
 [node name="Orb" unique_id=552011164 instance=ExtResource("1_g6dl0")]
-texture = ExtResource("4_y1m8o")
-note = ExtResource("3_st0p7")
-orb_id = 3
+texture = ExtResource("2_j1ine")
+note = SubResource("AudioStreamRandomizer_5p7tb")
+orb_id = 7
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]
 scale = Vector2(0.29, 0.29)
 sprite_frames = SubResource("SpriteFrames_xexi0")
+
+[node name="PitchHint" parent="." index="5" unique_id=1478975366]
+stream = ExtResource("6_pslhd")

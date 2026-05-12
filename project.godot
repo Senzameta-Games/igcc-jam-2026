@@ -17,8 +17,12 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="rotary-sequencer"
 run/main_scene="uid://12ufnc4ajfr1"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-run/max_fps=120
+run/max_fps=60
 config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://ctkysujyc0k35"
 
 [autoload]
 

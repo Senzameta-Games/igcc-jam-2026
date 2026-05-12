@@ -5,10 +5,11 @@ extends Node
 ## Add new orb types here as they are created.
 
 const _scenes: Dictionary = {
+	Orb.OrbType.Bb3: preload("res://core/entities/orbs/Bb3_orb.tscn"),
 	Orb.OrbType.F3: preload("res://core/entities/orbs/F3_orb.tscn"),
-	Orb.OrbType.C4: preload("res://core/entities/orbs/C4_orb.tscn"),
-	Orb.OrbType.F4: preload("res://core/entities/orbs/F4_orb.tscn"),
-	Orb.OrbType.G4: preload("res://core/entities/orbs/G4_orb.tscn"),
+	Orb.OrbType.G3: preload("res://core/entities/orbs/G3_orb.tscn"),
+	Orb.OrbType.A4: preload("res://core/entities/orbs/A4_orb.tscn"),
+	Orb.OrbType.D4: preload("res://core/entities/orbs/D4_orb.tscn"),
 }
 
 func spawn(orb_id: Orb.OrbType) -> Orb:

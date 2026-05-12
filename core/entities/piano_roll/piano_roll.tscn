@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bbrwnoui87mpb" path="res://core/assets/stars/little-five-star.png" id="7_1jlqo"]
 [ext_resource type="Texture2D" uid="uid://chvfu1l1qh1cs" path="res://core/assets/stars/big-four-star.png" id="8_qfohk"]
 [ext_resource type="Texture2D" uid="uid://2geknl8omchm" path="res://core/assets/stars/little-four-star.png" id="9_3oedg"]
+[ext_resource type="Shader" uid="uid://x55w0niueyu2" path="res://core/entities/piano_roll/key_star.gdshader" id="10_badv7"]
 
 [node name="PianoRoll" type="Node2D" unique_id=1962974652]
 z_index = 4
@@ -20,6 +21,10 @@ star_scale_min = 0.05
 star_scale_max = 0.2
 star_jitter = 10.0
 star_color = Color(1, 1, 1, 0.7176471)
+key_star_color = Color(0.9479781, 0.93570244, 0.8907748, 1)
+key_star_scale_min = 0.5
+key_star_scale_max = 0.8
+key_star_shader = ExtResource("10_badv7")
 
 [node name="Stars" type="Node2D" parent="." unique_id=1316850787]
 

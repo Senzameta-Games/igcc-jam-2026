@@ -1,7 +1,7 @@
 class_name RayCaster
 extends Node2D
 
-signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int)
+signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int, orb: Orb)
 
 ## Ray cast origin. Sits at [radius] + buffer away from the center along the X axis.
 @export var ray_origin: Vector2 = Vector2(400.0, 0.0)
@@ -67,7 +67,7 @@ func _sweep(tick: int) -> void:
 		var orb := area.get_parent() as Orb
 		if orb != null:
 			orb.play_note()
-			note_triggered.emit(orb.orb_id, orb.texture, result["position"], tick)
+			note_triggered.emit(orb.orb_id, orb.texture, result["position"], tick, orb)
 		exclude.append(result["rid"])
 
 func _update_visual() -> void:
