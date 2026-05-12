@@ -66,7 +66,6 @@ sequencer_transition_duration = 1.4
 sequencer_trans = 3
 sequencer_z_index_desk = 1
 sequencer_z_index_sky = 0
-audio_offset_db = 8.0
 
 [node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
 layer = 100

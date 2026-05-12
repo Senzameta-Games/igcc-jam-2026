@@ -74,18 +74,16 @@ func get_unique_orbs() -> Array[Orb.OrbType]:
 	return types
 
 func get_slot_for_type(orb_id: Orb.OrbType) -> Slot:
-	if not _slots_by_type.has(orb_id):
-		return null
-	for slot: Slot in (_slots_by_type[orb_id] as Array):
-		if not slot.is_occupied():
-			return slot
-	return null
+	return _get_slot_for_type_occupied(orb_id, false)
 
 func get_occupied_slot_for_type(orb_id: Orb.OrbType) -> Slot:
+	return _get_slot_for_type_occupied(orb_id, true)
+
+func _get_slot_for_type_occupied(orb_id: Orb.OrbType, occupied: bool) -> Slot:
 	if not _slots_by_type.has(orb_id):
 		return null
 	for slot: Slot in (_slots_by_type[orb_id] as Array):
-		if slot.is_occupied():
+		if slot.is_occupied() == occupied:
 			return slot
 	return null
 
