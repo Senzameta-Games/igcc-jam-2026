@@ -3,11 +3,11 @@
 	"name": "snake",
 	"bpm": 40,
 	"rings": [
-		{ "interval": "QUARTER" },
 		{ "interval": "EIGHTH" },
-		{ "interval": "EIGHTH" }
+		{ "interval": "EIGHTH" },
+		{ "interval": "SIXTEENTH" }
 	],
 	"solution": [
-		[], [], [], [], [1], [], [], [], [1], [], [1], [], [], [], [], []
+		[], [], [], [], [[0, 1]], [], [], [], [[0, 1]], [], [[0, 1]], [], [], [], [], []
 	]
 }

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bkfot4byy5awu"]
+
+[ext_resource type="Script" uid="uid://dvbp3q7mncf1s" path="res://core/entities/key_star/key_star.gd" id="1_kscrp"]
+
+[node name="KeyStar" type="Node2D" unique_id=1517401859]
+script = ExtResource("1_kscrp")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1385335008]

@@ -94,9 +94,10 @@ func _move_sequencer(target: Vector2) -> void:
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, _from_position: Vector2, tick: int, orb: Orb) -> void:
 	orb.tunnel()
 	var ring: Ring = _sequencer.get_ring_for_orb(orb)
+	var ring_index: int = ring.ring_index if ring != null else 0
 	if ring != null:
 		ring.register_snap_back(orb)
-	_piano_roll.receive_orb(orb_id, texture, tick, _sequencer.get_measure_duration())
+	_piano_roll.receive_orb(orb_id, texture, tick, ring_index, _sequencer.get_measure_duration())
 
 func _on_dev_load_requested(data: Dictionary) -> void:
 	_level_manager.load_level_data(data)

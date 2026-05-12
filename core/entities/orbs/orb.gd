@@ -8,7 +8,7 @@ enum State { IN_SLOT, HELD, LERPING }
 const LERP_SPEED: float = 12.0
 const LERP_THRESHOLD: float = 0.5
 
-enum OrbType { Bb3, F3, G3, A4, Bb4, D4, F4, G4 }
+enum OrbType { Bb3, F3, G3, A4, D4 }
 @export var texture: Texture2D
 @export var note: AudioStream
 

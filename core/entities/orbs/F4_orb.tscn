@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bspubr8kdmch8"]
 
 [ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_wtp3i"]
-[ext_resource type="Texture2D" uid="uid://6ked7lnln5nb" path="res://core/assets/icons/d-note.png" id="2_d7i88"]
+[ext_resource type="Texture2D" uid="uid://c2w0wehdipdx1" path="res://core/assets/orbs/F.png" id="2_14sdm"]
 [ext_resource type="AudioStream" uid="uid://b50pn1cjuv1ye" path="res://core/assets/audio/orb notes/play/F4/F4.wav" id="3_14sdm"]
 [ext_resource type="AudioStream" uid="uid://8ovhmcs7p8k8" path="res://core/assets/audio/orb notes/play/F4/F4_2.wav" id="4_lmkj1"]
 [ext_resource type="AudioStream" uid="uid://v36is0gmo7u7" path="res://core/assets/audio/orb notes/play/F4/F4_3.wav" id="5_y7y0m"]
@@ -17,7 +17,7 @@ stream_2/stream = ExtResource("5_y7y0m")
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_d7i88")
+"texture": ExtResource("2_14sdm")
 }],
 "loop": true,
 "name": &"default",
@@ -25,11 +25,12 @@ animations = [{
 }]
 
 [node name="Orb" unique_id=552011164 instance=ExtResource("1_wtp3i")]
-texture = ExtResource("2_d7i88")
+texture = ExtResource("2_14sdm")
 note = SubResource("AudioStreamRandomizer_lwwxw")
 orb_id = 6
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]
+scale = Vector2(0.29, 0.29)
 sprite_frames = SubResource("SpriteFrames_nw5cr")
 
 [node name="PitchHint" parent="." index="5" unique_id=1478975366]

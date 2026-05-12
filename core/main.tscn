@@ -60,7 +60,7 @@ thickness = 2
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
 sequencer_position_desk = Vector2(0, -20)
-sequencer_position_sky = Vector2(0, 380)
+sequencer_position_sky = Vector2(0, 280)
 sequencer_transition_duration = 1.4
 sequencer_trans = 3
 sequencer_z_index_desk = 1
@@ -106,8 +106,8 @@ rotation = -1.5707964
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
 position = Vector2(960, 520)
 script = ExtResource("6_brq4u")
-position_active = Vector2(960, 780)
-position_minimized = Vector2(960, 360)
+position_active = Vector2(960, 640)
+position_minimized = Vector2(960, 320)
 mode_transition_duration = 1.2
 mode_trans = 4
 
@@ -367,7 +367,7 @@ volume_db = -20.0
 
 [node name="BGM" type="AudioStreamPlayer" parent="." unique_id=2011721722]
 stream = ExtResource("16_jeqa8")
-volume_db = -8.0
+volume_db = -12.0
 autoplay = true
 
 [node name="RoomTone" type="AudioStreamPlayer" parent="." unique_id=676740509]

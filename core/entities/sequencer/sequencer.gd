@@ -210,9 +210,10 @@ func export() -> Dictionary:
 		ring_grids.append(grid)
 	for i: int in range(16):
 		var curr_pos: Array = []
-		for ring_grid: Array in ring_grids:
+		for ring_idx: int in range(ring_grids.size()):
+			var ring_grid: Array = ring_grids[ring_idx]
 			if ring_grid[i] != null:
-				curr_pos.push_front((ring_grid[i] as Orb).orb_id)
+				curr_pos.append([ring_idx, int((ring_grid[i] as Orb).orb_id)])
 		export_arr.append(curr_pos)
 	var rings_data: Array = []
 	for ring: Ring in _rings:

@@ -20,6 +20,10 @@ config/features=PackedStringArray("4.6", "GL Compatibility")
 run/max_fps=60
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://ctkysujyc0k35"
+
 [autoload]
 
 Playback="*uid://dlrk0r40y51mn"

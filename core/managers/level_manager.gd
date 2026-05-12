@@ -144,7 +144,8 @@ func _load_game(json_data: Dictionary) -> void:
 func _extract_orb_types(solution: Array) -> Array[Orb.OrbType]:
 	var counts: Dictionary = {}
 	for tick_data: Variant in solution:
-		for orb_int: int in (tick_data as Array):
+		for entry: Variant in (tick_data as Array):
+			var orb_int: int = int(entry) if not (entry is Array) else int((entry as Array)[1])
 			counts[orb_int] = counts.get(orb_int, 0) + 1
 	var unique: Array = counts.keys()
 	unique.sort_custom(func(a: int, b: int) -> bool: return a > b)

@@ -15,7 +15,7 @@ extends Node2D
 
 var _current_angle_rad: float = 0.0
 var _arc_tween: Tween = null
-var _was_at_desk: bool = true
+var _was_level_select: bool = false
 
 ## Maps Orb.OrbType → Array[Slot]. Supports multiple same-type slots per level.
 var _slots_by_type: Dictionary = {}
@@ -25,14 +25,14 @@ func _ready() -> void:
 	position = desk_pos
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
-	var is_desk := mode == ConsoleMode.Mode.DESK
-	if is_desk and not _was_at_desk:
-		_wind_down_sfx.play()
-	elif not is_desk and _was_at_desk:
+	var going_to_level_select := mode == ConsoleMode.Mode.LEVEL_SELECT
+	if going_to_level_select and not _was_level_select:
 		_wind_up_sfx.play()
-	_was_at_desk = is_desk
-	var target_deg: float = angle_desk_deg if is_desk else angle_sky_deg
-	var target_pos: Vector2 = desk_pos if is_desk else sky_pos
+	elif not going_to_level_select and _was_level_select:
+		_wind_down_sfx.play()
+	_was_level_select = going_to_level_select
+	var target_deg: float = angle_sky_deg if going_to_level_select else angle_desk_deg
+	var target_pos: Vector2 = sky_pos if going_to_level_select else desk_pos
 	_animate_to(deg_to_rad(target_deg), target_pos)
 
 func _animate_to(target_rad: float, target_pos: Vector2) -> void:
