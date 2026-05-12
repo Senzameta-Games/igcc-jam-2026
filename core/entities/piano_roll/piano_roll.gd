@@ -43,7 +43,9 @@ extends Node2D
 
 const TICKS: int = 16
 const RING_COUNT: int = 3
-const ARRIVAL_SCALE: float = 0.18
+const KEY_STAR_ARRIVAL_SCALE: float = 0.5
+const CORRECT_ARRIVAL_SCALE: float = 0.7
+const KEY_STAR_MIN_SCALE: float = 0.35
 
 const KEY_STAR_SCENE: PackedScene = preload("res://core/entities/key_star/key_star.tscn")
 
@@ -52,11 +54,18 @@ const _DEBUG_RADIAL_COLOR: Color = Color(1.0, 1.0, 1.0, 0.15)
 const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.6)
 const _DEBUG_ARC_SEGMENTS: int = 48
 
-## Sparse map of placed dots: key = tick * 100 + ring_index, value = Sprite2D node.
+signal constellation_completed
+
+## Persistent key stars placed on first detection. key = tick * 100 + ring_index.
 var _dots: Dictionary = {}
+var _dot_tweens: Dictionary = {}
 
 var _sequencer: Sequencer = null
 var _playing: bool = false
+
+var _solution: Array = []
+var _hit_positions: Dictionary = {}
+var _solution_position_count: int = 0
 
 func _ready() -> void:
 	Playback.stopped.connect(_on_playback_stopped)
@@ -108,28 +117,59 @@ func show_keys(solution: Array) -> void:
 			_keys_container.add_child(ks)
 			ks.setup(orb_type, key_star_shader)
 
-func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index: int, measure_duration: float) -> void:
+## Stores the current level solution for playback validation. Does not display any hints.
+func set_solution(solution: Array) -> void:
+	_solution = solution
+	_hit_positions.clear()
+	var unique_keys: Dictionary = {}
+	for tick: int in range(solution.size()):
+		for entry: Variant in (solution[tick] as Array):
+			var ring_idx: int = 0 if not (entry is Array) else int((entry as Array)[0])
+			unique_keys[_cell_key(tick, ring_idx)] = true
+	_solution_position_count = unique_keys.size()
+
+func receive_orb(_orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index: int, measure_duration: float) -> void:
 	var key: int = _cell_key(tick, ring_index)
+	var correct: bool = _is_solution_hit(tick, ring_index)
+	var arrival: float = CORRECT_ARRIVAL_SCALE if correct else KEY_STAR_ARRIVAL_SCALE
+
 	if _dots.has(key):
-		(_dots[key] as Node).queue_free()
-	var dot := Sprite2D.new()
-	dot.texture = texture
-	dot.scale = Vector2.ZERO
-	dot.position = _cell_pos(tick, ring_index)
-	_dots_container.add_child(dot)
-	_dots[key] = dot
+		# Already placed — jump back to arrival scale and restart decay.
+		var dot := _dots[key] as Sprite2D
+		dot.scale = Vector2(arrival, arrival)
+		if _dot_tweens.has(key):
+			(_dot_tweens[key] as Tween).kill()
+		_dot_tweens[key] = _start_key_star_decay(dot, measure_duration)
+	else:
+		# First detection — create the persistent key star.
+		var dot := Sprite2D.new()
+		if correct:
+			dot.texture = texture
+			if key_star_shader != null:
+				var mat := ShaderMaterial.new()
+				mat.shader = key_star_shader
+				dot.material = mat
+		else:
+			if not star_textures.is_empty():
+				dot.texture = star_textures[randi() % star_textures.size()]
+		dot.rotation = randf_range(0.0, TAU)
+		dot.scale = Vector2(arrival, arrival)
+		dot.position = _cell_pos(tick, ring_index)
+		_dots_container.add_child(dot)
+		_dots[key] = dot
+		_dot_tweens[key] = _start_key_star_decay(dot, measure_duration)
+
+	if correct and not _hit_positions.has(key):
+		_hit_positions[key] = true
+		if _hit_positions.size() >= _solution_position_count and _solution_position_count > 0:
+			constellation_completed.emit()
+
+func _start_key_star_decay(dot: Sprite2D, duration: float) -> Tween:
 	var tween := dot.create_tween()
-	tween.tween_property(dot, "scale", Vector2(ARRIVAL_SCALE, ARRIVAL_SCALE), 0.1) \
+	tween.tween_property(dot, "scale", Vector2(KEY_STAR_MIN_SCALE, KEY_STAR_MIN_SCALE), duration) \
 		.set_ease(Tween.EASE_OUT) \
-		.set_trans(Tween.TRANS_BACK)
-	tween.tween_property(dot, "scale", Vector2.ZERO, measure_duration) \
-		.set_ease(Tween.EASE_IN) \
 		.set_trans(Tween.TRANS_QUAD)
-	tween.tween_callback(func() -> void:
-		if _dots.get(key) == dot:
-			_dots.erase(key)
-		dot.queue_free()
-	)
+	return tween
 
 func _on_playback_started() -> void:
 	_playing = true
@@ -144,6 +184,7 @@ func _clear_dots() -> void:
 	for dot in _dots.values():
 		(dot as Node).queue_free()
 	_dots.clear()
+	_dot_tweens.clear()
 
 func _rebuild_stars() -> void:
 	for child: Node in _stars_container.get_children():
@@ -190,6 +231,15 @@ func _note_radius(ring_index: int) -> float:
 
 func _cell_key(tick: int, ring_index: int) -> int:
 	return tick * 100 + ring_index
+
+func _is_solution_hit(tick: int, ring_index: int) -> bool:
+	if tick >= _solution.size():
+		return false
+	for entry: Variant in (_solution[tick] as Array):
+		var r: int = 0 if not (entry is Array) else int((entry as Array)[0])
+		if r == ring_index:
+			return true
+	return false
 
 ## Returns solution positions as normalized Vector2 values in [-1, 1] space.
 func get_constellation_points(solution: Array) -> Array[Vector2]:

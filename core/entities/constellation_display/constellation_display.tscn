@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ctlf8nxm5wqjp"]
+
+[ext_resource type="Script" path="res://core/entities/constellation_display/constellation_display.gd" id="1_cdscr"]
+
+[node name="ConstellationDisplay" type="Node2D"]
+script = ExtResource("1_cdscr")

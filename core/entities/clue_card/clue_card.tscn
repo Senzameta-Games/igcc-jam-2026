@@ -2,7 +2,10 @@
 
 [ext_resource type="Script" uid="uid://7pahgca8kbvg" path="res://core/entities/clue_card/clue_card.gd" id="1_x131a"]
 [ext_resource type="Texture2D" uid="uid://c227gamx1cmp7" path="res://core/assets/clue_card/clue_card.png" id="2_h3pfr"]
-[ext_resource type="Texture2D" uid="uid://cyi0fuendbx0e" path="res://core/assets/stars/key.png" id="3_v52qp"]
+[ext_resource type="Script" uid="uid://e2fp0o4mn06m" path="res://core/entities/constellation_display/constellation_hint_display.gd" id="3_chdscr"]
+[ext_resource type="Texture2D" uid="uid://dafw1qq6yxib5" path="res://core/assets/stars/big-ridged-star.png" id="4_qsyu7"]
+[ext_resource type="Texture2D" uid="uid://chvfu1l1qh1cs" path="res://core/assets/stars/big-four-star.png" id="5_d2k66"]
+[ext_resource type="Texture2D" uid="uid://rpa0s5hl67vy" path="res://core/assets/stars/big-five-star.png" id="6_iq0g6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v52qp"]
 size = Vector2(386, 334)
@@ -16,103 +19,12 @@ texture = ExtResource("2_h3pfr")
 
 [node name="Keys" type="Node2D" parent="." unique_id=1170791373]
 
-[node name="Key0" type="Sprite2D" parent="Keys" unique_id=86961137]
-position = Vector2(-156, -28)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key1" type="Sprite2D" parent="Keys" unique_id=675303720]
-position = Vector2(-127, -2)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key2" type="Sprite2D" parent="Keys" unique_id=2082260365]
-position = Vector2(-97, 27)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key3" type="Sprite2D" parent="Keys" unique_id=1193028706]
-position = Vector2(-82, -71)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key4" type="Sprite2D" parent="Keys" unique_id=1421108194]
-position = Vector2(-63, -35)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key5" type="Sprite2D" parent="Keys" unique_id=1815655993]
-position = Vector2(-34, 24)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key6" type="Sprite2D" parent="Keys" unique_id=285146424]
-position = Vector2(13, -75)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key7" type="Sprite2D" parent="Keys" unique_id=740619970]
-position = Vector2(14, -38)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key8" type="Sprite2D" parent="Keys" unique_id=2110491852]
-position = Vector2(15, -5)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key9" type="Sprite2D" parent="Keys" unique_id=1256950688]
-position = Vector2(53, -39)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key10" type="Sprite2D" parent="Keys" unique_id=631990986]
-position = Vector2(110, -67)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key11" type="Sprite2D" parent="Keys" unique_id=2063570431]
-position = Vector2(101, -33)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key12" type="Sprite2D" parent="Keys" unique_id=814485025]
-position = Vector2(89, 5)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key13" type="Sprite2D" parent="Keys" unique_id=1065770140]
-position = Vector2(148, -23)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
-
-[node name="Key14" type="Sprite2D" parent="Keys" unique_id=669927075]
-position = Vector2(135, 14)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_v52qp")
+[node name="Constellation" type="Node2D" parent="Keys" unique_id=234567890]
+script = ExtResource("3_chdscr")
+star_textures = Array[Texture2D]([ExtResource("4_qsyu7"), ExtResource("5_d2k66"), ExtResource("4_qsyu7"), ExtResource("6_iq0g6")])
 
 [node name="Area" type="Area2D" parent="." unique_id=1175856262]
 
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1872269837]
 position = Vector2(-2, -6)
 shape = SubResource("RectangleShape2D_v52qp")
-
-[node name="Label" type="Label" parent="." unique_id=624698231]
-offset_left = -161.0
-offset_top = -141.0
-offset_right = 173.0
-offset_bottom = -64.0
-theme_override_colors/font_color = Color(0.05490196, 0.043137256, 0.09803922, 1)
-theme_override_font_sizes/font_size = 12
-text = "Currently has 14 manually placed stars in indexed order.
-
-
-
-
-
-
-
-
-
-Click to send the # of stars in the current level solution
-to their indexed positions on the piano roll."

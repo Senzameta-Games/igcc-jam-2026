@@ -10,6 +10,7 @@ const LERP_THRESHOLD: float = 0.5
 
 enum OrbType { Bb3, F3, G3, A4, D4 }
 @export var texture: Texture2D
+@export var key_star_texture: Texture2D
 @export var note: AudioStream
 
 @export var orb_id: OrbType = OrbType.F3
@@ -42,15 +43,6 @@ func play_note() -> void:
 		return
 	_note.stream = note
 	_note.play()
-
-func tunnel() -> void:
-	var tween := create_tween()
-	tween.tween_property(self, "scale", Vector2.ZERO, 0.12) \
-		.set_ease(Tween.EASE_IN) \
-		.set_trans(Tween.TRANS_QUAD)
-
-func restore_scale() -> void:
-	scale = Vector2.ONE
 
 func lift() -> void:
 	_state = State.HELD

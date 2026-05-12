@@ -12,6 +12,7 @@ extends Node2D
 @onready var _console_mode: ConsoleMode = $ConsoleMode
 @onready var _tools: Tools = $Tools
 @onready var _audio_manager: AudioManager = $AudioManager
+@onready var _clue_card: ClueCard = $ClueCard
 
 @export var sequencer_position_desk: Vector2 = Vector2(0, -100)
 @export var sequencer_position_sky: Vector2 = Vector2(0, 341)
@@ -39,6 +40,7 @@ func _ready() -> void:
 	_sky_layer.level_select_requested.connect(_console_mode.request_level_select)
 	_sky_layer.desk_area_hovered.connect(_sequencer.set_frame_glow)
 	_level_select.level_selected.connect(_on_level_selected)
+	_piano_roll.constellation_completed.connect(_on_constellation_completed)
 
 	_hand.connect_button(_playback_button)
 	_sequencer.note_triggered.connect(_on_note_triggered)
@@ -50,6 +52,11 @@ func _ready() -> void:
 	_piano_roll.set_sequencer(_sequencer)
 	_level_manager.load_level()
 	_setup_level_select()
+
+	# Prime the solution for the default-loaded level (no ClueCard shown at level select).
+	var initial_data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())
+	if initial_data.has("solution"):
+		_piano_roll.set_solution(initial_data["solution"])
 
 	_console_mode.initialize()
 
@@ -74,11 +81,8 @@ func _move_sequencer(target: Vector2) -> void:
 	_sequencer_tween.tween_property(_sequencer, "position", target, sequencer_transition_duration)
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, _from_position: Vector2, tick: int, orb: Orb) -> void:
-	orb.tunnel()
 	var ring: Ring = _sequencer.get_ring_for_orb(orb)
 	var ring_index: int = ring.ring_index if ring != null else 0
-	if ring != null:
-		ring.register_snap_back(orb)
 	_piano_roll.receive_orb(orb_id, texture, tick, ring_index, _sequencer.get_measure_duration())
 
 func _on_dev_load_requested(data: Dictionary) -> void:
@@ -103,7 +107,16 @@ func _setup_level_select() -> void:
 
 func _on_level_selected(index: int) -> void:
 	_level_manager.load_level_at_index(index)
-	var data: Dictionary = _level_manager.get_level_data_at_index(index)
-	if data.has("solution"):
-		_piano_roll.show_keys(data["solution"])
+	_present_clue_for_current_level()
 	_console_mode.request_sky()
+
+func _present_clue_for_current_level() -> void:
+	var data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())
+	if not data.has("solution"):
+		return
+	_piano_roll.set_solution(data["solution"])
+	_clue_card.setup(data["solution"])
+	_clue_card.present()
+
+func _on_constellation_completed() -> void:
+	_level_select.set_completed(_level_manager.current_index(), true)

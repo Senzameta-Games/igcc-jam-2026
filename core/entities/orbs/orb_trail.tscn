@@ -1,10 +1,52 @@
 [gd_scene format=3 uid="uid://3xd20hivcved"]
 
-[ext_resource type="Script" uid="uid://c4b63b0fajejx" path="res://core/entities/orbs/orb_trail.gd" id="1_ryinh"]
+[sub_resource type="GDScript" id="GDScript_d33y0"]
+script/source = "class_name OrbTrail
+extends Node2D
+ 
+## Spawned by Sequencer when a Detector triggers.
+## Travels from detector to target slot along an arc.
+## Emits an arrival signal when it reaches the destination, then frees itself.
+ 
+signal arrived
+
+const ARRIVAL_SCALE: float = 0.18
+const LAUNCH_SCALE: float = 0.29
+ 
+@export var travel_duration: float = 0.4
+@export var arc_height: float = -80.0
+ 
+var _from: Vector2
+var _to: Vector2
+var _control: Vector2
+var _elapsed: float = 0.0
+var _sprite: Sprite2D
+ 
+func setup(texture: Texture2D, from: Vector2, to: Vector2) -> void:
+	_from = from
+	_to = to
+	var mid: Vector2 = (_from + _to) * 0.5
+	_control = mid + Vector2(0.0, -arc_height)
+	_sprite = $Sprite
+	_sprite.scale = Vector2(LAUNCH_SCALE, LAUNCH_SCALE)
+	global_position = _from
+ 
+func _process(delta: float) -> void:
+	_elapsed += delta
+	var t: float = clampf(_elapsed / travel_duration, 0.0, 1.0)
+	var ease_t: float = ease(t, -2.0)
+	var a: Vector2 = _from.lerp(_control, ease_t)
+	var b: Vector2 = _control.lerp(_to, ease_t)
+	global_position = a.lerp(b, ease_t)
+	_sprite.scale = Vector2.ONE.lerp(Vector2(ARRIVAL_SCALE, ARRIVAL_SCALE), ease_t)
+	if t >= 1.0:
+		arrived.emit()
+		queue_free()
+"
 
 [node name="OrbTrail" type="Node2D" unique_id=1302186274]
 z_index = 20
-script = ExtResource("1_ryinh")
+script = SubResource("GDScript_d33y0")
 travel_duration = 1.4
 arc_height = 400.0
 
