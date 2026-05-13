@@ -12,7 +12,6 @@ extends Node2D
 @onready var _console_mode: ConsoleMode = $ConsoleMode
 @onready var _tools: Tools = $Tools
 @onready var _audio_manager: AudioManager = $AudioManager
-@onready var _clue_card: ClueCard = $ClueCard
 @onready var _lockbox: Lockbox = $Sequencer/Lockbox
 
 @export var sequencer_position_desk: Vector2 = Vector2(0, -100)
@@ -60,6 +59,8 @@ func _ready() -> void:
 	if initial_data.has("solution"):
 		_piano_roll.set_solution(initial_data["solution"])
 
+	_sequencer.position = sequencer_position_level_select
+	_sequencer.z_index = sequencer_z_index_sky
 	_console_mode.initialize()
 
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
@@ -84,6 +85,8 @@ func _move_sequencer(target: Vector2) -> void:
 	_sequencer_tween.set_ease(sequencer_ease)
 	_sequencer_tween.set_trans(sequencer_trans)
 	_sequencer_tween.tween_property(_sequencer, "position", target, sequencer_transition_duration)
+	if target == sequencer_position_desk:
+		_sequencer_tween.tween_callback(_sequencer.on_desk_settled)
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, _from_position: Vector2, tick: int, orb: Orb) -> void:
 	var ring: Ring = _sequencer.get_ring_for_orb(orb)
@@ -109,22 +112,32 @@ func _setup_level_select() -> void:
 		else:
 			all_points.append([])
 	_level_select.setup(all_points)
+	for i: int in range(_level_manager.level_count()):
+		_level_select.set_locked(i, not _level_manager.is_unlocked(i))
 
 func _on_level_selected(index: int) -> void:
+	Playback.stop()
 	_level_manager.load_level_at_index(index)
 	_present_clue_for_current_level()
-	_console_mode.request_sky()
+	_console_mode.request_desk()
 
 func _present_clue_for_current_level() -> void:
 	var data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())
 	if not data.has("solution"):
 		return
 	_piano_roll.set_solution(data["solution"])
-	_clue_card.setup(data["solution"])
-	_clue_card.present()
+	if not _level_manager.is_completed(_level_manager.current_index()):
+		_sequencer.queue_clue(data["solution"])
 
 func _on_constellation_completed() -> void:
-	_level_select.set_completed(_level_manager.current_index(), true)
+	var completed: int = _level_manager.current_index()
+	_level_manager.mark_completed(completed)
+	_level_select.set_completed(completed, true)
+	var next: int = completed + 1
+	if next < _level_manager.level_count():
+		_level_manager.unlock_level(next)
+		_level_select.set_locked(next, false)
+	_console_mode.force_level_select()
 
 func _on_lockbox_opened() -> void:
 	_piano_roll.set_solution([])

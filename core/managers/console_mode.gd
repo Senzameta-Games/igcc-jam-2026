@@ -24,6 +24,9 @@ func request_level_select() -> void:
 		return
 	_set_mode(Mode.LEVEL_SELECT)
 
+func force_level_select() -> void:
+	_set_mode(Mode.LEVEL_SELECT)
+
 func request_desk() -> void:
 	if Playback.is_playing:
 		return

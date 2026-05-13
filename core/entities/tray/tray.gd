@@ -16,6 +16,7 @@ extends Node2D
 var _current_angle_rad: float = 0.0
 var _arc_tween: Tween = null
 var _is_rotated_in: bool = false
+var _mode_ready: bool = false
 
 ## Maps Orb.OrbType → Array[Slot]. Supports multiple same-type slots per level.
 var _slots_by_type: Dictionary = {}
@@ -25,6 +26,10 @@ func _ready() -> void:
 	position = desk_pos
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
+	if not _mode_ready:
+		_mode_ready = true
+		_snap_to_mode(mode)
+		return
 	match mode:
 		ConsoleMode.Mode.SKY:
 			if Playback.is_playing and not _is_rotated_in:
@@ -41,6 +46,19 @@ func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 				_is_rotated_in = true
 				_wind_down_sfx.play()
 				_animate_to(deg_to_rad(angle_sky_deg), sky_pos)
+
+func _snap_to_mode(mode: ConsoleMode.Mode) -> void:
+	match mode:
+		ConsoleMode.Mode.SKY, ConsoleMode.Mode.LEVEL_SELECT:
+			_is_rotated_in = true
+			_current_angle_rad = deg_to_rad(angle_sky_deg)
+			rotation = _current_angle_rad - deg_to_rad(angle_desk_deg)
+			position = sky_pos
+		ConsoleMode.Mode.DESK:
+			_is_rotated_in = false
+			_current_angle_rad = deg_to_rad(angle_desk_deg)
+			rotation = 0.0
+			position = desk_pos
 
 func _animate_to(target_rad: float, target_pos: Vector2) -> void:
 	if _arc_tween != null and _arc_tween.is_running():

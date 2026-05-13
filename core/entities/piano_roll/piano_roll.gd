@@ -66,10 +66,12 @@ var _playing: bool = false
 var _solution: Array = []
 var _hit_positions: Dictionary = {}
 var _solution_position_count: int = 0
+var _pending_completion: bool = false
 
 func _ready() -> void:
 	Playback.stopped.connect(_on_playback_stopped)
 	Playback.started.connect(_on_playback_started)
+	Playback.tick_advanced.connect(_on_tick_advanced)
 
 func setup(tray: Tray) -> void:
 	_rebuild_stars()
@@ -162,7 +164,7 @@ func receive_orb(_orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index
 	if correct and not _hit_positions.has(key):
 		_hit_positions[key] = true
 		if _hit_positions.size() >= _solution_position_count and _solution_position_count > 0:
-			constellation_completed.emit()
+			_pending_completion = true
 
 func _start_key_star_decay(dot: Sprite2D, duration: float) -> Tween:
 	var tween := dot.create_tween()
@@ -171,10 +173,16 @@ func _start_key_star_decay(dot: Sprite2D, duration: float) -> Tween:
 		.set_trans(Tween.TRANS_QUAD)
 	return tween
 
+func _on_tick_advanced(tick: int) -> void:
+	if _pending_completion and tick == 0:
+		_pending_completion = false
+		constellation_completed.emit()
+
 func _on_playback_started() -> void:
 	_playing = true
 
 func _on_playback_stopped() -> void:
+	_pending_completion = false
 	_clear_dots()
 	_playing = false
 	_playhead.modulate.a = 1.0

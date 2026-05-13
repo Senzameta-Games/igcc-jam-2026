@@ -9,7 +9,6 @@
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
 [ext_resource type="Texture2D" uid="uid://cp83ckcybx1an" path="res://core/assets/background/sky.png" id="7_cus2n"]
-[ext_resource type="PackedScene" uid="uid://dmelyoceesneg" path="res://core/entities/clue_card/clue_card.tscn" id="10_xhu5d"]
 [ext_resource type="PackedScene" uid="uid://esgkju3uf5pp" path="res://core/levels/level_select.tscn" id="11_7ua4h"]
 [ext_resource type="Script" uid="uid://xtcepy8y6mch" path="res://core/managers/tools.gd" id="11_510js"]
 [ext_resource type="PackedScene" uid="uid://blkl088rhnod6" path="res://tools/export_form.tscn" id="12_7ua4h"]
@@ -86,11 +85,6 @@ metadata/_custom_type_script = "uid://0x2x5jmtfaov"
 
 [node name="ConsoleMode" type="Node" parent="." unique_id=978732142]
 script = ExtResource("4_7ua4h")
-
-[node name="ClueCard" parent="." unique_id=1129193832 instance=ExtResource("10_xhu5d")]
-z_index = 20
-position = Vector2(960, 589)
-minimized_position = Vector2(-600, 360)
 
 [node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
 

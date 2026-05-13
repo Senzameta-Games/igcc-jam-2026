@@ -23,6 +23,10 @@ func set_completed(index: int, done: bool) -> void:
 	if index >= 0 and index < _items.size():
 		_items[index].set_completed(done)
 
+func set_locked(index: int, locked: bool) -> void:
+	if index >= 0 and index < _items.size():
+		_items[index].set_locked(locked)
+
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	_set_items_active(mode == ConsoleMode.Mode.LEVEL_SELECT)
 

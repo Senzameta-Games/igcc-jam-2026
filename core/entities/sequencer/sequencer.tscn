@@ -23,6 +23,7 @@
 [ext_resource type="Script" uid="uid://nn88q4x5gfeu" path="res://core/entities/stash/stash.gd" id="21_toom1"]
 [ext_resource type="PackedScene" uid="uid://cv2gbijini7cf" path="res://core/entities/lockbox/lockbox.tscn" id="22_ebywj"]
 [ext_resource type="PackedScene" uid="uid://bbmvjaukbxutq" path="res://core/entities/tray/extra_tray.tscn" id="23_bibdu"]
+[ext_resource type="PackedScene" uid="uid://dmelyoceesneg" path="res://core/entities/clue_card/clue_card.tscn" id="24_gk0su"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ebywj"]
 shader = ExtResource("6_oyf0e")
@@ -155,3 +156,8 @@ rotation = -0.2268928
 [node name="ExtraTray2" parent="." unique_id=847930420 instance=ExtResource("23_bibdu")]
 position = Vector2(1663, 588)
 rotation = 0.2268928
+
+[node name="ClueCard" parent="." unique_id=1129193832 instance=ExtResource("24_gk0su")]
+z_index = 20
+position = Vector2(960, 589)
+minimized_position = Vector2(-600, 360)

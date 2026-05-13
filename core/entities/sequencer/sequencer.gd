@@ -30,10 +30,13 @@ const MAX_BPM: float = 90.0
 @onready var _lockbox: Lockbox = $Lockbox
 @onready var _extra_tray: Node2D = $ExtraTray
 @onready var _extra_tray2: Node2D = $ExtraTray2
+@onready var _clue_card: ClueCard = $ClueCard
 
 
 var _rings: Array[Ring] = []
 var _resetting: bool = false
+var _pending_clue: Array = []
+var _has_pending_clue: bool = false
 var _frame_glow_tween: Tween = null
 
 # Tick clock driven by absolute measure time, independent of ring multipliers
@@ -62,6 +65,17 @@ func _ready() -> void:
 	_lockbox.unlocked.connect(_on_lockbox_unlocked)
 	_extra_tray.position = extra_tray_hidden_pos
 	_extra_tray2.position = extra_tray2_hidden_pos
+
+func queue_clue(solution: Array) -> void:
+	_pending_clue = solution
+	_has_pending_clue = true
+
+func on_desk_settled() -> void:
+	if not _has_pending_clue:
+		return
+	_has_pending_clue = false
+	_clue_card.setup(_pending_clue)
+	_clue_card.present()
 
 func _on_lockbox_unlocked() -> void:
 	var t1 := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)

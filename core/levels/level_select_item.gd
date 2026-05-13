@@ -5,6 +5,7 @@ signal selected(index: int)
 
 ## Modulate applied to the container sprite when the level is completed.
 @export var completed_color: Color = Color(1.0, 0.92, 0.3, 1.0)
+@export var locked_color: Color = Color(0.25, 0.25, 0.25, 1.0)
 
 ## Hover: shader applied to each star (assign key_star.gdshader in Inspector).
 @export var hover_shader: Shader = null
@@ -18,6 +19,8 @@ signal selected(index: int)
 
 var _level_index: int = 0
 var _hover_tween: Tween = null
+var _locked: bool = true
+var _completed: bool = false
 
 func _ready() -> void:
 	input_event.connect(_on_input_event)
@@ -30,14 +33,31 @@ func setup(level_index: int, constellation_points: Array[Vector2]) -> void:
 	_level_index = level_index
 	_constellation.setup(constellation_points)
 
+func set_locked(locked: bool) -> void:
+	_locked = locked
+	_refresh_modulate()
+
 func set_completed(done: bool) -> void:
-	_sprite.modulate = completed_color if done else Color.WHITE
+	_completed = done
+	_refresh_modulate()
+	_set_hover(done)
+
+func _refresh_modulate() -> void:
+	if _completed:
+		_sprite.modulate = completed_color
+	elif _locked:
+		_sprite.modulate = locked_color
+	else:
+		_sprite.modulate = Color.WHITE
+	_constellation.modulate = Color(0.15, 0.15, 0.15, 1.0) if _locked else Color.WHITE
 
 func _on_mouse_entered() -> void:
-	_set_hover(true)
+	if not _locked:
+		_set_hover(true)
 
 func _on_mouse_exited() -> void:
-	_set_hover(false)
+	if not _locked and not _completed:
+		_set_hover(false)
 
 func _set_hover(active: bool) -> void:
 	if _hover_tween != null and _hover_tween.is_running():
@@ -56,6 +76,8 @@ func _set_hover(active: bool) -> void:
 		_hover_tween.tween_property(star, "scale", target_scale, hover_tween_duration)
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if _locked:
+		return
 	if not event is InputEventMouseButton:
 		return
 	var mb := event as InputEventMouseButton

@@ -13,6 +13,8 @@ var _piano_roll: PianoRoll = null
 
 var _level_files: Array[String] = []
 var _current_index: int = 0
+var _unlocked: Array[bool] = []
+var _completed: Array[bool] = []
 
 ## Per-level tray snapshots. Saved when navigating away; restored on return.
 ## Key: level index (int). Value: Array from Tray.snapshot_slots().
@@ -64,6 +66,8 @@ func load_level_data(data: Dictionary) -> void:
 func load_level_at_index(index: int) -> void:
 	if index < 0 or index >= _level_files.size():
 		return
+	if not is_unlocked(index):
+		return
 	_tray_states[_current_index] = _tray.snapshot_slots()
 	_sequencer_states[_current_index] = _sequencer.snapshot_rings()
 	_current_index = index
@@ -89,6 +93,24 @@ func current_index() -> int:
 func level_count() -> int:
 	return _level_files.size()
 
+func is_unlocked(index: int) -> bool:
+	if index < 0 or index >= _unlocked.size():
+		return false
+	return _unlocked[index]
+
+func unlock_level(index: int) -> void:
+	if index >= 0 and index < _unlocked.size():
+		_unlocked[index] = true
+
+func is_completed(index: int) -> bool:
+	if index < 0 or index >= _completed.size():
+		return false
+	return _completed[index]
+
+func mark_completed(index: int) -> void:
+	if index >= 0 and index < _completed.size():
+		_completed[index] = true
+
 func _scan_levels() -> void:
 	_level_files.clear()
 	var dir := DirAccess.open(LEVELS_DIR)
@@ -103,6 +125,12 @@ func _scan_levels() -> void:
 		fname = dir.get_next()
 	dir.list_dir_end()
 	_level_files.sort()
+	_unlocked.resize(_level_files.size())
+	_unlocked.fill(false)
+	if not _unlocked.is_empty():
+		_unlocked[0] = true
+	_completed.resize(_level_files.size())
+	_completed.fill(false)
 
 func _load_file(path: String) -> void:
 	var file := FileAccess.open(path, FileAccess.READ)
