@@ -7,7 +7,7 @@ signal all_levels_complete
 
 const LEVELS_DIR: String = "res://core/levels/dev/"
 
-var _sequencer: Sequencer = null
+var _sequencer: DeskLayer = null
 var _tray: Tray = null
 var _piano_roll: PianoRoll = null
 
@@ -15,6 +15,7 @@ var _level_files: Array[String] = []
 var _current_index: int = 0
 var _unlocked: Array[bool] = []
 var _completed: Array[bool] = []
+var _clue_shown: Array[bool] = []
 
 ## Per-level tray snapshots. Saved when navigating away; restored on return.
 ## Key: level index (int). Value: Array from Tray.snapshot_slots().
@@ -24,7 +25,7 @@ var _tray_states: Dictionary = {}
 ## Key: level index (int). Value: Array from Sequencer.snapshot_rings().
 var _sequencer_states: Dictionary = {}
 
-func initialize(sequencer: Sequencer, tray: Tray, piano_roll: PianoRoll) -> void:
+func initialize(sequencer: DeskLayer, tray: Tray, piano_roll: PianoRoll) -> void:
 	_sequencer = sequencer
 	_tray = tray
 	_piano_roll = piano_roll
@@ -62,6 +63,9 @@ func load_next_level() -> void:
 
 func load_level_data(data: Dictionary) -> void:
 	_present_level(data)
+
+func load_level_file(path: String) -> void:
+	_load_file(path)
 
 func load_level_at_index(index: int) -> void:
 	if index < 0 or index >= _level_files.size():
@@ -111,6 +115,15 @@ func mark_completed(index: int) -> void:
 	if index >= 0 and index < _completed.size():
 		_completed[index] = true
 
+func is_clue_shown(index: int) -> bool:
+	if index < 0 or index >= _clue_shown.size():
+		return false
+	return _clue_shown[index]
+
+func mark_clue_shown(index: int) -> void:
+	if index >= 0 and index < _clue_shown.size():
+		_clue_shown[index] = true
+
 func _scan_levels() -> void:
 	_level_files.clear()
 	var dir := DirAccess.open(LEVELS_DIR)
@@ -131,6 +144,8 @@ func _scan_levels() -> void:
 		_unlocked[0] = true
 	_completed.resize(_level_files.size())
 	_completed.fill(false)
+	_clue_shown.resize(_level_files.size())
+	_clue_shown.fill(false)
 
 func _load_file(path: String) -> void:
 	var file := FileAccess.open(path, FileAccess.READ)

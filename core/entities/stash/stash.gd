@@ -2,7 +2,8 @@ class_name Stash
 extends Node2D
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
-	visible = mode == ConsoleMode.Mode.DESK
+	if mode == ConsoleMode.Mode.DESK:
+		visible = true
 
 ## Returns a count of each OrbType held in stash that originated from level_index.
 ## Keys are int(OrbType). Filters by source_level so cross-level orbs don't

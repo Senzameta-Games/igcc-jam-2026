@@ -60,7 +60,7 @@ signal constellation_completed
 var _dots: Dictionary = {}
 var _dot_tweens: Dictionary = {}
 
-var _sequencer: Sequencer = null
+var _sequencer: DeskLayer = null
 var _playing: bool = false
 
 var _solution: Array = []
@@ -95,7 +95,7 @@ func _process(delta: float) -> void:
 
 	_update_playhead(t * float(TICKS))
 
-func set_sequencer(sequencer: Sequencer) -> void:
+func set_sequencer(sequencer: DeskLayer) -> void:
 	_sequencer = sequencer
 
 func get_cell_position(tick: int, ring_index: int) -> Vector2:
@@ -257,7 +257,7 @@ func get_constellation_points(solution: Array) -> Array[Vector2]:
 			var ring_idx: int = 0 if not (entry is Array) else int((entry as Array)[0])
 			var angle_rad: float = _tick_angle_rad(float(tick))
 			var radius: float = _note_radius(ring_idx)
-			positions.append(fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * radius)
+			positions.append(Vector2(cos(angle_rad), sin(angle_rad)) * radius)
 
 	if positions.is_empty():
 		return positions
@@ -271,10 +271,30 @@ func get_constellation_points(solution: Array) -> Array[Vector2]:
 	for p: Vector2 in positions:
 		max_dist = maxf(max_dist, (p - centroid).length())
 
+	# Scale by geometric mean of the solution's own extent and the full-grid extent.
+	# This keeps tight constellations bunched while large ones still fill the display.
+	var norm_scale: float = sqrt(max_dist * _grid_reference_scale())
+
 	var result: Array[Vector2] = []
 	for p: Vector2 in positions:
-		result.append((p - centroid) / max_dist)
+		result.append((p - centroid) / norm_scale)
 	return result
+
+func _grid_reference_scale() -> float:
+	var grid_centroid := Vector2.ZERO
+	for tick: int in range(TICKS):
+		for ring: int in range(RING_COUNT):
+			var angle_rad: float = _tick_angle_rad(float(tick))
+			var radius: float = _note_radius(ring)
+			grid_centroid += Vector2(cos(angle_rad), sin(angle_rad)) * radius
+	grid_centroid /= float(TICKS * RING_COUNT)
+	var ref: float = 0.001
+	for tick: int in range(TICKS):
+		for ring: int in range(RING_COUNT):
+			var angle_rad: float = _tick_angle_rad(float(tick))
+			var radius: float = _note_radius(ring)
+			ref = maxf(ref, (Vector2(cos(angle_rad), sin(angle_rad)) * radius - grid_centroid).length())
+	return ref
 
 # --- Debug draw ---
 

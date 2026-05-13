@@ -3,6 +3,8 @@ extends Node2D
 
 signal dismiss_complete
 
+enum State { HIDDEN, PRESENTING, MINIMIZED, INSPECTING }
+
 @export var slide_in_offset: Vector2 = Vector2(0.0, 800.0)
 @export var slide_in_duration: float = 0.5
 @export var display_duration: float = 1.0
@@ -17,22 +19,26 @@ signal dismiss_complete
 var _resting_position: Vector2 = Vector2.ZERO
 var _dismissed: bool = false
 var _tween: Tween = null
+var _state: State = State.HIDDEN
+var _base_z_index: int = 0
 
 func _ready() -> void:
 	visible = false
-	await get_tree().process_frame
 	_resting_position = position
+	await get_tree().process_frame
 	_area.input_event.connect(_on_area_input_event)
 
 func setup(solution: Array) -> void:
 	if _tween != null and _tween.is_running():
 		_tween.kill()
 	_dismissed = false
+	_state = State.HIDDEN
 	scale = Vector2.ONE
 	position = _resting_position
 	_constellation.setup(solution)
 
 func present() -> void:
+	_state = State.PRESENTING
 	await get_tree().process_frame
 	position = _resting_position + slide_in_offset
 	visible = true
@@ -51,14 +57,37 @@ func dismiss() -> void:
 	_dismissed = true
 	_minimize()
 
+func inspect() -> void:
+	_dismissed = false
+	_state = State.INSPECTING
+	_base_z_index = z_index
+	z_index = _base_z_index + 10
+	if _tween != null and _tween.is_running():
+		_tween.kill()
+	_tween = create_tween()
+	_tween.set_parallel(true)
+	_tween.tween_property(self, "position", _resting_position, minimize_duration) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	_tween.tween_property(self, "scale", Vector2.ONE, minimize_duration) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+
 func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if not event is InputEventMouseButton:
 		return
 	var mb := event as InputEventMouseButton
-	if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-		dismiss()
+	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
+		return
+	match _state:
+		State.PRESENTING:
+			dismiss()
+		State.MINIMIZED:
+			inspect()
+		State.INSPECTING:
+			dismiss()
 
 func _minimize() -> void:
+	_state = State.MINIMIZED
+	z_index = _base_z_index
 	if _tween != null and _tween.is_running():
 		_tween.kill()
 	var target_pos: Vector2 = _resting_position + minimized_position

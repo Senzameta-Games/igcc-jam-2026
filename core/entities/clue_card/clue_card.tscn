@@ -12,6 +12,7 @@ size = Vector2(386, 334)
 
 [node name="ClueCard" type="Node2D" unique_id=1129193832]
 script = ExtResource("1_x131a")
+minimized_position = Vector2(0, 120)
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=159149063]
 scale = Vector2(0.5, 0.5)

@@ -2,10 +2,16 @@
 
 [ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="1_7pus6"]
 [ext_resource type="PackedScene" uid="uid://n1myx81yypow" path="res://core/entities/orbs/pearl.tscn" id="2_jbg4s"]
+[ext_resource type="Texture2D" uid="uid://ctip0u2b2hhpf" path="res://core/assets/pentacle/pentacle_surface.png" id="3_qmiws"]
 
 [node name="Stash" type="Node2D" unique_id=1974781458]
 
+[node name="Surface" type="Sprite2D" parent="." unique_id=1216664536]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_qmiws")
+
 [node name="Pearls" type="Node2D" parent="." unique_id=2107219807]
+position = Vector2(0, -6)
 
 [node name="Slot" parent="Pearls" unique_id=136360553 instance=ExtResource("1_7pus6")]
 position = Vector2(0, -25)
@@ -23,12 +29,13 @@ position = Vector2(34, 29)
 [node name="Pearl" parent="Pearls/Slot3" unique_id=1825789510 instance=ExtResource("2_jbg4s")]
 
 [node name="LevelGlyphs" type="Node2D" parent="." unique_id=201207237]
-
-[node name="OrbSlots" type="Node2D" parent="." unique_id=1803322578]
 position = Vector2(0, 4)
 
+[node name="OrbSlots" type="Node2D" parent="." unique_id=1803322578]
+position = Vector2(0, 8)
+
 [node name="Slot0" parent="OrbSlots" unique_id=400353250 instance=ExtResource("1_7pus6")]
-position = Vector2(0, -107)
+position = Vector2(0, -131)
 
 [node name="Slot1" parent="OrbSlots" unique_id=1302444667 instance=ExtResource("1_7pus6")]
 position = Vector2(120, -42)

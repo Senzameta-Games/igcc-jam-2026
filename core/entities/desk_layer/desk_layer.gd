@@ -1,4 +1,4 @@
-class_name Sequencer
+class_name DeskLayer
 extends Node2D
 
 signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int, orb: Orb)
@@ -22,21 +22,18 @@ const MAX_BPM: float = 90.0
 @export var extra_tray2_revealed_pos: Vector2 = Vector2(1663, 588)
 @export var tray_reveal_duration: float = 0.6
 
-@onready var _rings_container: Node2D = $Device/Rings
-@onready var _ray_caster: RayCaster = $Device/RayCaster
-@onready var _device: Node2D = $Device
+@onready var _rings_container: Node2D = $Sequencer/Rings
+@onready var _ray_caster: RayCaster = $Sequencer/RayCaster
+@onready var _sequencer: Node2D = $Sequencer
 @onready var _ring_spin_sfx: AudioStreamPlayer = $PassiveSound/RingRotate
-@onready var _playback_button_sfx: AudioStreamPlayer = $Device/StartStop/ButtonPress
+@onready var _playback_button_sfx: AudioStreamPlayer = $Sequencer/StartStop/ButtonPress
 @onready var _lockbox: Lockbox = $Lockbox
 @onready var _extra_tray: Node2D = $ExtraTray
 @onready var _extra_tray2: Node2D = $ExtraTray2
-@onready var _clue_card: ClueCard = $ClueCard
-
+@onready var _clues: Clues = $Clues
 
 var _rings: Array[Ring] = []
 var _resetting: bool = false
-var _pending_clue: Array = []
-var _has_pending_clue: bool = false
 var _frame_glow_tween: Tween = null
 
 # Tick clock driven by absolute measure time, independent of ring multipliers
@@ -67,15 +64,10 @@ func _ready() -> void:
 	_extra_tray2.position = extra_tray2_hidden_pos
 
 func queue_clue(solution: Array) -> void:
-	_pending_clue = solution
-	_has_pending_clue = true
+	_clues.queue_clue(solution)
 
 func on_desk_settled() -> void:
-	if not _has_pending_clue:
-		return
-	_has_pending_clue = false
-	_clue_card.setup(_pending_clue)
-	_clue_card.present()
+	_clues.on_desk_settled()
 
 func _on_lockbox_unlocked() -> void:
 	var t1 := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
@@ -173,7 +165,7 @@ func set_frame_glow(active: bool) -> void:
 	_frame_glow_tween.set_ease(Tween.EASE_OUT)
 	_frame_glow_tween.set_trans(Tween.TRANS_QUAD)
 	var target: Color = Color(1.35, 1.25, 0.95, 1.0) if active else Color.WHITE
-	_frame_glow_tween.tween_property(_device, "modulate", target, 0.35)
+	_frame_glow_tween.tween_property(_sequencer, "modulate", target, 0.35)
 
 func _on_playback_started() -> void:
 	_playback_button_sfx.play()

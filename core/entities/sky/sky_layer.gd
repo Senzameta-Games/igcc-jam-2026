@@ -53,12 +53,8 @@ var _desk_hint_active: bool = false
 var _desk_glow_active: bool = false
 var _current_mode: ConsoleMode.Mode = ConsoleMode.Mode.DESK
 
-@onready var _hit_area: Area2D = $HitArea
 @onready var _piano_roll: PianoRoll = $PianoRoll
 @onready var _level_select: LevelSelect = $LevelSelect
-
-func _ready() -> void:
-	_refresh_hit_area()
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	_current_mode = mode
@@ -83,7 +79,6 @@ func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 			_is_minimized = false
 			_tween_to(position_level_select, piano_roll_scale_sky)
 	_level_select.on_mode_changed(mode)
-	_refresh_hit_area()
 
 func _process(_delta: float) -> void:
 	if _mode_tween != null and _mode_tween.is_running():
@@ -160,10 +155,6 @@ func _tween_to(target_position: Vector2, target_scale: Vector2) -> void:
 	_mode_tween.tween_property(self, "position", target_position, mode_transition_duration)
 	_mode_tween.tween_property(_piano_roll, "scale", target_scale, mode_transition_duration)
 	_mode_tween.tween_property(_piano_roll, "position", target_piano_position, mode_transition_duration)
-
-func _refresh_hit_area() -> void:
-	_hit_area.monitoring = false
-	_hit_area.monitorable = false
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:
