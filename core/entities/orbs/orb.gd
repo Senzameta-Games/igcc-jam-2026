@@ -14,6 +14,7 @@ enum OrbType { Bb3, F3, G3, A4, D4 }
 @export var note: AudioStream
 
 @export var orb_id: OrbType = OrbType.F3
+@export var is_pearl: bool = false
 
 var source_level: int = -1
 var _state: State = State.IN_SLOT

@@ -125,21 +125,28 @@ func _present_level(data: Dictionary) -> void:
 
 func _load_game(json_data: Dictionary) -> void:
 	_sequencer.eject_orbs()
-	if json_data.has("bpm"):
-		_sequencer.bpm = float(json_data["bpm"])
+	_sequencer.bpm = 40.0
 	if json_data.has("rings"):
 		var rings: Array[Ring] = _sequencer.get_rings()
 		var ring_data: Array = json_data["rings"]
-		for i: int in range(mini(ring_data.size(), rings.size())):
-			var interval_str: String = ring_data[i].get("interval", "QUARTER")
-			rings[i].interval_type = Ring.IntervalType.get(interval_str, Ring.IntervalType.QUARTER)
+		for i: int in range(rings.size()):
+			var active: bool = i < ring_data.size()
+			rings[i].set_active(active)
+			if active:
+				var interval_str: String = ring_data[i].get("interval", "QUARTER")
+				rings[i].interval_type = Ring.IntervalType.get(interval_str, Ring.IntervalType.QUARTER)
 	if _sequencer_states.has(_current_index):
 		_sequencer.restore_rings(_sequencer_states[_current_index])
-	if json_data.has("solution"):
-		if _tray_states.has(_current_index):
-			_tray.restore_snapshot(_tray_states[_current_index])
-		else:
-			_tray.populate(_extract_orb_types(json_data["solution"]), _current_index)
+	if _tray_states.has(_current_index):
+		_tray.restore_snapshot(_tray_states[_current_index])
+	elif json_data.has("tray_orbs"):
+		var raw: Array = json_data["tray_orbs"]
+		var types: Array[Orb.OrbType] = []
+		for id: Variant in raw:
+			types.append(int(id) as Orb.OrbType)
+		_tray.populate(types, _current_index)
+	elif json_data.has("solution"):
+		_tray.populate(_extract_orb_types(json_data["solution"]), _current_index)
 
 func _extract_orb_types(solution: Array) -> Array[Orb.OrbType]:
 	var counts: Dictionary = {}

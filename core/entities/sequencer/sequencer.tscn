@@ -5,9 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://c2ry2hofjuqey" path="res://core/entities/rings/ring0.tscn" id="2_y5shy"]
 [ext_resource type="PackedScene" uid="uid://kuho8o104lte" path="res://core/entities/rings/ring1.tscn" id="3_rlxeh"]
 [ext_resource type="PackedScene" uid="uid://uf27xxyxu3to" path="res://core/entities/rings/ring2.tscn" id="4_pw2oc"]
+[ext_resource type="Shader" uid="uid://u5anm6l4kvyp" path="res://core/entities/sequencer/glass.gdshader" id="6_oyf0e"]
+[ext_resource type="Texture2D" uid="uid://bo20svq2wyo2b" path="res://core/assets/raycaster/glass.png" id="7_toom1"]
 [ext_resource type="AudioStream" uid="uid://d2do0hfqxb4qt" path="res://core/assets/audio/button_press/playbackpress.wav" id="8_aen4v"]
-[ext_resource type="Texture2D" uid="uid://dwe0ak00f8fht" path="res://core/assets/icons/empty.png" id="8_pw2oc"]
 [ext_resource type="Script" uid="uid://jpnvfasgpdy1" path="res://core/entities/sequencer/ray_caster.gd" id="8_rlxeh"]
+[ext_resource type="Texture2D" uid="uid://bv0ygqbbbirey" path="res://core/assets/raycaster/frame.png" id="8_toom1"]
 [ext_resource type="AudioStream" uid="uid://d32xohytt2g2d" path="res://core/assets/audio/background/measure_pad_1.wav" id="9_pxt5q"]
 [ext_resource type="AudioStream" uid="uid://bqmk2a3lwlh16" path="res://core/assets/audio/button_press/playbackpress2.wav" id="9_uioqo"]
 [ext_resource type="AudioStream" uid="uid://3k4li513dt4h" path="res://core/assets/audio/background/measure_pad_2.wav" id="10_52j4s"]
@@ -19,6 +21,16 @@
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="20_oyf0e"]
 [ext_resource type="PackedScene" uid="uid://u3aqduwfjcbo" path="res://core/entities/stash/stash.tscn" id="20_toom1"]
 [ext_resource type="Script" uid="uid://nn88q4x5gfeu" path="res://core/entities/stash/stash.gd" id="21_toom1"]
+[ext_resource type="PackedScene" uid="uid://cv2gbijini7cf" path="res://core/entities/lockbox/lockbox.tscn" id="22_ebywj"]
+[ext_resource type="PackedScene" uid="uid://bbmvjaukbxutq" path="res://core/entities/tray/extra_tray.tscn" id="23_bibdu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ebywj"]
+shader = ExtResource("6_oyf0e")
+shader_parameter/is_object_centered = false
+shader_parameter/magnification = 1.0800000038
+shader_parameter/glass_mix = 0.39200001862
+shader_parameter/edge_distortion = 0.00400000019
+shader_parameter/edge_falloff = 0.110000005225
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_sxubq"]
 random_pitch = 1.122462
@@ -61,11 +73,26 @@ interval_type = 1
 script = ExtResource("8_rlxeh")
 
 [node name="Ray" type="Line2D" parent="Device/RayCaster" unique_id=1219976118]
+width = 0.0
+default_color = Color(1, 1, 1, 0)
 
 [node name="Caster" type="Sprite2D" parent="Device/RayCaster" unique_id=1009913363]
-texture = ExtResource("8_pw2oc")
+z_index = 8
+material = SubResource("ShaderMaterial_ebywj")
+rotation = 1.5707964
+scale = Vector2(0.29, 0.24)
+texture = ExtResource("7_toom1")
+offset = Vector2(0, -900)
+
+[node name="Frame" type="Sprite2D" parent="Device/RayCaster" unique_id=1613740214]
+z_index = 8
+position = Vector2(222.10522, 0)
+rotation = 1.5707964
+scale = Vector2(0.29, 0.24)
+texture = ExtResource("8_toom1")
 
 [node name="StartStop" parent="Device" unique_id=1939683072 instance=ExtResource("2_ee14c")]
+z_index = 12
 offset_left = -80.0
 offset_top = -80.0
 offset_right = 80.0
@@ -78,7 +105,7 @@ volume_db = -14.0
 [node name="DetectionFeedback" type="Node2D" parent="Device" unique_id=1697610570]
 
 [node name="Tray" parent="." unique_id=835271133 instance=ExtResource("20_oyf0e")]
-z_index = 4
+z_index = 9
 position = Vector2(960, 552)
 angle_sky_deg = -90.0
 desk_pos = Vector2(960, 560)
@@ -97,15 +124,17 @@ script = ExtResource("13_uioqo")
 stream = ExtResource("14_52j4s")
 volume_db = 8.0
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="PassiveSound" unique_id=1678015815]
+
 [node name="Frame" type="Sprite2D" parent="." unique_id=1633339244]
-z_index = 10
+z_index = 18
 position = Vector2(975.99994, 875.99994)
 scale = Vector2(0.55, 0.55)
 texture = ExtResource("19_sxubq")
 
 [node name="Stash" parent="." unique_id=1974781458 instance=ExtResource("20_toom1")]
-z_index = 10
-position = Vector2(960, 964)
+z_index = 20
+position = Vector2(1551, 820)
 script = ExtResource("21_toom1")
 
 [node name="HitArea" type="Area2D" parent="." unique_id=1132301635]
@@ -114,3 +143,15 @@ position = Vector2(960, 559)
 
 [node name="Shape" type="CollisionShape2D" parent="HitArea" unique_id=1768295922]
 shape = SubResource("RectangleShape2D_toom1")
+
+[node name="Lockbox" parent="." unique_id=9991812 instance=ExtResource("22_ebywj")]
+z_index = 20
+position = Vector2(960, 916)
+
+[node name="ExtraTray" parent="." unique_id=911235638 instance=ExtResource("23_bibdu")]
+position = Vector2(273.99997, 588)
+rotation = -0.2268928
+
+[node name="ExtraTray2" parent="." unique_id=847930420 instance=ExtResource("23_bibdu")]
+position = Vector2(1663, 588)
+rotation = 0.2268928

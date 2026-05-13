@@ -1,6 +1,8 @@
 class_name Slot
 extends Node2D
 
+signal orb_placed(orb: Orb)
+
 @export var texture_empty: Texture2D
 @export var texture_occupied: Texture2D
 @export var texture_hover: Texture2D
@@ -44,6 +46,7 @@ func receive_orb(incoming: Orb) -> Orb:
 		_orb.reparent(self, true)
 		_orb.land()
 		_refresh_visual()
+		orb_placed.emit(_orb)
 		return null
 	return incoming
 

@@ -16,11 +16,20 @@ const MAX_BPM: float = 90.0
 ## [1.0, 1.0, 1.0] is the same as QUANTIZED.
 @export var custom_multipliers: Array[float] = [1.0, 1.0, 1.0]
 
+@export var extra_tray_hidden_pos: Vector2 = Vector2(293, 707)
+@export var extra_tray2_hidden_pos: Vector2 = Vector2(1641, 707)
+@export var extra_tray_revealed_pos: Vector2 = Vector2(274, 588)
+@export var extra_tray2_revealed_pos: Vector2 = Vector2(1663, 588)
+@export var tray_reveal_duration: float = 0.6
+
 @onready var _rings_container: Node2D = $Device/Rings
 @onready var _ray_caster: RayCaster = $Device/RayCaster
 @onready var _device: Node2D = $Device
 @onready var _ring_spin_sfx: AudioStreamPlayer = $PassiveSound/RingRotate
 @onready var _playback_button_sfx: AudioStreamPlayer = $Device/StartStop/ButtonPress
+@onready var _lockbox: Lockbox = $Lockbox
+@onready var _extra_tray: Node2D = $ExtraTray
+@onready var _extra_tray2: Node2D = $ExtraTray2
 
 
 var _rings: Array[Ring] = []
@@ -50,6 +59,15 @@ func _ready() -> void:
 		return a.ring_index < b.ring_index
 	)
 	_ray_caster.note_triggered.connect(_on_ray_caster_note_triggered)
+	_lockbox.unlocked.connect(_on_lockbox_unlocked)
+	_extra_tray.position = extra_tray_hidden_pos
+	_extra_tray2.position = extra_tray2_hidden_pos
+
+func _on_lockbox_unlocked() -> void:
+	var t1 := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	t1.tween_property(_extra_tray, "position", extra_tray_revealed_pos, tray_reveal_duration)
+	var t2 := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	t2.tween_property(_extra_tray2, "position", extra_tray2_revealed_pos, tray_reveal_duration)
 
 func get_measure_duration() -> float:
 	return (60.0 / bpm) * BEATS_PER_MEASURE

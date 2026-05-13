@@ -88,10 +88,9 @@ metadata/_custom_type_script = "uid://0x2x5jmtfaov"
 script = ExtResource("4_7ua4h")
 
 [node name="ClueCard" parent="." unique_id=1129193832 instance=ExtResource("10_xhu5d")]
-z_index = 12
+z_index = 20
 position = Vector2(960, 589)
 minimized_position = Vector2(-600, 360)
-key_launch_duration = 1.8
 
 [node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
 

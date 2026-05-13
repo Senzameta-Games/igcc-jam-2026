@@ -43,6 +43,9 @@ func _input(event: InputEvent) -> void:
 			var slot := area.get_parent() as Slot
 			if slot == null or slot.in_tray or not slot.is_occupied():
 				continue
+			var peeked: Orb = slot.get_orb()
+			if peeked != null and peeked.is_pearl:
+				continue
 			var orb: Orb = slot.eject_orb()
 			if orb == null:
 				continue
@@ -113,6 +116,8 @@ func pick_up(orb: Orb) -> void:
 func try_drop(slot: Slot) -> void:
 	if _held_orb == null:
 		return
+	if _held_orb.is_pearl and slot.get_parent().get_parent() is Ring:
+		return
 	var orb_to_drop: Orb = _held_orb
 	_held_orb = null
 	_hide_all_drophints()
@@ -146,9 +151,12 @@ func _refresh_texture() -> void:
 		_sprite.offset = Vector2(70, 80)
 
 func _show_all_drophints() -> void:
+	var pearl_held: bool = _held_orb != null and _held_orb.is_pearl
 	for node: Node in get_tree().get_nodes_in_group("slots"):
 		var slot := node as Slot
-		if slot == null or slot.is_occupied():
+		if slot == null or slot.is_occupied() or not slot.is_visible_in_tree():
+			continue
+		if pearl_held and slot.get_parent().get_parent() is Ring:
 			continue
 		slot.show_drophint()
 

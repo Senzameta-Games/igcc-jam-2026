@@ -63,6 +63,15 @@ func set_current_angle(angle: float) -> void:
 	_current_angle = angle
 	rotation = angle
 
+func set_active(active: bool) -> void:
+	visible = active
+	for slot: Slot in _slots:
+		var handle := slot.get_node("Handle") as Area2D
+		if handle == null:
+			continue
+		handle.monitorable = active
+		handle.monitoring = active
+
 func get_slots() -> Array[Slot]:
 	return _slots
 

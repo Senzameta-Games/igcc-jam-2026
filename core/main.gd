@@ -13,6 +13,7 @@ extends Node2D
 @onready var _tools: Tools = $Tools
 @onready var _audio_manager: AudioManager = $AudioManager
 @onready var _clue_card: ClueCard = $ClueCard
+@onready var _lockbox: Lockbox = $Sequencer/Lockbox
 
 @export var sequencer_position_desk: Vector2 = Vector2(0, -100)
 @export var sequencer_position_sky: Vector2 = Vector2(0, 341)
@@ -42,6 +43,7 @@ func _ready() -> void:
 	_level_select.level_selected.connect(_on_level_selected)
 	_piano_roll.constellation_completed.connect(_on_constellation_completed)
 
+	_lockbox.unlocked.connect(_on_lockbox_opened)
 	_hand.connect_button(_playback_button)
 	_sequencer.note_triggered.connect(_on_note_triggered)
 	_tools.dev_load_requested.connect(_on_dev_load_requested)
@@ -65,12 +67,15 @@ func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 		ConsoleMode.Mode.SKY:
 			_move_sequencer(sequencer_position_sky)
 			_sequencer.z_index = sequencer_z_index_sky
+			_lockbox.visible = false
 		ConsoleMode.Mode.DESK:
 			_move_sequencer(sequencer_position_desk)
 			_sequencer.z_index = sequencer_z_index_desk
+			_lockbox.visible = true
 		ConsoleMode.Mode.LEVEL_SELECT:
 			_move_sequencer(sequencer_position_level_select)
 			_sequencer.z_index = sequencer_z_index_sky
+			_lockbox.visible = false
 
 func _move_sequencer(target: Vector2) -> void:
 	if _sequencer_tween != null and _sequencer_tween.is_running():
@@ -120,3 +125,14 @@ func _present_clue_for_current_level() -> void:
 
 func _on_constellation_completed() -> void:
 	_level_select.set_completed(_level_manager.current_index(), true)
+
+func _on_lockbox_opened() -> void:
+	_piano_roll.set_solution([])
+	_level_manager.load_level_data({
+		"rings": [
+			{"interval": "SIXTEENTH"},
+			{"interval": "SIXTEENTH"},
+			{"interval": "SIXTEENTH"}
+		],
+		"tray_orbs": [0, 1, 2, 3, 4]
+	})
