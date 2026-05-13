@@ -30,7 +30,6 @@ const MAX_BPM: float = 90.0
 @onready var _lockbox: Lockbox = $Lockbox
 @onready var _extra_tray: Node2D = $ExtraTray
 @onready var _extra_tray2: Node2D = $ExtraTray2
-@onready var _clues: Clues = $Clues
 
 var _rings: Array[Ring] = []
 var _resetting: bool = false
@@ -63,11 +62,6 @@ func _ready() -> void:
 	_extra_tray.position = extra_tray_hidden_pos
 	_extra_tray2.position = extra_tray2_hidden_pos
 
-func queue_clue(solution: Array) -> void:
-	_clues.queue_clue(solution)
-
-func on_desk_settled() -> void:
-	_clues.on_desk_settled()
 
 func _on_lockbox_unlocked() -> void:
 	var t1 := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)

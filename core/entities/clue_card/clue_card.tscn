@@ -8,23 +8,28 @@
 [ext_resource type="Texture2D" uid="uid://rpa0s5hl67vy" path="res://core/assets/stars/big-five-star.png" id="6_iq0g6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v52qp"]
-size = Vector2(386, 334)
+size = Vector2(280, 170)
 
 [node name="ClueCard" type="Node2D" unique_id=1129193832]
 script = ExtResource("1_x131a")
 slide_in_offset = Vector2(0, -80)
 slide_in_duration = 0.8
-minimized_position = Vector2(0, 120)
+display_duration = 3.0
+minimized_position = Vector2(400, 120)
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=159149063]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.6, 0.6)
 texture = ExtResource("2_h3pfr")
 
 [node name="Keys" type="Node2D" parent="." unique_id=1170791373]
+position = Vector2(0, -9)
 
 [node name="Constellation" type="Node2D" parent="Keys" unique_id=234567890]
 script = ExtResource("3_chdscr")
 star_textures = Array[Texture2D]([ExtResource("4_qsyu7"), ExtResource("5_d2k66"), ExtResource("4_qsyu7"), ExtResource("6_iq0g6")])
+fan_radius_inner = 60.0
+fan_radius_outer = 90.0
+grid_star_scale = 0.2
 
 [node name="Area" type="Area2D" parent="." unique_id=1175856262]
 

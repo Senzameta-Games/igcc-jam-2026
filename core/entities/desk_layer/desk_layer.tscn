@@ -24,7 +24,6 @@
 [ext_resource type="Script" uid="uid://nn88q4x5gfeu" path="res://core/entities/stash/stash.gd" id="21_toom1"]
 [ext_resource type="PackedScene" uid="uid://cv2gbijini7cf" path="res://core/entities/lockbox/lockbox.tscn" id="22_ebywj"]
 [ext_resource type="PackedScene" uid="uid://bbmvjaukbxutq" path="res://core/entities/tray/extra_tray.tscn" id="23_bibdu"]
-[ext_resource type="Script" uid="uid://b6ha8286hyu0d" path="res://core/entities/desk_layer/clues.gd" id="25_clues"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ebywj"]
 shader = ExtResource("6_oyf0e")
@@ -149,11 +148,3 @@ script = ExtResource("21_toom1")
 [node name="Lockbox" parent="." unique_id=9991812 instance=ExtResource("22_ebywj")]
 z_index = 2
 position = Vector2(347, 916)
-
-[node name="Clues" type="Node2D" parent="." unique_id=187726820]
-z_index = 3
-position = Vector2(960, 1001)
-script = ExtResource("25_clues")
-present_position = Vector2(0, -300)
-pile_y = -50.0
-pile_gap = 160.0

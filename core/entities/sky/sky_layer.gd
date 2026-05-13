@@ -3,9 +3,6 @@ extends Node2D
 
 signal transition_finished
 signal transition_midpoint
-signal focus_requested          # DESK click → SKY
-signal desk_requested           # SKY click (non-peek) → DESK
-signal level_select_requested   # SKY click while peeking → LEVEL_SELECT
 signal desk_area_hovered(active: bool)  # SKY hover near bottom → sequencer frame glow
 
 @export var transition_duration: float = 2.0
@@ -155,26 +152,6 @@ func _tween_to(target_position: Vector2, target_scale: Vector2) -> void:
 	_mode_tween.tween_property(self, "position", target_position, mode_transition_duration)
 	_mode_tween.tween_property(_piano_roll, "scale", target_scale, mode_transition_duration)
 	_mode_tween.tween_property(_piano_roll, "position", target_piano_position, mode_transition_duration)
-
-func _unhandled_input(event: InputEvent) -> void:
-	if not event is InputEventMouseButton:
-		return
-	var mb := event as InputEventMouseButton
-	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
-		return
-	var viewport_y: float = get_viewport().get_mouse_position().y
-	match _current_mode:
-		ConsoleMode.Mode.DESK:
-			if viewport_y < sky_click_threshold_y:
-				focus_requested.emit()
-		ConsoleMode.Mode.SKY:
-			if viewport_y < sky_click_threshold_y:
-				level_select_requested.emit()
-			else:
-				desk_requested.emit()
-		ConsoleMode.Mode.LEVEL_SELECT:
-			if viewport_y >= sky_click_threshold_y:
-				focus_requested.emit()
 
 func _on_transition_midpoint() -> void:
 	transition_midpoint.emit()

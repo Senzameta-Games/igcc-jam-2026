@@ -21,10 +21,17 @@ extends Node2D
 @export var constellation_star_scale_max: float = 0.7
 @export var constellation_star_color: Color = Color(0.0, 0.0, 0.0, 1.0)
 
+## Flash animation when a tick fires during clue playback.
+@export var flash_scale_multiplier: float = 1.5
+@export var flash_in_duration: float = 0.08
+@export var flash_out_duration: float = 0.15
+
 const _TOTAL_TICKS: int = 16
 const _TOTAL_RINGS: int = 3
 const _MAX_TICK: int = 15
 const _MAX_RING: int = 2
+
+var _tick_stars: Dictionary = {}
 
 func setup(solution: Array) -> void:
 	clear()
@@ -56,9 +63,6 @@ func setup(solution: Array) -> void:
 	min_ring = maxi(0, min_ring - 1)
 	max_ring = mini(_MAX_RING, max_ring + 1)
 
-	# Compute raw arc positions and bounding box for auto-centering.
-	# Ticks and rings are normalized to the cropped range so the visible
-	# cells always fill the full fan_angle_span / radial depth.
 	var cell_positions: Dictionary = {}
 	var bbox_min := Vector2(INF, INF)
 	var bbox_max := Vector2(-INF, -INF)
@@ -85,14 +89,30 @@ func setup(solution: Array) -> void:
 				var scale_val: float = randf_range(constellation_star_scale_min, constellation_star_scale_max)
 				star.scale = Vector2(scale_val, scale_val)
 				star.modulate = constellation_star_color
+				star.set_meta("base_scale", star.scale)
+				if not _tick_stars.has(tick):
+					_tick_stars[tick] = []
+				(_tick_stars[tick] as Array).append(star)
 			else:
 				star.scale = Vector2(grid_star_scale, grid_star_scale)
 				star.modulate = grid_star_color
 			add_child(star)
 
+func flash_at_tick(tick: int) -> void:
+	if not _tick_stars.has(tick):
+		return
+	for star: Sprite2D in (_tick_stars[tick] as Array):
+		var base: Vector2 = star.get_meta("base_scale") as Vector2
+		var t := create_tween()
+		t.tween_property(star, "scale", base * flash_scale_multiplier, flash_in_duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		t.tween_property(star, "scale", base, flash_out_duration) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+
 func clear() -> void:
 	for child: Node in get_children():
 		child.queue_free()
+	_tick_stars.clear()
 
 func _cell_pos(tick: int, ring: int, min_tick: int, max_tick: int, min_ring: int, max_ring: int) -> Vector2:
 	var t_tick: float = float(tick - min_tick) / float(maxi(1, max_tick - min_tick))

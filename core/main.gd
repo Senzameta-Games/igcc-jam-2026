@@ -13,6 +13,9 @@ extends Node2D
 @onready var _audio_manager: AudioManager = $AudioManager
 @onready var _lockbox: Lockbox = $DeskLayer/Lockbox
 @onready var _hints: Control = $Hints
+@onready var _hint_mode_toggle: Control = $Hints/Hints/ModeToggleHint
+@onready var _hint_level_select: Control = $Hints/Hints/LevelSelectHint
+@onready var _clues: Clues = $Clues
 
 @export var sequencer_position_desk: Vector2 = Vector2(0, -100)
 @export var sequencer_position_sky: Vector2 = Vector2(0, 341)
@@ -37,9 +40,6 @@ func _ready() -> void:
 	_console_mode.mode_changed.connect(_sky_layer.on_mode_changed)
 	_console_mode.mode_changed.connect(_tray.on_mode_changed)
 	_console_mode.mode_changed.connect(_stash.on_mode_changed)
-	_sky_layer.focus_requested.connect(_console_mode.request_sky)
-	_sky_layer.desk_requested.connect(_console_mode.request_desk)
-	_sky_layer.level_select_requested.connect(_console_mode.request_level_select)
 	_sky_layer.desk_area_hovered.connect(_desk_layer.set_frame_glow)
 	_level_select.level_selected.connect(_on_level_selected)
 	_piano_roll.constellation_completed.connect(_on_constellation_completed)
@@ -70,13 +70,24 @@ func _input(event: InputEvent) -> void:
 			_console_mode.request_desk()
 		else:
 			_console_mode.request_sky()
+		_flash_hint(_hint_mode_toggle)
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("level_select"):
 		if _console_mode.current_mode == ConsoleMode.Mode.LEVEL_SELECT:
 			_console_mode.request_desk()
 		else:
 			_console_mode.request_level_select()
+		_flash_hint(_hint_level_select)
 		get_viewport().set_input_as_handled()
+
+func _flash_hint(hint: Control) -> void:
+	if not _hints.visible:
+		return
+	var t := create_tween()
+	t.tween_property(hint, "modulate", Color(2.0, 2.0, 2.0, 1.0), 0.05) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	t.tween_property(hint, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.35) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
@@ -102,7 +113,7 @@ func _move_sequencer(target: Vector2) -> void:
 		_sequencer_tween.tween_callback(_on_desk_settled)
 
 func _on_desk_settled() -> void:
-	_desk_layer.on_desk_settled()
+	_clues.on_desk_settled()
 	if _hints_pending:
 		_hints_pending = false
 		_hints.modulate.a = 0.0
@@ -145,7 +156,7 @@ func _present_clue_for_current_level() -> void:
 	var idx: int = _level_manager.current_index()
 	if not _level_manager.is_clue_shown(idx):
 		_level_manager.mark_clue_shown(idx)
-		_desk_layer.queue_clue(data["solution"])
+		_clues.queue_clue(data["solution"], _desk_layer.get_measure_duration())
 		_audio_manager.play_level_start()
 		if idx == 0:
 			_hints_pending = true
