@@ -49,7 +49,7 @@ stream_2/stream = ExtResource("5_t4js0")
 stream_3/stream = ExtResource("6_k8k4c")
 
 [node name="Orb" type="Node2D" unique_id=552011164]
-z_index = 3
+z_index = 1
 script = ExtResource("1_7f7e3")
 texture = ExtResource("2_sv67k")
 note = SubResource("AudioStreamRandomizer_i83og")

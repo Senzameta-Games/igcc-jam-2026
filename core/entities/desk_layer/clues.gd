@@ -9,13 +9,8 @@ const CLUE_CARD_SCENE: PackedScene = preload("res://core/entities/clue_card/clue
 ## Y position of the pile row in Clues-node local space.
 ## Default: Clues origin y(1001) + (-151) = DeskLayer y(850).
 @export var pile_y: float = -151.0
-## Left and right x bounds of the pile row in Clues-node local space.
-## Defaults span DeskLayer x 200–1720 (Clues origin x is 960).
-@export var pile_left_x: float = -760.0
-@export var pile_right_x: float = 760.0
-## Total slots — determines even distribution spacing regardless of how many cards exist yet.
-@export var max_cards: int = 5
-@export var card_z_index: int = 50
+## Gap in pixels between each card center in the pile.
+@export var pile_gap: float = 64.0
 
 var _cards: Array[ClueCard] = []
 var _pending_solution: Array = []
@@ -32,21 +27,21 @@ func on_desk_settled() -> void:
 	_spawn_card(_pending_solution)
 
 func _spawn_card(solution: Array) -> void:
-	var index: int = _cards.size()
 	var card := CLUE_CARD_SCENE.instantiate() as ClueCard
-	card.z_index = card_z_index
-	card.z_as_relative = false
 	card.position = present_position
-	card.minimized_position = _pile_position(index) - present_position
 	_cards.append(card)
 	add_child(card)
+	_redistribute()
 	card.setup(solution)
 	card.present()
 
-func _pile_position(index: int) -> Vector2:
-	var x: float
-	if max_cards <= 1:
-		x = (pile_left_x + pile_right_x) * 0.5
-	else:
-		x = lerpf(pile_left_x, pile_right_x, float(index) / float(max_cards - 1))
+func _redistribute() -> void:
+	var total: int = _cards.size()
+	for i: int in range(total):
+		var new_minimized: Vector2 = _pile_position(i, total) - present_position
+		_cards[i].reposition_in_pile(new_minimized)
+
+func _pile_position(index: int, total: int) -> Vector2:
+	var group_width: float = float(total - 1) * pile_gap
+	var x: float = -group_width * 0.5 + float(index) * pile_gap
 	return Vector2(x, pile_y)

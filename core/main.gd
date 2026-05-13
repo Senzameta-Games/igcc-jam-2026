@@ -43,6 +43,7 @@ func _ready() -> void:
 	_sky_layer.desk_area_hovered.connect(_desk_layer.set_frame_glow)
 	_level_select.level_selected.connect(_on_level_selected)
 	_piano_roll.constellation_completed.connect(_on_constellation_completed)
+	_piano_roll.completion_pending.connect(_on_completion_pending)
 
 	_lockbox.unlocked.connect(_on_lockbox_opened)
 	_hand.connect_button(_playback_button)
@@ -63,17 +64,19 @@ func _ready() -> void:
 	_desk_layer.z_index = sequencer_z_index_sky
 	_console_mode.initialize()
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("mode_toggle"):
 		if _console_mode.current_mode == ConsoleMode.Mode.SKY:
 			_console_mode.request_desk()
 		else:
 			_console_mode.request_sky()
+		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("level_select"):
 		if _console_mode.current_mode == ConsoleMode.Mode.LEVEL_SELECT:
 			_console_mode.request_desk()
 		else:
 			_console_mode.request_level_select()
+		get_viewport().set_input_as_handled()
 
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
@@ -129,6 +132,7 @@ func _setup_level_select() -> void:
 
 func _on_level_selected(index: int) -> void:
 	Playback.stop()
+	_playback_button.disabled = false
 	_level_manager.load_level_at_index(index)
 	_present_clue_for_current_level()
 	_console_mode.request_desk()
@@ -142,8 +146,14 @@ func _present_clue_for_current_level() -> void:
 	if not _level_manager.is_clue_shown(idx):
 		_level_manager.mark_clue_shown(idx)
 		_desk_layer.queue_clue(data["solution"])
+		_audio_manager.play_level_start()
 		if idx == 0:
 			_hints_pending = true
+
+func _on_completion_pending() -> void:
+	_playback_button.disabled = true
+	_audio_manager.play_level_complete()
+	_audio_manager.fade_for_completion()
 
 func _on_constellation_completed() -> void:
 	var completed: int = _level_manager.current_index()

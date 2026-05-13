@@ -21,7 +21,6 @@ texture_hover = ExtResource("3_4ycc5")
 scale = Vector2(0.6, 0.6)
 
 [node name="DropHint" type="Sprite2D" parent="." unique_id=1495767581]
-z_index = 4
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_rs7tw")
 

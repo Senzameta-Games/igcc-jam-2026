@@ -55,6 +55,7 @@ const _DEBUG_ORIGIN_COLOR: Color = Color(1.0, 1.0, 0.0, 0.6)
 const _DEBUG_ARC_SEGMENTS: int = 48
 
 signal constellation_completed
+signal completion_pending
 
 ## Persistent key stars placed on first detection. key = tick * 100 + ring_index.
 var _dots: Dictionary = {}
@@ -165,6 +166,7 @@ func receive_orb(_orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index
 		_hit_positions[key] = true
 		if _hit_positions.size() >= _solution_position_count and _solution_position_count > 0:
 			_pending_completion = true
+			completion_pending.emit()
 
 func _start_key_star_decay(dot: Sprite2D, duration: float) -> Tween:
 	var tween := dot.create_tween()
