@@ -3,9 +3,6 @@ extends Node2D
 
 signal transition_finished
 signal transition_midpoint
-signal focus_requested          # DESK click → SKY
-signal desk_requested           # SKY click (non-peek) → DESK
-signal level_select_requested   # SKY click while peeking → LEVEL_SELECT
 signal desk_area_hovered(active: bool)  # SKY hover near bottom → sequencer frame glow
 
 @export var transition_duration: float = 2.0
@@ -28,46 +25,21 @@ signal desk_area_hovered(active: bool)  # SKY hover near bottom → sequencer fr
 
 ## SkyLayer world position for LEVEL_SELECT.
 @export var position_level_select: Vector2 = Vector2(960, 1900)
-## Downward nudge when hovering near top in SKY mode (peek preview to LEVEL_SELECT).
-@export var peek_offset_y: float = 80.0
-## Viewport y below which hover triggers peek preview (SKY mode only).
-@export var peek_y_threshold: float = 200.0
-@export var peek_transition_duration: float = 0.35
-## Viewport y below which a click in DESK mode counts as clicking the sky (→ SKY).
-@export var sky_click_threshold_y: float = 380.0
-
-## DESK hover affordance: small downward nudge on the SkyLayer strip when hovering near top.
-@export var desk_hint_offset_y: float = 22.0
-@export var desk_hint_transition_duration: float = 0.3
 
 ## SKY hover affordance: viewport y above which hovering near the bottom emits desk_area_hovered.
 @export var desk_hover_y_threshold: float = 850.0
 
 var _tween: Tween = null
 var _mode_tween: Tween = null
-var _peek_tween: Tween = null
-var _desk_hint_tween: Tween = null
 var _is_minimized: bool = false
-var _peek_active: bool = false
-var _desk_hint_active: bool = false
 var _desk_glow_active: bool = false
 var _current_mode: ConsoleMode.Mode = ConsoleMode.Mode.DESK
 
-@onready var _hit_area: Area2D = $HitArea
 @onready var _piano_roll: PianoRoll = $PianoRoll
 @onready var _level_select: LevelSelect = $LevelSelect
 
-func _ready() -> void:
-	_refresh_hit_area()
-
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	_current_mode = mode
-	_peek_active = false
-	_desk_hint_active = false
-	if _peek_tween != null and _peek_tween.is_running():
-		_peek_tween.kill()
-	if _desk_hint_tween != null and _desk_hint_tween.is_running():
-		_desk_hint_tween.kill()
 	# Clear desk glow when leaving SKY.
 	if mode != ConsoleMode.Mode.SKY and _desk_glow_active:
 		_desk_glow_active = false
@@ -83,47 +55,12 @@ func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 			_is_minimized = false
 			_tween_to(position_level_select, piano_roll_scale_sky)
 	_level_select.on_mode_changed(mode)
-	_refresh_hit_area()
 
 func _process(_delta: float) -> void:
 	if _mode_tween != null and _mode_tween.is_running():
 		return
-	var mouse_y: float = get_viewport().get_mouse_position().y
-	match _current_mode:
-		ConsoleMode.Mode.DESK:
-			_update_desk_hint(mouse_y)
-		ConsoleMode.Mode.SKY:
-			_update_sky_peek(mouse_y)
-			_update_desk_glow(mouse_y)
-
-func _update_desk_hint(mouse_y: float) -> void:
-	var should_hint: bool = mouse_y < sky_click_threshold_y
-	if should_hint == _desk_hint_active:
-		return
-	_desk_hint_active = should_hint
-	var target_y: float = position_minimized.y + (desk_hint_offset_y if should_hint else 0.0)
-	if _desk_hint_tween != null and _desk_hint_tween.is_running():
-		_desk_hint_tween.kill()
-	_desk_hint_tween = create_tween()
-	_desk_hint_tween.set_ease(mode_ease)
-	_desk_hint_tween.set_trans(mode_trans)
-	_desk_hint_tween.tween_property(self, "position:y", target_y, desk_hint_transition_duration)
-
-func _update_sky_peek(mouse_y: float) -> void:
-	var should_peek: bool = mouse_y < peek_y_threshold and not Playback.is_playing
-	if should_peek == _peek_active:
-		return
-	_peek_active = should_peek
-	_apply_peek(should_peek)
-
-func _apply_peek(active: bool) -> void:
-	var target_y: float = position_active.y + (peek_offset_y if active else 0.0)
-	if _peek_tween != null and _peek_tween.is_running():
-		_peek_tween.kill()
-	_peek_tween = create_tween()
-	_peek_tween.set_ease(mode_ease)
-	_peek_tween.set_trans(mode_trans)
-	_peek_tween.tween_property(self, "position:y", target_y, peek_transition_duration)
+	if _current_mode == ConsoleMode.Mode.SKY:
+		_update_desk_glow(get_viewport().get_mouse_position().y)
 
 func _update_desk_glow(mouse_y: float) -> void:
 	var should_glow: bool = mouse_y > desk_hover_y_threshold
@@ -160,30 +97,6 @@ func _tween_to(target_position: Vector2, target_scale: Vector2) -> void:
 	_mode_tween.tween_property(self, "position", target_position, mode_transition_duration)
 	_mode_tween.tween_property(_piano_roll, "scale", target_scale, mode_transition_duration)
 	_mode_tween.tween_property(_piano_roll, "position", target_piano_position, mode_transition_duration)
-
-func _refresh_hit_area() -> void:
-	_hit_area.monitoring = false
-	_hit_area.monitorable = false
-
-func _unhandled_input(event: InputEvent) -> void:
-	if not event is InputEventMouseButton:
-		return
-	var mb := event as InputEventMouseButton
-	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
-		return
-	var viewport_y: float = get_viewport().get_mouse_position().y
-	match _current_mode:
-		ConsoleMode.Mode.DESK:
-			if viewport_y < sky_click_threshold_y:
-				focus_requested.emit()
-		ConsoleMode.Mode.SKY:
-			if viewport_y < sky_click_threshold_y:
-				level_select_requested.emit()
-			else:
-				desk_requested.emit()
-		ConsoleMode.Mode.LEVEL_SELECT:
-			if viewport_y >= sky_click_threshold_y:
-				focus_requested.emit()
 
 func _on_transition_midpoint() -> void:
 	transition_midpoint.emit()

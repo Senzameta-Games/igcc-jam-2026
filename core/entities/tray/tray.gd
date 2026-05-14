@@ -15,7 +15,8 @@ extends Node2D
 
 var _current_angle_rad: float = 0.0
 var _arc_tween: Tween = null
-var _was_level_select: bool = false
+var _is_rotated_in: bool = false
+var _mode_ready: bool = false
 
 ## Maps Orb.OrbType → Array[Slot]. Supports multiple same-type slots per level.
 var _slots_by_type: Dictionary = {}
@@ -25,15 +26,39 @@ func _ready() -> void:
 	position = desk_pos
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
-	var going_to_level_select := mode == ConsoleMode.Mode.LEVEL_SELECT
-	if going_to_level_select and not _was_level_select:
-		_wind_up_sfx.play()
-	elif not going_to_level_select and _was_level_select:
-		_wind_down_sfx.play()
-	_was_level_select = going_to_level_select
-	var target_deg: float = angle_sky_deg if going_to_level_select else angle_desk_deg
-	var target_pos: Vector2 = sky_pos if going_to_level_select else desk_pos
-	_animate_to(deg_to_rad(target_deg), target_pos)
+	if not _mode_ready:
+		_mode_ready = true
+		_snap_to_mode(mode)
+		return
+	match mode:
+		ConsoleMode.Mode.SKY:
+			if Playback.is_playing and not _is_rotated_in:
+				_is_rotated_in = true
+				_wind_down_sfx.play()
+				_animate_to(deg_to_rad(angle_sky_deg), sky_pos)
+		ConsoleMode.Mode.DESK:
+			if _is_rotated_in:
+				_is_rotated_in = false
+				_wind_up_sfx.play()
+				_animate_to(deg_to_rad(angle_desk_deg), desk_pos)
+		ConsoleMode.Mode.LEVEL_SELECT:
+			if not _is_rotated_in:
+				_is_rotated_in = true
+				_wind_down_sfx.play()
+				_animate_to(deg_to_rad(angle_sky_deg), sky_pos)
+
+func _snap_to_mode(mode: ConsoleMode.Mode) -> void:
+	match mode:
+		ConsoleMode.Mode.SKY, ConsoleMode.Mode.LEVEL_SELECT:
+			_is_rotated_in = true
+			_current_angle_rad = deg_to_rad(angle_sky_deg)
+			rotation = _current_angle_rad - deg_to_rad(angle_desk_deg)
+			position = sky_pos
+		ConsoleMode.Mode.DESK:
+			_is_rotated_in = false
+			_current_angle_rad = deg_to_rad(angle_desk_deg)
+			rotation = 0.0
+			position = desk_pos
 
 func _animate_to(target_rad: float, target_pos: Vector2) -> void:
 	if _arc_tween != null and _arc_tween.is_running():

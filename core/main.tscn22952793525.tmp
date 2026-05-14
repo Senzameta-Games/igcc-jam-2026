@@ -1,0 +1,207 @@
+[gd_scene format=3 uid="uid://12ufnc4ajfr1"]
+
+[ext_resource type="Script" uid="uid://vx6v8iqa4anf" path="res://core/main.gd" id="1_csopv"]
+[ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/desk_layer/desk_layer.tscn" id="1_xiose"]
+[ext_resource type="Shader" uid="uid://xeu5hmfr8vto" path="res://core/screenspace_shader.gdshader" id="2_510js"]
+[ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
+[ext_resource type="Script" uid="uid://0x2x5jmtfaov" path="res://core/managers/level_manager.gd" id="2_rayt5"]
+[ext_resource type="Script" uid="uid://0jy8je4f7jdl" path="res://core/managers/console_mode.gd" id="4_7ua4h"]
+[ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
+[ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
+[ext_resource type="Texture2D" uid="uid://cp83ckcybx1an" path="res://core/assets/background/sky.png" id="7_cus2n"]
+[ext_resource type="PackedScene" uid="uid://esgkju3uf5pp" path="res://core/levels/level_select.tscn" id="11_7ua4h"]
+[ext_resource type="AudioStream" uid="uid://bd4d1vpc26b1w" path="res://core/assets/audio/transitions/up-tone.wav" id="14_ge7io"]
+[ext_resource type="Script" uid="uid://bd3wbt6366r4m" path="res://core/managers/audio_manager.gd" id="14_lxu0y"]
+[ext_resource type="AudioStream" uid="uid://613o7gmkvqfj" path="res://core/assets/audio/transitions/down-tone.wav" id="15_jeqa8"]
+[ext_resource type="AudioStream" uid="uid://25aohswhd0bm" path="res://core/assets/audio/one_shot_music/level_complete.wav" id="16_7akvt"]
+[ext_resource type="AudioStream" uid="uid://bmo4yn8e46gs4" path="res://core/assets/audio/music/spheres_1.wav" id="16_jeqa8"]
+[ext_resource type="Texture2D" uid="uid://dgw3cc1aih04q" path="res://core/assets/action_glyphs/to_level_select.png" id="16_slld4"]
+[ext_resource type="AudioStream" uid="uid://d1ljj0td0n10i" path="res://core/assets/audio/one_shot_music/level_start.wav" id="17_bc33c"]
+[ext_resource type="AudioStream" uid="uid://cl3mfscv62x5k" path="res://core/assets/audio/background/noise.wav" id="17_g0q11"]
+[ext_resource type="Texture2D" uid="uid://ujiywbs5a06e" path="res://core/assets/input_glyphs/tab_key.png" id="17_i2u5h"]
+[ext_resource type="Texture2D" uid="uid://csr17srdwcaks" path="res://core/assets/action_glyphs/to_piano_roll.png" id="18_7akvt"]
+[ext_resource type="Texture2D" uid="uid://dp6a5hxqgfc5t" path="res://core/assets/input_glyphs/shift_key.png" id="19_bc33c"]
+[ext_resource type="Script" uid="uid://b6ha8286hyu0d" path="res://core/entities/desk_layer/clues.gd" id="22_bc33c"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ua4h"]
+shader = ExtResource("2_510js")
+shader_parameter/luma_threshold = 0.9250000439375
+shader_parameter/smoke_strength = 0.53200002527
+shader_parameter/smoke_speed = 1.954000092815
+shader_parameter/smoke_scale = 10.0
+shader_parameter/smoke_height = 0.03200000152
+shader_parameter/turbulence_strength = 0.7950000377625
+shader_parameter/turbulence_speed = 3.63600017271
+shader_parameter/turbulence_scale = 4.5010001662975
+shader_parameter/blur_radius = 0.0010000000475
+shader_parameter/smoke_color = Color(0.95173925, 0.84316486, 0.8871049, 0.34901962)
+
+[node name="Main" type="Node2D" unique_id=1746196733]
+script = ExtResource("1_csopv")
+sequencer_position_desk = Vector2(0, -20)
+sequencer_position_sky = Vector2(0, 280)
+sequencer_transition_duration = 1.4
+sequencer_trans = 3
+
+[node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
+layer = 100
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="SSShader" unique_id=1170456765]
+material = SubResource("ShaderMaterial_7ua4h")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LevelManager" type="Node" parent="." unique_id=531121199]
+script = ExtResource("2_rayt5")
+metadata/_custom_type_script = "uid://0x2x5jmtfaov"
+
+[node name="ConsoleMode" type="Node" parent="." unique_id=978732142]
+script = ExtResource("4_7ua4h")
+
+[node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
+
+[node name="DeskLayer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
+position = Vector2(0, -60)
+
+[node name="Rings" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="0" unique_id=123070447]
+rotation = -1.5707964
+
+[node name="RayCaster" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="1" unique_id=724280312]
+rotation = -1.5707964
+
+[node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
+position = Vector2(960, 520)
+script = ExtResource("6_brq4u")
+transition_duration = null
+transition_ease = null
+transition_trans = null
+position_active = Vector2(960, 640)
+position_minimized = Vector2(960, 320)
+mode_transition_duration = 1.2
+mode_ease = null
+mode_trans = 4
+piano_roll_scale_sky = null
+piano_roll_scale_desk = null
+position_level_select = null
+peek_offset_y = null
+peek_y_threshold = null
+peek_transition_duration = null
+sky_click_threshold_y = null
+desk_hint_offset_y = null
+desk_hint_transition_duration = null
+desk_hover_y_threshold = null
+
+[node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]
+z_index = -3
+position = Vector2(0, -615)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("7_cus2n")
+
+[node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
+position = Vector2(-524.0001, -349)
+scale = Vector2(0.99999994, 0.99999994)
+fan_radius_inner = 540.0
+fan_radius_outer = 800.0
+fan_angle_span = 80.0
+fan_origin = Vector2(521, 556)
+
+[node name="LevelSelect" parent="SkyLayer" unique_id=302540498 instance=ExtResource("11_7ua4h")]
+position = Vector2(-960, -1600)
+
+[node name="AudioManager" type="Node" parent="." unique_id=468181767]
+script = ExtResource("14_lxu0y")
+
+[node name="BGM" type="AudioStreamPlayer" parent="AudioManager" unique_id=2011721722]
+stream = ExtResource("16_jeqa8")
+volume_db = -12.0
+autoplay = true
+
+[node name="RoomTone" type="AudioStreamPlayer" parent="AudioManager" unique_id=676740509]
+stream = ExtResource("17_g0q11")
+volume_db = -4.0
+autoplay = true
+
+[node name="ScreenUp" type="AudioStreamPlayer" parent="AudioManager" unique_id=1518849922]
+stream = ExtResource("14_ge7io")
+volume_db = -20.0
+
+[node name="ScreenDown" type="AudioStreamPlayer" parent="AudioManager" unique_id=1263234912]
+stream = ExtResource("15_jeqa8")
+volume_db = -20.0
+
+[node name="LevelComplete" type="AudioStreamPlayer" parent="AudioManager" unique_id=462100004]
+stream = ExtResource("16_7akvt")
+volume_db = -10.0
+
+[node name="LevelStart" type="AudioStreamPlayer" parent="AudioManager" unique_id=297330845]
+stream = ExtResource("17_bc33c")
+volume_db = -10.0
+
+[node name="Hints" type="MarginContainer" parent="." unique_id=1895240326]
+offset_left = 1753.0
+offset_top = 4.0
+offset_right = 1915.0
+offset_bottom = 148.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Hints" type="VBoxContainer" parent="Hints" unique_id=747966718]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 16
+
+[node name="LevelSelectHint" type="HBoxContainer" parent="Hints/Hints" unique_id=1181498548]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="ActionHint" type="TextureRect" parent="Hints/Hints/LevelSelectHint" unique_id=1636332159]
+layout_mode = 2
+texture = ExtResource("16_slld4")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="InputGlyph" type="TextureRect" parent="Hints/Hints/LevelSelectHint" unique_id=1657101840]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("17_i2u5h")
+expand_mode = 3
+
+[node name="ModeToggleHint" type="HBoxContainer" parent="Hints/Hints" unique_id=1365049071]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="ActionHint" type="TextureRect" parent="Hints/Hints/ModeToggleHint" unique_id=1969527188]
+layout_mode = 2
+texture = ExtResource("18_7akvt")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="InputGlyph" type="TextureRect" parent="Hints/Hints/ModeToggleHint" unique_id=2079797316]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+texture = ExtResource("19_bc33c")
+expand_mode = 3
+
+[node name="Clues" type="Node2D" parent="." unique_id=1266064845]
+z_index = 3
+position = Vector2(960, 1001)
+script = ExtResource("22_bc33c")
+present_position = Vector2(0, -300)
+pile_x = -1280.0
+pile_top_y = -900.0
+pile_gap = 160.0
+
+[editable path="DeskLayer"]

@@ -7,22 +7,17 @@ signal all_levels_complete
 
 const LEVELS_DIR: String = "res://core/levels/dev/"
 
-var _sequencer: Sequencer = null
+var _sequencer: DeskLayer = null
 var _tray: Tray = null
 var _piano_roll: PianoRoll = null
 
 var _level_files: Array[String] = []
 var _current_index: int = 0
+var _unlocked: Array[bool] = []
+var _completed: Array[bool] = []
+var _clue_shown: Array[bool] = []
 
-## Per-level tray snapshots. Saved when navigating away; restored on return.
-## Key: level index (int). Value: Array from Tray.snapshot_slots().
-var _tray_states: Dictionary = {}
-
-## Per-level sequencer ring snapshots. Saved when navigating away; restored on return.
-## Key: level index (int). Value: Array from Sequencer.snapshot_rings().
-var _sequencer_states: Dictionary = {}
-
-func initialize(sequencer: Sequencer, tray: Tray, piano_roll: PianoRoll) -> void:
+func initialize(sequencer: DeskLayer, tray: Tray, piano_roll: PianoRoll) -> void:
 	_sequencer = sequencer
 	_tray = tray
 	_piano_roll = piano_roll
@@ -61,11 +56,14 @@ func load_next_level() -> void:
 func load_level_data(data: Dictionary) -> void:
 	_present_level(data)
 
+func load_level_file(path: String) -> void:
+	_load_file(path)
+
 func load_level_at_index(index: int) -> void:
 	if index < 0 or index >= _level_files.size():
 		return
-	_tray_states[_current_index] = _tray.snapshot_slots()
-	_sequencer_states[_current_index] = _sequencer.snapshot_rings()
+	if not is_unlocked(index):
+		return
 	_current_index = index
 	_load_file(_level_files[_current_index])
 
@@ -89,6 +87,33 @@ func current_index() -> int:
 func level_count() -> int:
 	return _level_files.size()
 
+func is_unlocked(index: int) -> bool:
+	if index < 0 or index >= _unlocked.size():
+		return false
+	return _unlocked[index]
+
+func unlock_level(index: int) -> void:
+	if index >= 0 and index < _unlocked.size():
+		_unlocked[index] = true
+
+func is_completed(index: int) -> bool:
+	if index < 0 or index >= _completed.size():
+		return false
+	return _completed[index]
+
+func mark_completed(index: int) -> void:
+	if index >= 0 and index < _completed.size():
+		_completed[index] = true
+
+func is_clue_shown(index: int) -> bool:
+	if index < 0 or index >= _clue_shown.size():
+		return false
+	return _clue_shown[index]
+
+func mark_clue_shown(index: int) -> void:
+	if index >= 0 and index < _clue_shown.size():
+		_clue_shown[index] = true
+
 func _scan_levels() -> void:
 	_level_files.clear()
 	var dir := DirAccess.open(LEVELS_DIR)
@@ -103,6 +128,14 @@ func _scan_levels() -> void:
 		fname = dir.get_next()
 	dir.list_dir_end()
 	_level_files.sort()
+	_unlocked.resize(_level_files.size())
+	_unlocked.fill(false)
+	if not _unlocked.is_empty():
+		_unlocked[0] = true
+	_completed.resize(_level_files.size())
+	_completed.fill(false)
+	_clue_shown.resize(_level_files.size())
+	_clue_shown.fill(false)
 
 func _load_file(path: String) -> void:
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -125,21 +158,24 @@ func _present_level(data: Dictionary) -> void:
 
 func _load_game(json_data: Dictionary) -> void:
 	_sequencer.eject_orbs()
-	if json_data.has("bpm"):
-		_sequencer.bpm = float(json_data["bpm"])
+	_sequencer.bpm = 40.0
 	if json_data.has("rings"):
 		var rings: Array[Ring] = _sequencer.get_rings()
 		var ring_data: Array = json_data["rings"]
-		for i: int in range(mini(ring_data.size(), rings.size())):
-			var interval_str: String = ring_data[i].get("interval", "QUARTER")
-			rings[i].interval_type = Ring.IntervalType.get(interval_str, Ring.IntervalType.QUARTER)
-	if _sequencer_states.has(_current_index):
-		_sequencer.restore_rings(_sequencer_states[_current_index])
-	if json_data.has("solution"):
-		if _tray_states.has(_current_index):
-			_tray.restore_snapshot(_tray_states[_current_index])
-		else:
-			_tray.populate(_extract_orb_types(json_data["solution"]), _current_index)
+		for i: int in range(rings.size()):
+			var active: bool = i < ring_data.size()
+			rings[i].set_active(active)
+			if active:
+				var interval_str: String = ring_data[i].get("interval", "QUARTER")
+				rings[i].interval_type = Ring.IntervalType.get(interval_str, Ring.IntervalType.QUARTER)
+	if json_data.has("tray_orbs"):
+		var raw: Array = json_data["tray_orbs"]
+		var types: Array[Orb.OrbType] = []
+		for id: Variant in raw:
+			types.append(int(id) as Orb.OrbType)
+		_tray.populate(types, _current_index)
+	elif json_data.has("solution"):
+		_tray.populate(_extract_orb_types(json_data["solution"]), _current_index)
 
 func _extract_orb_types(solution: Array) -> Array[Orb.OrbType]:
 	var counts: Dictionary = {}

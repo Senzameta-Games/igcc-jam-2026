@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bc3s7ag62y8ve" path="res://core/entities/orbs/orb.tscn" id="1_ie3b1"]
 [ext_resource type="AudioStream" uid="uid://m5wmsuuf47g8" path="res://core/assets/audio/orb notes/play/D4/D4.wav" id="2_g61th"]
 [ext_resource type="Texture2D" uid="uid://dd10temj165l5" path="res://core/assets/orbs/D.png" id="2_vhy4q"]
+[ext_resource type="Texture2D" uid="uid://cteb88mpcs0tx" path="res://core/assets/stars/keys/D.png" id="3_cql8p"]
 [ext_resource type="AudioStream" uid="uid://dr3tmrkkqxtdh" path="res://core/assets/audio/orb notes/play/D4/D4_2.wav" id="3_vhy4q"]
 [ext_resource type="AudioStream" uid="uid://4odmecji6bj8" path="res://core/assets/audio/orb notes/play/D4/D4_3.wav" id="4_cql8p"]
 [ext_resource type="AudioStream" uid="uid://bthogenlrgfku" path="res://core/assets/audio/orb notes/pick-up/D4_pickup.wav" id="5_hvukm"]
@@ -26,6 +27,7 @@ animations = [{
 
 [node name="Orb" unique_id=552011164 instance=ExtResource("1_ie3b1")]
 texture = ExtResource("2_vhy4q")
+key_star_texture = ExtResource("3_cql8p")
 note = SubResource("AudioStreamRandomizer_gp6pl")
 orb_id = 5
 

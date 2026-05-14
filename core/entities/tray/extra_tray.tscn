@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://bbmvjaukbxutq"]
+
+[ext_resource type="Texture2D" uid="uid://btgao70da5d41" path="res://core/assets/tray/extra_tray.png" id="1_bu8nn"]
+[ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="2_kgwnm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bu8nn"]
+size = Vector2(591, 94)
+
+[node name="ExtraTray" type="Node2D" unique_id=911235638]
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=90557775]
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("1_bu8nn")
+
+[node name="Slots" type="Node2D" parent="." unique_id=1399433577]
+position = Vector2(0, 172)
+
+[node name="Slot0" parent="Slots" unique_id=136360553 instance=ExtResource("2_kgwnm")]
+position = Vector2(-198, -190)
+in_tray = true
+
+[node name="Slot1" parent="Slots" unique_id=206346277 instance=ExtResource("2_kgwnm")]
+position = Vector2(-99, -190)
+in_tray = true
+
+[node name="Slot2" parent="Slots" unique_id=1091405632 instance=ExtResource("2_kgwnm")]
+position = Vector2(0, -190)
+in_tray = true
+
+[node name="Slot3" parent="Slots" unique_id=599064132 instance=ExtResource("2_kgwnm")]
+position = Vector2(101, -190)
+in_tray = true
+
+[node name="Slot4" parent="Slots" unique_id=1713670140 instance=ExtResource("2_kgwnm")]
+position = Vector2(200, -190)
+in_tray = true
+
+[node name="Area" type="Area2D" parent="." unique_id=292449142]
+position = Vector2(0, 71)
+
+[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=872643176]
+position = Vector2(-0.5, -91)
+shape = SubResource("RectangleShape2D_bu8nn")

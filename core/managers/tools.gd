@@ -5,7 +5,7 @@ extends Node
 
 signal dev_load_requested(data: Dictionary)
 
-var _sequencer: Sequencer = null
+var _sequencer: DeskLayer = null
 
 @onready var _panel: Control = $Tools/Layout/Form
 @onready var _bpm_field: TextEdit = $Tools/Layout/Form/Timing/BPM/BPM
@@ -17,7 +17,7 @@ var _sequencer: Sequencer = null
 @onready var _load_text: TextEdit = $Tools/Layout/Form/LevelData/Load/LoadText
 @onready var _export_form: ExportForm = $ExportForm
 
-func setup(sequencer: Sequencer) -> void:
+func setup(sequencer: DeskLayer) -> void:
 	_sequencer = sequencer
 	_setup_dev_tools()
 
@@ -42,13 +42,13 @@ func _setup_dev_tools() -> void:
 			_on_interval_selected(captured_i, idx)
 		)
 
-	_rotation_model_select.add_item("QUANTIZED", Sequencer.RotationModel.QUANTIZED)
-	_rotation_model_select.add_item("CUSTOM", Sequencer.RotationModel.CUSTOM)
+	_rotation_model_select.add_item("QUANTIZED", DeskLayer.RotationModel.QUANTIZED)
+	_rotation_model_select.add_item("CUSTOM", DeskLayer.RotationModel.CUSTOM)
 	_rotation_model_select.select(int(_sequencer.rotation_model))
 	_rotation_model_select.item_selected.connect(_on_rotation_model_selected)
 
 	_custom_multipliers_field.text = _multipliers_to_string(_sequencer.custom_multipliers)
-	_custom_multipliers_field.visible = _sequencer.rotation_model == Sequencer.RotationModel.CUSTOM
+	_custom_multipliers_field.visible = _sequencer.rotation_model == DeskLayer.RotationModel.CUSTOM
 	_custom_multipliers_field.focus_exited.connect(_on_custom_multipliers_committed)
 
 	var reset_btn := $Tools/Layout/Form/MiscUtils/Reset as Button
@@ -69,7 +69,7 @@ func _on_bpm_committed() -> void:
 	if value <= 0.0:
 		_bpm_field.text = str(_sequencer.bpm)
 		return
-	_sequencer.bpm = minf(value, Sequencer.MAX_BPM)
+	_sequencer.bpm = minf(value, DeskLayer.MAX_BPM)
 	_bpm_field.text = str(_sequencer.bpm)
 
 func _on_interval_selected(ring_index: int, item_index: int) -> void:
@@ -79,8 +79,8 @@ func _on_interval_selected(ring_index: int, item_index: int) -> void:
 	rings[ring_index].interval_type = Ring.IntervalType.values()[item_index]
 
 func _on_rotation_model_selected(item_index: int) -> void:
-	_sequencer.rotation_model = Sequencer.RotationModel.values()[item_index]
-	_custom_multipliers_field.visible = _sequencer.rotation_model == Sequencer.RotationModel.CUSTOM
+	_sequencer.rotation_model = DeskLayer.RotationModel.values()[item_index]
+	_custom_multipliers_field.visible = _sequencer.rotation_model == DeskLayer.RotationModel.CUSTOM
 
 func _on_fill_slots_pressed() -> void:
 	for ring: Ring in _sequencer.get_rings():

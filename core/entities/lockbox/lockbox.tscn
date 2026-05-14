@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://cv2gbijini7cf"]
+
+[ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="1_6ehq4"]
+[ext_resource type="Script" uid="uid://cnwjthirqaia0" path="res://core/entities/lockbox/lockbox.gd" id="1_dgrc7"]
+[ext_resource type="Texture2D" uid="uid://7t5eft433fyk" path="res://core/assets/lockbox/lockbox_placeholder.png" id="1_t00rn"]
+
+[node name="Lockbox" type="Node2D" unique_id=9991812]
+script = ExtResource("1_dgrc7")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=5204324]
+position = Vector2(0, 23)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_t00rn")
+
+[node name="Slots" type="Node2D" parent="." unique_id=966486204]
+
+[node name="Slot0" parent="Slots" unique_id=136360553 instance=ExtResource("1_6ehq4")]
+position = Vector2(-98, 0)
+
+[node name="Slot1" parent="Slots" unique_id=1056489452 instance=ExtResource("1_6ehq4")]
+
+[node name="Slot2" parent="Slots" unique_id=716179232 instance=ExtResource("1_6ehq4")]
+position = Vector2(99, 0)

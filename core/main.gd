@@ -1,17 +1,21 @@
 extends Node2D
 
 @onready var _hand: Hand = $Hand
-@onready var _sequencer: Sequencer = $Sequencer
-@onready var _tray: Tray = $Sequencer/Tray
+@onready var _desk_layer: DeskLayer = $DeskLayer
+@onready var _tray: Tray = $DeskLayer/Tray
 @onready var _piano_roll: PianoRoll = $SkyLayer/PianoRoll
-@onready var _playback_button: PlaybackButton = $Sequencer/Device/StartStop/Button
+@onready var _playback_button: PlaybackButton = $DeskLayer/Sequencer/StartStop/Button
 @onready var _sky_layer: SkyLayer = $SkyLayer
 @onready var _level_manager: LevelManager = $LevelManager
 @onready var _level_select: LevelSelect = $SkyLayer/LevelSelect
-@onready var _stash: Stash = $Sequencer/Stash
+@onready var _pentacle: Pentacle = $DeskLayer/Pentacle
 @onready var _console_mode: ConsoleMode = $ConsoleMode
-@onready var _tools: Tools = $Tools
 @onready var _audio_manager: AudioManager = $AudioManager
+@onready var _lockbox: Lockbox = $DeskLayer/Lockbox
+@onready var _hints: Control = $Hints
+@onready var _hint_mode_toggle: Control = $Hints/Hints/ModeToggleHint
+@onready var _hint_level_select: Control = $Hints/Hints/LevelSelectHint
+@onready var _clues: Clues = $Clues
 
 @export var sequencer_position_desk: Vector2 = Vector2(0, -100)
 @export var sequencer_position_sky: Vector2 = Vector2(0, 341)
@@ -21,49 +25,101 @@ extends Node2D
 @export var sequencer_trans: Tween.TransitionType = Tween.TRANS_CUBIC
 @export var sequencer_z_index_desk: int = 0
 @export var sequencer_z_index_sky: int = -1
+@export var sequencer_z_index_level_select: int = 1
 
 var _sequencer_tween: Tween = null
+var _hints_pending: bool = false
 
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	_hints.visible = false
 	await get_tree().process_frame
 
 	_console_mode.mode_changed.connect(_on_mode_changed)
 	_console_mode.mode_changed.connect(_audio_manager.on_mode_changed)
 	_console_mode.mode_changed.connect(_sky_layer.on_mode_changed)
 	_console_mode.mode_changed.connect(_tray.on_mode_changed)
-	_console_mode.mode_changed.connect(_stash.on_mode_changed)
-	_sky_layer.focus_requested.connect(_console_mode.request_sky)
-	_sky_layer.desk_requested.connect(_console_mode.request_desk)
-	_sky_layer.level_select_requested.connect(_console_mode.request_level_select)
-	_sky_layer.desk_area_hovered.connect(_sequencer.set_frame_glow)
+	_console_mode.mode_changed.connect(_pentacle.on_mode_changed)
+	_sky_layer.desk_area_hovered.connect(_desk_layer.set_frame_glow)
 	_level_select.level_selected.connect(_on_level_selected)
+	_piano_roll.constellation_completed.connect(_on_constellation_completed)
+	_piano_roll.completion_pending.connect(_on_completion_pending)
 
+	_clues.clue_active_changed.connect(_hand.set_clue_active)
+	_lockbox.unlocked.connect(_on_lockbox_opened)
 	_hand.connect_button(_playback_button)
-	_sequencer.note_triggered.connect(_on_note_triggered)
-	_tools.dev_load_requested.connect(_on_dev_load_requested)
-	_tools.setup(_sequencer)
+	_desk_layer.note_triggered.connect(_on_note_triggered)
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
-	_level_manager.initialize(_sequencer, _tray, _piano_roll)
+	_level_manager.initialize(_desk_layer, _tray, _piano_roll)
 	_hand.set_tray(_tray)
-	_piano_roll.set_sequencer(_sequencer)
+	_piano_roll.set_sequencer(_desk_layer)
 	_level_manager.load_level()
 	_setup_level_select()
 
+	# Prime the solution for the default-loaded level (no ClueCard shown at level select).
+	var initial_data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())
+	if initial_data.has("solution"):
+		_piano_roll.set_solution(initial_data["solution"])
+
+	_desk_layer.position = sequencer_position_level_select
+	_desk_layer.z_index = sequencer_z_index_sky
 	_console_mode.initialize()
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("mode_toggle"):
+		if _console_mode.current_mode == ConsoleMode.Mode.SKY:
+			_console_mode.request_desk()
+		else:
+			_console_mode.request_sky()
+		_flash_hint(_hint_mode_toggle)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("level_select"):
+		if _console_mode.current_mode == ConsoleMode.Mode.LEVEL_SELECT:
+			_console_mode.request_desk()
+		else:
+			_console_mode.request_level_select()
+		_flash_hint(_hint_level_select)
+		get_viewport().set_input_as_handled()
+
+func _flash_hint(hint: Control) -> void:
+	if not _hints.visible:
+		return
+	var t := create_tween()
+	t.tween_property(hint, "modulate", Color(2.0, 2.0, 2.0, 1.0), 0.05) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	t.tween_property(hint, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.35) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
 		ConsoleMode.Mode.SKY:
 			_move_sequencer(sequencer_position_sky)
-			_sequencer.z_index = sequencer_z_index_sky
+			_desk_layer.z_index = sequencer_z_index_sky
 		ConsoleMode.Mode.DESK:
 			_move_sequencer(sequencer_position_desk)
-			_sequencer.z_index = sequencer_z_index_desk
+			_desk_layer.z_index = sequencer_z_index_desk
+			_lockbox.visible = true
 		ConsoleMode.Mode.LEVEL_SELECT:
+			_hand.return_held_to_tray(_tray)
+			_sweep_non_pearl_orbs_to_tray()
 			_move_sequencer(sequencer_position_level_select)
-			_sequencer.z_index = sequencer_z_index_sky
+			_desk_layer.z_index = sequencer_z_index_level_select
+
+func _sweep_non_pearl_orbs_to_tray() -> void:
+	for node: Node in get_tree().get_nodes_in_group("slots"):
+		var slot := node as Slot
+		if slot == null or slot.in_tray or not slot.is_occupied():
+			continue
+		var orb: Orb = slot.get_orb()
+		if orb.is_pearl:
+			continue
+		slot.eject_orb()
+		var tray_slot: Slot = _tray.get_slot_for_orb(orb)
+		if tray_slot != null:
+			tray_slot.receive_orb(orb)
+		else:
+			orb.queue_free()
 
 func _move_sequencer(target: Vector2) -> void:
 	if _sequencer_tween != null and _sequencer_tween.is_running():
@@ -71,25 +127,26 @@ func _move_sequencer(target: Vector2) -> void:
 	_sequencer_tween = create_tween()
 	_sequencer_tween.set_ease(sequencer_ease)
 	_sequencer_tween.set_trans(sequencer_trans)
-	_sequencer_tween.tween_property(_sequencer, "position", target, sequencer_transition_duration)
+	_sequencer_tween.tween_property(_desk_layer, "position", target, sequencer_transition_duration)
+	if target == sequencer_position_desk:
+		_sequencer_tween.tween_callback(_on_desk_settled)
+
+func _on_desk_settled() -> void:
+	_clues.on_desk_settled()
+	if _hints_pending:
+		_hints_pending = false
+		_hints.modulate.a = 0.0
+		_hints.visible = true
+		var t := create_tween()
+		t.tween_property(_hints, "modulate:a", 1.0, 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, _from_position: Vector2, tick: int, orb: Orb) -> void:
-	orb.tunnel()
-	var ring: Ring = _sequencer.get_ring_for_orb(orb)
+	var ring: Ring = _desk_layer.get_ring_for_orb(orb)
 	var ring_index: int = ring.ring_index if ring != null else 0
-	if ring != null:
-		ring.register_snap_back(orb)
-	_piano_roll.receive_orb(orb_id, texture, tick, ring_index, _sequencer.get_measure_duration())
-
-func _on_dev_load_requested(data: Dictionary) -> void:
-	_level_manager.load_level_data(data)
+	_piano_roll.receive_orb(orb_id, texture, tick, ring_index, _desk_layer.get_measure_duration())
 
 func _on_sky_transition_midpoint() -> void:
 	_piano_roll.clear_keys()
-
-func _on_export_form_file_added(file_name: String) -> void:
-	_level_manager.add_file_name(file_name)
-	_setup_level_select()
 
 func _setup_level_select() -> void:
 	var all_points: Array = []
@@ -100,10 +157,44 @@ func _setup_level_select() -> void:
 		else:
 			all_points.append([])
 	_level_select.setup(all_points)
+	for i: int in range(_level_manager.level_count()):
+		_level_select.set_locked(i, not _level_manager.is_unlocked(i))
 
 func _on_level_selected(index: int) -> void:
+	Playback.stop()
+	_playback_button.disabled = false
 	_level_manager.load_level_at_index(index)
-	var data: Dictionary = _level_manager.get_level_data_at_index(index)
-	if data.has("solution"):
-		_piano_roll.show_keys(data["solution"])
-	_console_mode.request_sky()
+	_present_clue_for_current_level()
+	_console_mode.request_desk()
+
+func _present_clue_for_current_level() -> void:
+	var data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())
+	if not data.has("solution"):
+		return
+	_piano_roll.set_solution(data["solution"])
+	var idx: int = _level_manager.current_index()
+	if not _level_manager.is_clue_shown(idx):
+		_level_manager.mark_clue_shown(idx)
+		_clues.queue_clue(data["solution"], _desk_layer.get_measure_duration())
+		_audio_manager.play_level_start()
+		if idx == 0:
+			_hints_pending = true
+
+func _on_completion_pending() -> void:
+	_playback_button.disabled = true
+	_audio_manager.play_level_complete()
+	_audio_manager.fade_for_completion()
+
+func _on_constellation_completed() -> void:
+	var completed: int = _level_manager.current_index()
+	_level_manager.mark_completed(completed)
+	_level_select.set_completed(completed, true)
+	var next: int = completed + 1
+	if next < _level_manager.level_count():
+		_level_manager.unlock_level(next)
+		_level_select.set_locked(next, false)
+	_console_mode.force_level_select()
+
+func _on_lockbox_opened() -> void:
+	_piano_roll.set_solution([])
+	_level_manager.load_level_file("res://core/levels/dev/005_freeplay.json")

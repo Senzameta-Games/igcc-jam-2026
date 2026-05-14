@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://12ufnc4ajfr1"]
 
 [ext_resource type="Script" uid="uid://vx6v8iqa4anf" path="res://core/main.gd" id="1_csopv"]
-[ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/sequencer/sequencer.tscn" id="1_xiose"]
+[ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/desk_layer/desk_layer.tscn" id="1_xiose"]
 [ext_resource type="Shader" uid="uid://xeu5hmfr8vto" path="res://core/screenspace_shader.gdshader" id="2_510js"]
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
 [ext_resource type="Script" uid="uid://0x2x5jmtfaov" path="res://core/managers/level_manager.gd" id="2_rayt5"]
@@ -9,15 +9,25 @@
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
 [ext_resource type="Texture2D" uid="uid://cp83ckcybx1an" path="res://core/assets/background/sky.png" id="7_cus2n"]
-[ext_resource type="PackedScene" uid="uid://dmelyoceesneg" path="res://core/entities/clue_card/clue_card.tscn" id="10_xhu5d"]
 [ext_resource type="PackedScene" uid="uid://esgkju3uf5pp" path="res://core/levels/level_select.tscn" id="11_7ua4h"]
-[ext_resource type="Script" uid="uid://xtcepy8y6mch" path="res://core/managers/tools.gd" id="11_510js"]
-[ext_resource type="PackedScene" uid="uid://blkl088rhnod6" path="res://tools/export_form.tscn" id="12_7ua4h"]
 [ext_resource type="AudioStream" uid="uid://bd4d1vpc26b1w" path="res://core/assets/audio/transitions/up-tone.wav" id="14_ge7io"]
 [ext_resource type="Script" uid="uid://bd3wbt6366r4m" path="res://core/managers/audio_manager.gd" id="14_lxu0y"]
 [ext_resource type="AudioStream" uid="uid://613o7gmkvqfj" path="res://core/assets/audio/transitions/down-tone.wav" id="15_jeqa8"]
+[ext_resource type="AudioStream" uid="uid://25aohswhd0bm" path="res://core/assets/audio/one_shot_music/level_complete.wav" id="16_7akvt"]
 [ext_resource type="AudioStream" uid="uid://bmo4yn8e46gs4" path="res://core/assets/audio/music/spheres_1.wav" id="16_jeqa8"]
+[ext_resource type="Texture2D" uid="uid://dgw3cc1aih04q" path="res://core/assets/action_glyphs/to_level_select.png" id="16_slld4"]
+[ext_resource type="AudioStream" uid="uid://d1ljj0td0n10i" path="res://core/assets/audio/one_shot_music/level_start.wav" id="17_bc33c"]
 [ext_resource type="AudioStream" uid="uid://cl3mfscv62x5k" path="res://core/assets/audio/background/noise.wav" id="17_g0q11"]
+[ext_resource type="Texture2D" uid="uid://ujiywbs5a06e" path="res://core/assets/input_glyphs/tab_key.png" id="17_i2u5h"]
+[ext_resource type="Texture2D" uid="uid://csr17srdwcaks" path="res://core/assets/action_glyphs/to_piano_roll.png" id="18_7akvt"]
+[ext_resource type="Texture2D" uid="uid://dp6a5hxqgfc5t" path="res://core/assets/input_glyphs/shift_key.png" id="19_bc33c"]
+[ext_resource type="Script" uid="uid://b6ha8286hyu0d" path="res://core/entities/desk_layer/clues.gd" id="22_bc33c"]
+[ext_resource type="Texture2D" uid="uid://c4modcxmfp002" path="res://core/assets/background/fullscreen_scrim.png" id="23_s2qte"]
+[ext_resource type="AudioStream" uid="uid://crmgp5cwkleyd" path="res://core/assets/audio/slot/orbPlace1.wav" id="24_rjnh8"]
+[ext_resource type="AudioStream" uid="uid://c33kvm2wpto8" path="res://core/assets/audio/slot/orbPlace2.wav" id="25_k2fum"]
+[ext_resource type="AudioStream" uid="uid://bo30pgdcofwfy" path="res://core/assets/audio/slot/orbPlace3.wav" id="26_ltm8o"]
+[ext_resource type="AudioStream" uid="uid://cbk0aqsmhhu1r" path="res://core/assets/audio/slot/orbPlace4.wav" id="27_13j2v"]
+[ext_resource type="AudioStream" uid="uid://c3gm3gq1yac5c" path="res://core/assets/audio/slot/orbPlace5.wav" id="28_8dldp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ua4h"]
 shader = ExtResource("2_510js")
@@ -32,31 +42,13 @@ shader_parameter/turbulence_scale = 4.5010001662975
 shader_parameter/blur_radius = 0.0010000000475
 shader_parameter/smoke_color = Color(0.95173925, 0.84316486, 0.8871049, 0.34901962)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ntwa4"]
-size = Vector2(1920, 1501)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_7ua4h"]
-size = Vector2(1920, 100)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ntwa4"]
-content_margin_left = 32.0
-content_margin_top = 32.0
-content_margin_right = 32.0
-content_margin_bottom = 32.0
-bg_color = Color(0.047557652, 0.047557652, 0.047557607, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.8, 0, 0.8, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_ge7io"]
-color = Color(0.1148968, 0.11489681, 0.1148968, 1)
-thickness = 2
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_fc6mm"]
+streams_count = 5
+stream_0/stream = ExtResource("24_rjnh8")
+stream_1/stream = ExtResource("25_k2fum")
+stream_2/stream = ExtResource("26_ltm8o")
+stream_3/stream = ExtResource("27_13j2v")
+stream_4/stream = ExtResource("28_8dldp")
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
@@ -64,8 +56,6 @@ sequencer_position_desk = Vector2(0, -20)
 sequencer_position_sky = Vector2(0, 280)
 sequencer_transition_duration = 1.4
 sequencer_trans = 3
-sequencer_z_index_desk = 1
-sequencer_z_index_sky = 0
 
 [node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
 layer = 100
@@ -87,21 +77,15 @@ metadata/_custom_type_script = "uid://0x2x5jmtfaov"
 [node name="ConsoleMode" type="Node" parent="." unique_id=978732142]
 script = ExtResource("4_7ua4h")
 
-[node name="ClueCard" parent="." unique_id=1129193832 instance=ExtResource("10_xhu5d")]
-z_index = 12
-position = Vector2(960, 589)
-minimized_position = Vector2(-600, 360)
-key_launch_duration = 1.8
-
 [node name="Hand" parent="." unique_id=797971003 instance=ExtResource("2_csopv")]
 
-[node name="Sequencer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
+[node name="DeskLayer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
 position = Vector2(0, -60)
 
-[node name="Rings" parent="Sequencer/Device" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="0" unique_id=123070447]
+[node name="Rings" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="0" unique_id=123070447]
 rotation = -1.5707964
 
-[node name="RayCaster" parent="Sequencer/Device" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="1" unique_id=724280312]
+[node name="RayCaster" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="1" unique_id=724280312]
 rotation = -1.5707964
 
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
@@ -113,7 +97,7 @@ mode_transition_duration = 1.2
 mode_trans = 4
 
 [node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]
-z_index = -1
+z_index = -3
 position = Vector2(0, -615)
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("7_cus2n")
@@ -126,237 +110,8 @@ fan_radius_outer = 800.0
 fan_angle_span = 80.0
 fan_origin = Vector2(521, 556)
 
-[node name="HitArea" type="Area2D" parent="SkyLayer" unique_id=1211724838]
-position = Vector2(0, -386)
-collision_layer = 0
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="SkyLayer/HitArea" unique_id=815866661]
-position = Vector2(0, -582.5)
-shape = SubResource("RectangleShape2D_ntwa4")
-
 [node name="LevelSelect" parent="SkyLayer" unique_id=302540498 instance=ExtResource("11_7ua4h")]
 position = Vector2(-960, -1600)
-
-[node name="SkyPeek" type="Area2D" parent="SkyLayer" unique_id=951453775]
-position = Vector2(0, -562)
-collision_layer = 0
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="SkyLayer/SkyPeek" unique_id=26485703]
-shape = SubResource("RectangleShape2D_7ua4h")
-
-[node name="Tools" type="Node" parent="." unique_id=321753963]
-script = ExtResource("11_510js")
-
-[node name="Tools" type="PanelContainer" parent="Tools" unique_id=1832995140]
-visible = false
-z_index = 12
-custom_minimum_size = Vector2(400, 0)
-offset_right = 636.0
-offset_bottom = 113.0
-size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_ntwa4")
-
-[node name="Layout" type="VBoxContainer" parent="Tools/Tools" unique_id=935155070]
-layout_mode = 2
-size_flags_vertical = 0
-theme_override_constants/separation = 24
-
-[node name="Title" type="Label" parent="Tools/Tools/Layout" unique_id=1494831237]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.94744676, 0.41838992, 1, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
-text = "Dev Tools
-Use ` (tilde) to show/hide"
-
-[node name="Form" type="VBoxContainer" parent="Tools/Tools/Layout" unique_id=1539661882]
-visible = false
-layout_mode = 2
-size_flags_vertical = 0
-theme_override_constants/separation = 16
-
-[node name="Timing" type="VBoxContainer" parent="Tools/Tools/Layout/Form" unique_id=2006432130]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing" unique_id=1510948181]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
-text = "Timing and sequencer settings"
-
-[node name="BPM" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing" unique_id=1665004885]
-layout_mode = 2
-
-[node name="BPMLabel" type="Label" parent="Tools/Tools/Layout/Form/Timing/BPM" unique_id=1462496]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Beats per minute (commits on blur)"
-
-[node name="BPM" type="TextEdit" parent="Tools/Tools/Layout/Form/Timing/BPM" unique_id=390956020]
-custom_minimum_size = Vector2(160, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-placeholder_text = "Beats per minute"
-
-[node name="Intervals" type="HBoxContainer" parent="Tools/Tools/Layout/Form/Timing" unique_id=1452252405]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Interval1" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing/Intervals" unique_id=485397954]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval1" unique_id=990997635]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Ring1 Interval"
-
-[node name="Option" type="OptionButton" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval1" unique_id=2003694440]
-custom_minimum_size = Vector2(180, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-
-[node name="Interval2" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing/Intervals" unique_id=2141314066]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval2" unique_id=25434665]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Ring2 Interval"
-
-[node name="Option" type="OptionButton" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval2" unique_id=1442185639]
-custom_minimum_size = Vector2(180, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-
-[node name="Interval3" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing/Intervals" unique_id=207851851]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval3" unique_id=549512065]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Ring3 Interval"
-
-[node name="Option" type="OptionButton" parent="Tools/Tools/Layout/Form/Timing/Intervals/Interval3" unique_id=1759189039]
-custom_minimum_size = Vector2(180, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-
-[node name="Rotation" type="VBoxContainer" parent="Tools/Tools/Layout/Form/Timing" unique_id=1014294777]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/Timing/Rotation" unique_id=478536695]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Rotation Model"
-
-[node name="Option" type="OptionButton" parent="Tools/Tools/Layout/Form/Timing/Rotation" unique_id=1368835336]
-custom_minimum_size = Vector2(240, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-
-[node name="Field" type="TextEdit" parent="Tools/Tools/Layout/Form/Timing/Rotation" unique_id=958312223]
-custom_minimum_size = Vector2(320, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70380783, 0.70380783, 0.70380783, 1)
-theme_override_constants/outline_size = 4
-placeholder_text = "1.0, 1.0, 1.0"
-
-[node name="separator" type="HSeparator" parent="Tools/Tools/Layout/Form" unique_id=559978457]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_ge7io")
-
-[node name="MiscUtils" type="VBoxContainer" parent="Tools/Tools/Layout/Form" unique_id=347444533]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/MiscUtils" unique_id=2032588547]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
-text = "Misc. utilities"
-
-[node name="Reset" type="Button" parent="Tools/Tools/Layout/Form/MiscUtils" unique_id=1717802145]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Reset scene"
-
-[node name="FillSlots" type="Button" parent="Tools/Tools/Layout/Form/MiscUtils" unique_id=1435891126]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Fill all slots with 1 random orb"
-
-[node name="separator2" type="HSeparator" parent="Tools/Tools/Layout/Form" unique_id=1709124399]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_ge7io")
-
-[node name="LevelData" type="VBoxContainer" parent="Tools/Tools/Layout/Form" unique_id=1350022760]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Label" type="Label" parent="Tools/Tools/Layout/Form/LevelData" unique_id=166415098]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.48064166, 0.46486205, 0.4769578, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 16
-text = "Level data tools"
-
-[node name="Export" type="Button" parent="Tools/Tools/Layout/Form/LevelData" unique_id=641890247]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Export configuration as level JSON"
-
-[node name="Load" type="VBoxContainer" parent="Tools/Tools/Layout/Form/LevelData" unique_id=400812314]
-layout_mode = 2
-
-[node name="SolutionLabel" type="Label" parent="Tools/Tools/Layout/Form/LevelData/Load" unique_id=1816996568]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.70796657, 0.7079665, 0.7079665, 1)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 12
-text = "Solution data"
-
-[node name="LoadText" type="TextEdit" parent="Tools/Tools/Layout/Form/LevelData/Load" unique_id=857557841]
-custom_minimum_size = Vector2(0, 96)
-layout_mode = 2
-text = "{\"solution\": [[], [], [1,2], [], [1,2,3], [], [], [2], [1,2,3], [], [], [], [0,3,2], [1], [2], [3]]}"
-wrap_mode = 1
-
-[node name="Load" type="Button" parent="Tools/Tools/Layout/Form/LevelData/Load" unique_id=1700082254]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.59717613, 0.59717613, 0.5971761, 1)
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 24
-text = "Load this solution"
-
-[node name="ExportForm" parent="Tools" unique_id=422840756 instance=ExtResource("12_7ua4h")]
-z_index = 30
-position = Vector2(1417, 22)
 
 [node name="AudioManager" type="Node" parent="." unique_id=468181767]
 script = ExtResource("14_lxu0y")
@@ -379,6 +134,86 @@ volume_db = -20.0
 stream = ExtResource("15_jeqa8")
 volume_db = -20.0
 
-[connection signal="file_added" from="Tools/ExportForm" to="." method="_on_export_form_file_added"]
+[node name="LevelComplete" type="AudioStreamPlayer" parent="AudioManager" unique_id=462100004]
+stream = ExtResource("16_7akvt")
+volume_db = -10.0
 
-[editable path="Sequencer"]
+[node name="LevelStart" type="AudioStreamPlayer" parent="AudioManager" unique_id=297330845]
+stream = ExtResource("17_bc33c")
+volume_db = -10.0
+
+[node name="Hints" type="MarginContainer" parent="." unique_id=1895240326]
+offset_left = 1753.0
+offset_top = 4.0
+offset_right = 1915.0
+offset_bottom = 148.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Hints" type="VBoxContainer" parent="Hints" unique_id=747966718]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 16
+
+[node name="LevelSelectHint" type="HBoxContainer" parent="Hints/Hints" unique_id=1181498548]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="ActionHint" type="TextureRect" parent="Hints/Hints/LevelSelectHint" unique_id=1636332159]
+layout_mode = 2
+texture = ExtResource("16_slld4")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="InputGlyph" type="TextureRect" parent="Hints/Hints/LevelSelectHint" unique_id=1657101840]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("17_i2u5h")
+expand_mode = 3
+
+[node name="ModeToggleHint" type="HBoxContainer" parent="Hints/Hints" unique_id=1365049071]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="ActionHint" type="TextureRect" parent="Hints/Hints/ModeToggleHint" unique_id=1969527188]
+layout_mode = 2
+texture = ExtResource("18_7akvt")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="InputGlyph" type="TextureRect" parent="Hints/Hints/ModeToggleHint" unique_id=2079797316]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+texture = ExtResource("19_bc33c")
+expand_mode = 3
+
+[node name="Clues" type="Node2D" parent="." unique_id=1266064845]
+z_index = 3
+position = Vector2(960, 1001)
+script = ExtResource("22_bc33c")
+present_position = Vector2(0, -300)
+pile_x = -1280.0
+pile_top_y = -900.0
+pile_gap = 80.0
+scrim_opacity = 0.96
+
+[node name="Scrim" type="Sprite2D" parent="Clues" unique_id=1828588868]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0, -404.99997)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("23_s2qte")
+
+[node name="ClueNote" type="AudioStreamPlayer" parent="Clues" unique_id=875040904]
+stream = SubResource("AudioStreamRandomizer_fc6mm")
+volume_db = -6.0
+pitch_scale = 2.0
+
+[editable path="DeskLayer"]

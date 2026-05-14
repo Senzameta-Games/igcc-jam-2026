@@ -1,24 +1,28 @@
 [gd_scene format=3 uid="uid://b5x3d8ndx7yln"]
 
 [ext_resource type="Script" uid="uid://bouws8cpknl0" path="res://core/levels/level_select_item.gd" id="1_c6hew"]
-[ext_resource type="Texture2D" uid="uid://dafw1qq6yxib5" path="res://core/assets/stars/big-ridged-star.png" id="2_qsyu7"]
-[ext_resource type="Texture2D" uid="uid://chvfu1l1qh1cs" path="res://core/assets/stars/big-four-star.png" id="3_d2k66"]
-[ext_resource type="Texture2D" uid="uid://rpa0s5hl67vy" path="res://core/assets/stars/big-five-star.png" id="4_iq0g6"]
-[ext_resource type="Shader" uid="uid://x55w0niueyu2" path="res://core/entities/piano_roll/key_star.gdshader" id="5_d2k66"]
+[ext_resource type="Script" uid="uid://c2ihntqa43wcq" path="res://core/entities/constellation_display/constellation_display.gd" id="2_cdscr"]
+[ext_resource type="Texture2D" uid="uid://dafw1qq6yxib5" path="res://core/assets/stars/big-ridged-star.png" id="3_qsyu7"]
+[ext_resource type="Texture2D" uid="uid://chvfu1l1qh1cs" path="res://core/assets/stars/big-four-star.png" id="4_d2k66"]
+[ext_resource type="Texture2D" uid="uid://rpa0s5hl67vy" path="res://core/assets/stars/big-five-star.png" id="5_iq0g6"]
+[ext_resource type="Shader" uid="uid://x55w0niueyu2" path="res://core/entities/piano_roll/key_star.gdshader" id="6_d2k66"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i5g4r"]
 radius = 160.0
 
 [node name="Level" type="Area2D" unique_id=1791471152]
 script = ExtResource("1_c6hew")
-star_textures = Array[Texture2D]([ExtResource("2_qsyu7"), ExtResource("3_d2k66"), ExtResource("2_qsyu7"), ExtResource("4_iq0g6")])
-star_scale_min = 0.3
-star_scale_max = 0.4
-star_color = Color(1, 1, 1, 0.8784314)
-constellation_radius = 120.0
-hover_shader = ExtResource("5_d2k66")
+hover_shader = ExtResource("6_d2k66")
 
 [node name="Shape" type="CollisionShape2D" parent="." unique_id=745144249]
 shape = SubResource("CircleShape2D_i5g4r")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=348086013]
+
+[node name="Constellation" type="Node2D" parent="." unique_id=112233445]
+script = ExtResource("2_cdscr")
+star_textures = Array[Texture2D]([ExtResource("3_qsyu7"), ExtResource("4_d2k66"), ExtResource("3_qsyu7"), ExtResource("5_iq0g6")])
+star_scale_min = 0.3
+star_scale_max = 0.4
+star_color = Color(1, 1, 1, 0.8784314)
+constellation_radius = 120.0
