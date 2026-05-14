@@ -81,6 +81,9 @@ func _ready() -> void:
 
 
 func _on_lockbox_unlocked() -> void:
+	reveal_extra_trays()
+
+func reveal_extra_trays() -> void:
 	_set_extra_trays_disabled(false)
 	var t1 := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	t1.tween_property(_extra_tray, "position", extra_tray_revealed_pos, tray_reveal_duration)

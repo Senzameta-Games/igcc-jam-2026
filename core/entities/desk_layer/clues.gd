@@ -27,6 +27,16 @@ var _has_pending: bool = false
 var _active_card_count: int = 0
 var _scrim_tween: Tween = null
 
+func clear() -> void:
+	_has_pending = false
+	for card: ClueCard in _cards:
+		card.queue_free()
+	_cards.clear()
+	if _active_card_count > 0:
+		clue_active_changed.emit(false)
+	_active_card_count = 0
+	_fade_scrim(0.0)
+
 func queue_clue(solution: Array, measure_duration: float) -> void:
 	_pending_solution = solution
 	_pending_measure_duration = measure_duration

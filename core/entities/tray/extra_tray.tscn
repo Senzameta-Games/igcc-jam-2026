@@ -2,6 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://btgao70da5d41" path="res://core/assets/tray/extra_tray.png" id="1_bu8nn"]
 [ext_resource type="PackedScene" uid="uid://cxh0tse6o5o01" path="res://core/entities/slot/slot.tscn" id="2_kgwnm"]
+[ext_resource type="PackedScene" uid="uid://cx75inkvaagql" path="res://core/entities/orbs/Bb3_orb.tscn" id="3_mgn7w"]
+[ext_resource type="PackedScene" uid="uid://dmodddgtqr3fl" path="res://core/entities/orbs/F3_orb.tscn" id="4_0jld8"]
+[ext_resource type="PackedScene" uid="uid://0kkxevqigqm" path="res://core/entities/orbs/G3_orb.tscn" id="5_4keml"]
+[ext_resource type="PackedScene" uid="uid://du774app4fkqo" path="res://core/entities/orbs/A4_orb.tscn" id="6_353ff"]
+[ext_resource type="PackedScene" uid="uid://muri2vi0y2eu" path="res://core/entities/orbs/D4_orb.tscn" id="7_b6x6q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bu8nn"]
 size = Vector2(591, 94)
@@ -19,21 +24,31 @@ position = Vector2(0, 172)
 position = Vector2(-198, -190)
 in_tray = true
 
+[node name="Orb" parent="Slots/Slot0" unique_id=552011164 instance=ExtResource("3_mgn7w")]
+
 [node name="Slot1" parent="Slots" unique_id=206346277 instance=ExtResource("2_kgwnm")]
 position = Vector2(-99, -190)
 in_tray = true
+
+[node name="Orb" parent="Slots/Slot1" unique_id=1013342611 instance=ExtResource("4_0jld8")]
 
 [node name="Slot2" parent="Slots" unique_id=1091405632 instance=ExtResource("2_kgwnm")]
 position = Vector2(0, -190)
 in_tray = true
 
+[node name="Orb" parent="Slots/Slot2" unique_id=1956939905 instance=ExtResource("5_4keml")]
+
 [node name="Slot3" parent="Slots" unique_id=599064132 instance=ExtResource("2_kgwnm")]
 position = Vector2(101, -190)
 in_tray = true
 
+[node name="Orb" parent="Slots/Slot3" unique_id=346230539 instance=ExtResource("6_353ff")]
+
 [node name="Slot4" parent="Slots" unique_id=1713670140 instance=ExtResource("2_kgwnm")]
 position = Vector2(200, -190)
 in_tray = true
+
+[node name="Orb" parent="Slots/Slot4" unique_id=1790823450 instance=ExtResource("7_b6x6q")]
 
 [node name="Area" type="Area2D" parent="." unique_id=292449142]
 position = Vector2(0, 71)

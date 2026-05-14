@@ -6,5 +6,5 @@
 		{ "interval": "SIXTEENTH" },
 		{ "interval": "SIXTEENTH" }
 	],
-	"tray_orbs": [0, 1, 2, 3, 4]
+	"tray_orbs": [0, 1, 2, 3, 4, 0]
 }

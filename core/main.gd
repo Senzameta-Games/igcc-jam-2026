@@ -17,6 +17,7 @@ extends Node2D
 @onready var _clues: Clues = $Clues
 
 var _hints_pending: bool = false
+var _post_completion: bool = false
 
 
 func _ready() -> void:
@@ -77,11 +78,13 @@ func _flash_hint(hint: Control) -> void:
 
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
-		#ConsoleMode.Mode.CONSOLE:
+		ConsoleMode.Mode.CONSOLE:
 			#_lockbox.visible = true
+			_post_completion = false
 		ConsoleMode.Mode.LEVEL_SELECT:
 			_hand.return_held_to_tray(_tray)
-			_sweep_non_pearl_orbs_to_tray()
+			if not _post_completion:
+				_sweep_non_pearl_orbs_to_tray()
 
 func _sweep_non_pearl_orbs_to_tray() -> void:
 	for node: Node in get_tree().get_nodes_in_group("slots"):
@@ -160,6 +163,16 @@ func _on_constellation_completed() -> void:
 	if next < _level_manager.level_count():
 		_level_manager.unlock_level(next)
 		_level_select.set_locked(next, false)
+		var next_data: Dictionary = _level_manager.get_level_data_at_index(next)
+		if not next_data.has("solution"):
+			Playback.stop()
+			_playback_button.disabled = false
+			_level_manager.load_level_at_index(next)
+			_piano_roll.set_solution([])
+			_clues.clear()
+			_desk_layer.reveal_extra_trays()
+			return
+	_post_completion = true
 	_console_mode.force_level_select()
 
 func _on_lockbox_opened() -> void:
