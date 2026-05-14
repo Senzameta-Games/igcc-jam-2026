@@ -27,6 +27,8 @@ const SLOT_SCENE: PackedScene = preload("res://core/entities/slot/slot.tscn")
 
 @export var interval_type: IntervalType = IntervalType.QUARTER:
 	set(value):
+		if interval_type == value:
+			return
 		interval_type = value
 		load_modifier = _get_load_modifier()
 		_rebuild_slots()
@@ -48,9 +50,6 @@ func _process(delta: float) -> void:
 		return
 	_current_angle += _rotation_speed * delta
 	rotation = _current_angle
-	for slot: Slot in _slots:
-		if not slot.is_occupied():
-			slot.rotation = -_current_angle
 
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:

@@ -35,7 +35,7 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
 	float value = 0.0;
 	float amplitude = 0.5;
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 2; i++) {
 		value += amplitude * noise(p);
 		p *= 2.1;
 		amplitude *= 0.5;
@@ -46,7 +46,7 @@ float fbm(vec2 p) {
 float fbm_turb(vec2 p) {
 	float value = 0.0;
 	float amplitude = 0.5;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 		value += amplitude * noise(p);
 		p *= 3.0;
 		amplitude *= 0.45;
@@ -57,7 +57,7 @@ float fbm_turb(vec2 p) {
 float compute_smoke(vec2 uv, float t, float t_turb) {
 	float source = 0.0;
 	float nearest_source_y = 0.0;
-	int steps = 16;
+	int steps = 5;
 	for (int i = 0; i < steps; i++) {
 		float frac = float(i) / float(steps);
 		float wave = sin(frac * TAU * 2.0 + TIME * 2.0) * 0.02 * frac;
@@ -103,17 +103,7 @@ void fragment() {
 	float t_turb = TIME * turbulence_speed;
 	vec4 color = texture(screen_texture, SCREEN_UV);
 
-	float r = blur_radius;
 	float s = compute_smoke(SCREEN_UV, t, t_turb);
-	s += compute_smoke(SCREEN_UV + vec2( r,  0.0), t, t_turb);
-	s += compute_smoke(SCREEN_UV + vec2(-r,  0.0), t, t_turb);
-	s += compute_smoke(SCREEN_UV + vec2( 0.0,  r), t, t_turb);
-	s += compute_smoke(SCREEN_UV + vec2( 0.0, -r), t, t_turb);
-	s += compute_smoke(SCREEN_UV + vec2( r,  r), t, t_turb);
-	s += compute_smoke(SCREEN_UV + vec2(-r,  r), t, t_turb);
-	s += compute_smoke(SCREEN_UV + vec2( r, -r), t, t_turb);
-	s += compute_smoke(SCREEN_UV + vec2(-r, -r), t, t_turb);
-	s /= 9.0;
 
 	color.rgb = mix(color.rgb, smoke_color.rgb, clamp(s * smoke_strength, 0.0, 1.0));
 

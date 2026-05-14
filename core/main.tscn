@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://vx6v8iqa4anf" path="res://core/main.gd" id="1_csopv"]
 [ext_resource type="PackedScene" uid="uid://b1vu1c1k0s57o" path="res://core/entities/desk_layer/desk_layer.tscn" id="1_xiose"]
-[ext_resource type="Shader" uid="uid://xeu5hmfr8vto" path="res://core/screenspace_shader.gdshader" id="2_510js"]
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
 [ext_resource type="Script" uid="uid://0x2x5jmtfaov" path="res://core/managers/level_manager.gd" id="2_rayt5"]
 [ext_resource type="Script" uid="uid://0jy8je4f7jdl" path="res://core/managers/console_mode.gd" id="4_7ua4h"]
@@ -10,14 +9,14 @@
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
 [ext_resource type="Texture2D" uid="uid://cp83ckcybx1an" path="res://core/assets/background/sky.png" id="7_cus2n"]
 [ext_resource type="PackedScene" uid="uid://esgkju3uf5pp" path="res://core/levels/level_select.tscn" id="11_7ua4h"]
+[ext_resource type="AudioStream" uid="uid://1prnm56knkjx" path="res://core/assets/audio/music/spheres_1_juiced.wav" id="12_l1ude"]
+[ext_resource type="AudioStream" uid="uid://cvpxpwpvlpc63" path="res://core/assets/audio/background/noise_looped2.wav" id="13_l1ude"]
 [ext_resource type="AudioStream" uid="uid://bd4d1vpc26b1w" path="res://core/assets/audio/transitions/up-tone.wav" id="14_ge7io"]
 [ext_resource type="Script" uid="uid://bd3wbt6366r4m" path="res://core/managers/audio_manager.gd" id="14_lxu0y"]
 [ext_resource type="AudioStream" uid="uid://613o7gmkvqfj" path="res://core/assets/audio/transitions/down-tone.wav" id="15_jeqa8"]
 [ext_resource type="AudioStream" uid="uid://25aohswhd0bm" path="res://core/assets/audio/one_shot_music/level_complete.wav" id="16_7akvt"]
-[ext_resource type="AudioStream" uid="uid://bmo4yn8e46gs4" path="res://core/assets/audio/music/spheres_1.wav" id="16_jeqa8"]
 [ext_resource type="Texture2D" uid="uid://dgw3cc1aih04q" path="res://core/assets/action_glyphs/to_level_select.png" id="16_slld4"]
 [ext_resource type="AudioStream" uid="uid://d1ljj0td0n10i" path="res://core/assets/audio/one_shot_music/level_start.wav" id="17_bc33c"]
-[ext_resource type="AudioStream" uid="uid://cl3mfscv62x5k" path="res://core/assets/audio/background/noise.wav" id="17_g0q11"]
 [ext_resource type="Texture2D" uid="uid://ujiywbs5a06e" path="res://core/assets/input_glyphs/tab_key.png" id="17_i2u5h"]
 [ext_resource type="Script" uid="uid://b6ha8286hyu0d" path="res://core/entities/desk_layer/clues.gd" id="22_bc33c"]
 [ext_resource type="Texture2D" uid="uid://c4modcxmfp002" path="res://core/assets/background/fullscreen_scrim.png" id="23_s2qte"]
@@ -26,19 +25,6 @@
 [ext_resource type="AudioStream" uid="uid://bo30pgdcofwfy" path="res://core/assets/audio/slot/orbPlace3.wav" id="26_ltm8o"]
 [ext_resource type="AudioStream" uid="uid://cbk0aqsmhhu1r" path="res://core/assets/audio/slot/orbPlace4.wav" id="27_13j2v"]
 [ext_resource type="AudioStream" uid="uid://c3gm3gq1yac5c" path="res://core/assets/audio/slot/orbPlace5.wav" id="28_8dldp"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ua4h"]
-shader = ExtResource("2_510js")
-shader_parameter/luma_threshold = 0.9250000439375
-shader_parameter/smoke_strength = 0.53200002527
-shader_parameter/smoke_speed = 1.954000092815
-shader_parameter/smoke_scale = 10.0
-shader_parameter/smoke_height = 0.03200000152
-shader_parameter/turbulence_strength = 0.7950000377625
-shader_parameter/turbulence_speed = 3.63600017271
-shader_parameter/turbulence_scale = 4.5010001662975
-shader_parameter/blur_radius = 0.0010000000475
-shader_parameter/smoke_color = Color(0.95173925, 0.84316486, 0.8871049, 0.34901962)
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_fc6mm"]
 streams_count = 5
@@ -50,18 +36,6 @@ stream_4/stream = ExtResource("28_8dldp")
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
-
-[node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
-layer = 100
-
-[node name="ColorRect" type="ColorRect" parent="SSShader" unique_id=1170456765]
-material = SubResource("ShaderMaterial_7ua4h")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="LevelManager" type="Node" parent="." unique_id=531121199]
 script = ExtResource("2_rayt5")
@@ -122,12 +96,12 @@ position = Vector2(-960, -1600)
 script = ExtResource("14_lxu0y")
 
 [node name="BGM" type="AudioStreamPlayer" parent="AudioManager" unique_id=2011721722]
-stream = ExtResource("16_jeqa8")
-volume_db = -12.0
+stream = ExtResource("12_l1ude")
+volume_db = -16.0
 autoplay = true
 
 [node name="RoomTone" type="AudioStreamPlayer" parent="AudioManager" unique_id=676740509]
-stream = ExtResource("17_g0q11")
+stream = ExtResource("13_l1ude")
 volume_db = -4.0
 autoplay = true
 

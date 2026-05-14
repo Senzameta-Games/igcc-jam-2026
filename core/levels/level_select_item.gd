@@ -21,6 +21,7 @@ var _level_index: int = 0
 var _hover_tween: Tween = null
 var _locked: bool = true
 var _completed: bool = false
+var _hover_material: ShaderMaterial = null
 
 func _ready() -> void:
 	input_event.connect(_on_input_event)
@@ -64,8 +65,10 @@ func _set_hover(active: bool) -> void:
 		_hover_tween.kill()
 	var mat: ShaderMaterial = null
 	if active and hover_shader != null:
-		mat = ShaderMaterial.new()
-		mat.shader = hover_shader
+		if _hover_material == null:
+			_hover_material = ShaderMaterial.new()
+			_hover_material.shader = hover_shader
+		mat = _hover_material
 	_hover_tween = create_tween().set_parallel(true)
 	_hover_tween.set_ease(Tween.EASE_OUT)
 	_hover_tween.set_trans(Tween.TRANS_BACK)

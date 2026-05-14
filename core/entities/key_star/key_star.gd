@@ -19,10 +19,7 @@ const _COLORS: Dictionary = {
 
 @onready var _sprite: Sprite2D = $Sprite
 
-func setup(orb_type: Orb.OrbType, shader: Shader = null) -> void:
+func setup(orb_type: Orb.OrbType, material: ShaderMaterial = null) -> void:
 	_sprite.texture = KEY_STAR_TEXTURES.get(orb_type) as Texture2D
 	modulate = _COLORS.get(orb_type, Color.WHITE)
-	if shader != null:
-		var mat := ShaderMaterial.new()
-		mat.shader = shader
-		_sprite.material = mat
+	_sprite.material = material

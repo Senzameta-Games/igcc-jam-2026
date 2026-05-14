@@ -100,6 +100,7 @@ var _hit_positions: Dictionary = {}
 var _solution_position_count: int = 0
 var _pending_completion: bool = false
 var _completion_signaled: bool = false
+var _key_star_material: ShaderMaterial = null
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -302,6 +303,14 @@ func _clear_chain() -> void:
 				_animate_segment_out(seg as Array)
 	_constellations.clear()
 
+func _get_key_star_material() -> ShaderMaterial:
+	if key_star_shader == null:
+		return null
+	if _key_star_material == null:
+		_key_star_material = ShaderMaterial.new()
+		_key_star_material.shader = key_star_shader
+	return _key_star_material
+
 func show_keys(solution: Array) -> void:
 	clear_keys()
 	for tick: int in range(solution.size()):
@@ -314,7 +323,7 @@ func show_keys(solution: Array) -> void:
 			ks.rotation = randf_range(0.0, TAU)
 			ks.position = _cell_pos(tick, ring_idx)
 			_keys_container.add_child(ks)
-			ks.setup(orb_type, key_star_shader)
+			ks.setup(orb_type, _get_key_star_material())
 
 ## Stores the current level solution for playback validation. Does not display any hints.
 func set_solution(solution: Array) -> void:
@@ -345,10 +354,7 @@ func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index:
 		var dot := Sprite2D.new()
 		if correct:
 			dot.texture = texture
-			if key_star_shader != null:
-				var mat := ShaderMaterial.new()
-				mat.shader = key_star_shader
-				dot.material = mat
+			dot.material = _get_key_star_material()
 		else:
 			if not star_textures.is_empty():
 				dot.texture = star_textures[randi() % star_textures.size()]
