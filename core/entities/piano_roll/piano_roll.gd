@@ -99,6 +99,7 @@ var _solution: Array = []
 var _hit_positions: Dictionary = {}
 var _solution_position_count: int = 0
 var _pending_completion: bool = false
+var _completion_signaled: bool = false
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -319,6 +320,7 @@ func show_keys(solution: Array) -> void:
 func set_solution(solution: Array) -> void:
 	_solution = solution
 	_hit_positions.clear()
+	_completion_signaled = false
 	var unique_keys: Dictionary = {}
 	for tick: int in range(solution.size()):
 		for entry: Variant in (solution[tick] as Array):
@@ -326,9 +328,9 @@ func set_solution(solution: Array) -> void:
 			unique_keys[_cell_key(tick, ring_idx)] = true
 	_solution_position_count = unique_keys.size()
 
-func receive_orb(_orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index: int, measure_duration: float) -> void:
+func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index: int, measure_duration: float) -> void:
 	var key: int = _cell_key(tick, ring_index)
-	var correct: bool = _is_solution_hit(tick, ring_index)
+	var correct: bool = _is_solution_hit(tick, ring_index, orb_id)
 	var arrival: float = CORRECT_ARRIVAL_SCALE if correct else KEY_STAR_ARRIVAL_SCALE
 
 	if _dots.has(key):
@@ -361,7 +363,9 @@ func receive_orb(_orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index
 		_hit_positions[key] = true
 		if _hit_positions.size() >= _solution_position_count and _solution_position_count > 0:
 			_pending_completion = true
-			completion_pending.emit()
+			if not _completion_signaled:
+				_completion_signaled = true
+				completion_pending.emit()
 
 func _start_key_star_decay(dot: Sprite2D, duration: float) -> Tween:
 	var tween := dot.create_tween()
@@ -371,15 +375,18 @@ func _start_key_star_decay(dot: Sprite2D, duration: float) -> Tween:
 	return tween
 
 func _on_tick_advanced(tick: int) -> void:
-	if _pending_completion and tick == 0:
-		_pending_completion = false
-		constellation_completed.emit()
+	if tick == 0:
+		if _pending_completion:
+			_pending_completion = false
+			constellation_completed.emit()
+		_hit_positions.clear()
 
 func _on_playback_started() -> void:
 	_playing = true
 
 func _on_playback_stopped() -> void:
 	_pending_completion = false
+	_completion_signaled = false
 	_clear_dots()
 	_playing = false
 	_playhead.modulate.a = 1.0
@@ -437,12 +444,13 @@ func _note_radius(ring_index: int) -> float:
 func _cell_key(tick: int, ring_index: int) -> int:
 	return tick * 100 + ring_index
 
-func _is_solution_hit(tick: int, ring_index: int) -> bool:
+func _is_solution_hit(tick: int, ring_index: int, orb_id: Orb.OrbType) -> bool:
 	if tick >= _solution.size():
 		return false
 	for entry: Variant in (_solution[tick] as Array):
 		var r: int = 0 if not (entry is Array) else int((entry as Array)[0])
-		if r == ring_index:
+		var o: int = int(entry) if not (entry is Array) else int((entry as Array)[1])
+		if r == ring_index and o == int(orb_id):
 			return true
 	return false
 
