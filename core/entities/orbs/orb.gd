@@ -25,6 +25,7 @@ var _pulse_tween: Tween = null
 @onready var _land: AudioStreamPlayer = $Land
 @onready var _lift: AudioStreamPlayer = $Lift
 @onready var _pitchhint: AudioStreamPlayer = $PitchHint
+@onready var _return_to_tray_sfx: AudioStreamPlayer = $ReturnToTray
 
 func _init() -> void:
 	if (key_star_texture == null):
@@ -70,3 +71,6 @@ func land(silent: bool = false) -> void:
 	if not silent:
 		_land.play()
 		_pitchhint.play()
+
+func play_return_to_tray() -> void:
+	_return_to_tray_sfx.play()

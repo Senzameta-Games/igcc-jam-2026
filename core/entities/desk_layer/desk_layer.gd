@@ -37,6 +37,7 @@ const MAX_BPM: float = 90.0
 @onready var _ray_caster: RayCaster = $Sequencer/RayCaster
 @onready var _sequencer: Node2D = $Sequencer
 @onready var _ring_spin_sfx: AudioStreamPlayer = $PassiveSound/RingRotate
+@onready var _return_all_orbs_sfx: AudioStreamPlayer = $PassiveSound/ReturnAllOrbs
 @onready var _playback_button_sfx: AudioStreamPlayer = $Sequencer/StartStop/ButtonPress
 #@onready var _lockbox: Lockbox = $Lockbox
 @onready var _extra_tray: Node2D = $ExtraTray
@@ -82,6 +83,9 @@ func _ready() -> void:
 
 func _on_lockbox_unlocked() -> void:
 	reveal_extra_trays()
+
+func play_return_orbs_sfx() -> void:
+	_return_all_orbs_sfx.play()
 
 func reveal_extra_trays() -> void:
 	_set_extra_trays_disabled(false)

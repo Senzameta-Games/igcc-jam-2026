@@ -14,6 +14,8 @@ extends Node2D
 #@onready var _lockbox: Lockbox = $DeskLayer/Lockbox
 @onready var _hints: Control = $Hints
 @onready var _hint_level_select: Control = $Hints/Hints/LevelSelectHint
+@onready var _hint_playback: Control = $Hints/Hints/PlaybackHint
+@onready var _hint_return_orbs: Control = $Hints/Hints/ReturnOrbsHint
 @onready var _clues: Clues = $Clues
 
 var _hints_pending: bool = false
@@ -64,6 +66,12 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("level_select"):
 		_toggle_level_select()
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("playback_toggle"):
+		_toggle_playback()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("return_orbs"):
+		_return_orbs_to_tray()
+		get_viewport().set_input_as_handled()
 
 func _toggle_level_select() -> void:
 	if _console_mode.current_mode == ConsoleMode.Mode.LEVEL_SELECT:
@@ -71,6 +79,18 @@ func _toggle_level_select() -> void:
 	else:
 		_console_mode.request_level_select()
 	_flash_hint(_hint_level_select)
+
+func _toggle_playback() -> void:
+	if _playback_button.disabled:
+		return
+	_playback_button.button_pressed = not _playback_button.button_pressed
+	_flash_hint(_hint_playback)
+
+func _return_orbs_to_tray() -> void:
+	if _console_mode.current_mode != ConsoleMode.Mode.CONSOLE:
+		return
+	_sweep_non_pearl_orbs_to_tray()
+	_flash_hint(_hint_return_orbs)
 
 func _on_level_select_hint_gui_input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:
@@ -100,6 +120,7 @@ func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 				_sweep_non_pearl_orbs_to_tray()
 
 func _sweep_non_pearl_orbs_to_tray() -> void:
+	var returned: Array[Orb] = []
 	for node: Node in get_tree().get_nodes_in_group("slots"):
 		var slot := node as Slot
 		if slot == null or slot.in_tray or not slot.is_occupied():
@@ -111,8 +132,17 @@ func _sweep_non_pearl_orbs_to_tray() -> void:
 		var tray_slot: Slot = _tray.get_slot_for_orb(orb)
 		if tray_slot != null:
 			tray_slot.receive_orb(orb, true)
+			returned.append(orb)
 		else:
 			orb.queue_free()
+	if returned.is_empty():
+		return
+	_desk_layer.play_return_orbs_sfx()
+	var t := create_tween()
+	for i: int in range(returned.size()):
+		if i > 0:
+			t.tween_interval(0.1)
+		t.tween_callback(returned[i].play_return_to_tray)
 
 func _on_console_settled() -> void:
 	_clues.on_desk_settled()

@@ -18,6 +18,10 @@
 [ext_resource type="Texture2D" uid="uid://dgw3cc1aih04q" path="res://core/assets/action_glyphs/to_level_select.png" id="16_slld4"]
 [ext_resource type="AudioStream" uid="uid://d1ljj0td0n10i" path="res://core/assets/audio/one_shot_music/level_start.wav" id="17_bc33c"]
 [ext_resource type="Texture2D" uid="uid://ujiywbs5a06e" path="res://core/assets/input_glyphs/tab_key.png" id="17_i2u5h"]
+[ext_resource type="Texture2D" uid="uid://byxvfjlteuo1x" path="res://core/assets/action_glyphs/playback.png" id="19_rjnh8"]
+[ext_resource type="Texture2D" uid="uid://dirgnsau1fujw" path="res://core/assets/input_glyphs/space_key.png" id="20_k2fum"]
+[ext_resource type="Texture2D" uid="uid://gc6oq2x8n023" path="res://core/assets/action_glyphs/return_orbs.png" id="21_k2fum"]
+[ext_resource type="Texture2D" uid="uid://fis08vm402gc" path="res://core/assets/input_glyphs/enter_key.png" id="21_ltm8o"]
 [ext_resource type="Script" uid="uid://b6ha8286hyu0d" path="res://core/entities/desk_layer/clues.gd" id="22_bc33c"]
 [ext_resource type="Texture2D" uid="uid://c4modcxmfp002" path="res://core/assets/background/fullscreen_scrim.png" id="23_s2qte"]
 [ext_resource type="AudioStream" uid="uid://crmgp5cwkleyd" path="res://core/assets/audio/slot/orbPlace1.wav" id="24_rjnh8"]
@@ -122,10 +126,10 @@ stream = ExtResource("17_bc33c")
 volume_db = -10.0
 
 [node name="Hints" type="MarginContainer" parent="." unique_id=1895240326]
-offset_left = 1753.0
+offset_left = 1731.0
 offset_top = 4.0
-offset_right = 1898.0
-offset_bottom = 84.0
+offset_right = 1961.0
+offset_bottom = 212.0
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
@@ -133,13 +137,10 @@ theme_override_constants/margin_bottom = 16
 
 [node name="Hints" type="VBoxContainer" parent="Hints" unique_id=747966718]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
 theme_override_constants/separation = 16
 
 [node name="LevelSelectHint" type="HBoxContainer" parent="Hints/Hints" unique_id=1181498548]
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/separation = 8
 
@@ -154,6 +155,42 @@ custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_vertical = 0
 texture = ExtResource("17_i2u5h")
+expand_mode = 3
+
+[node name="PlaybackHint" type="HBoxContainer" parent="Hints/Hints" unique_id=283511412]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="ActionHint" type="TextureRect" parent="Hints/Hints/PlaybackHint" unique_id=1939955495]
+layout_mode = 2
+texture = ExtResource("19_rjnh8")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="InputGlyph" type="TextureRect" parent="Hints/Hints/PlaybackHint" unique_id=520922242]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("20_k2fum")
+expand_mode = 3
+
+[node name="ReturnOrbsHint" type="HBoxContainer" parent="Hints/Hints" unique_id=1216448947]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="ActionHint" type="TextureRect" parent="Hints/Hints/ReturnOrbsHint" unique_id=1872246089]
+layout_mode = 2
+texture = ExtResource("21_k2fum")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="InputGlyph" type="TextureRect" parent="Hints/Hints/ReturnOrbsHint" unique_id=1134051842]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("21_ltm8o")
 expand_mode = 3
 
 [node name="Clues" type="Node2D" parent="." unique_id=1266064845]

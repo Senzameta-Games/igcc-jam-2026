@@ -71,6 +71,11 @@ volume_db = -12.0
 stream = SubResource("AudioStreamRandomizer_mi8b4")
 volume_db = -8.0
 
+[node name="ReturnToTray" type="AudioStreamPlayer" parent="." unique_id=59626128]
+stream = SubResource("AudioStreamRandomizer_mi8b4")
+volume_db = -12.0
+pitch_scale = 1.6
+
 [node name="Lift" type="AudioStreamPlayer" parent="." unique_id=1995781555]
 stream = SubResource("AudioStreamRandomizer_qgeok")
 

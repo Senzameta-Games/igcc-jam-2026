@@ -19,6 +19,7 @@
 [ext_resource type="Script" uid="uid://31exyxhqqk4i" path="res://core/entities/desk_layer/measure_pad.gd" id="13_uioqo"]
 [ext_resource type="AudioStream" uid="uid://bjt8dxbjy7i0f" path="res://core/assets/audio/ring/playbackSpin.wav" id="14_52j4s"]
 [ext_resource type="Texture2D" uid="uid://brctjjt72mrxc" path="res://core/assets/layout/bottom_frame.png" id="19_sxubq"]
+[ext_resource type="AudioStream" uid="uid://c83mupve7hurv" path="res://core/assets/audio/button_press/return_all_orbs.wav" id="20_18s83"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="20_oyf0e"]
 [ext_resource type="PackedScene" uid="uid://bbmvjaukbxutq" path="res://core/entities/tray/extra_tray.tscn" id="23_bibdu"]
 
@@ -119,9 +120,11 @@ script = ExtResource("13_uioqo")
 
 [node name="RingRotate" type="AudioStreamPlayer" parent="PassiveSound" unique_id=7909675]
 stream = ExtResource("14_52j4s")
-volume_db = 8.0
+volume_db = 5.0
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="PassiveSound" unique_id=1678015815]
+[node name="ReturnAllOrbs" type="AudioStreamPlayer" parent="PassiveSound" unique_id=380579136]
+stream = ExtResource("20_18s83")
+volume_db = -12.0
 
 [node name="ExtraTray" parent="." unique_id=911235638 instance=ExtResource("23_bibdu")]
 position = Vector2(293, 707)
