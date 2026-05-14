@@ -21,6 +21,10 @@ extends Node2D
 @export var constellation_star_scale_max: float = 0.7
 @export var constellation_star_color: Color = Color(0.0, 0.0, 0.0, 1.0)
 
+## Extra blank cells shown beyond the constellation bounding box for context.
+@export var tick_padding: int = 2
+@export var ring_padding: int = 1
+
 ## Flash animation when a tick fires during clue playback.
 @export var flash_scale_multiplier: float = 1.5
 @export var flash_in_duration: float = 0.08
@@ -58,10 +62,10 @@ func setup(solution: Array) -> void:
 	if not found:
 		return
 
-	min_tick = maxi(0, min_tick - 1)
-	max_tick = mini(_MAX_TICK, max_tick + 1)
-	min_ring = maxi(0, min_ring - 1)
-	max_ring = mini(_MAX_RING, max_ring + 1)
+	min_tick = maxi(0, min_tick - tick_padding)
+	max_tick = mini(_MAX_TICK, max_tick + tick_padding)
+	min_ring = maxi(0, min_ring - ring_padding)
+	max_ring = mini(_MAX_RING, max_ring + ring_padding)
 
 	var cell_positions: Dictionary = {}
 	var bbox_min := Vector2(INF, INF)

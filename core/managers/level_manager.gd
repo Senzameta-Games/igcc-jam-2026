@@ -17,14 +17,6 @@ var _unlocked: Array[bool] = []
 var _completed: Array[bool] = []
 var _clue_shown: Array[bool] = []
 
-## Per-level tray snapshots. Saved when navigating away; restored on return.
-## Key: level index (int). Value: Array from Tray.snapshot_slots().
-var _tray_states: Dictionary = {}
-
-## Per-level sequencer ring snapshots. Saved when navigating away; restored on return.
-## Key: level index (int). Value: Array from Sequencer.snapshot_rings().
-var _sequencer_states: Dictionary = {}
-
 func initialize(sequencer: DeskLayer, tray: Tray, piano_roll: PianoRoll) -> void:
 	_sequencer = sequencer
 	_tray = tray
@@ -72,8 +64,6 @@ func load_level_at_index(index: int) -> void:
 		return
 	if not is_unlocked(index):
 		return
-	_tray_states[_current_index] = _tray.snapshot_slots()
-	_sequencer_states[_current_index] = _sequencer.snapshot_rings()
 	_current_index = index
 	_load_file(_level_files[_current_index])
 
@@ -178,11 +168,7 @@ func _load_game(json_data: Dictionary) -> void:
 			if active:
 				var interval_str: String = ring_data[i].get("interval", "QUARTER")
 				rings[i].interval_type = Ring.IntervalType.get(interval_str, Ring.IntervalType.QUARTER)
-	if _sequencer_states.has(_current_index):
-		_sequencer.restore_rings(_sequencer_states[_current_index])
-	if _tray_states.has(_current_index):
-		_tray.restore_snapshot(_tray_states[_current_index])
-	elif json_data.has("tray_orbs"):
+	if json_data.has("tray_orbs"):
 		var raw: Array = json_data["tray_orbs"]
 		var types: Array[Orb.OrbType] = []
 		for id: Variant in raw:

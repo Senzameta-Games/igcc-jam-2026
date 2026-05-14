@@ -11,6 +11,7 @@ signal dropped
 var _held_orb: Orb = null
 var _pointing: bool = false
 var _tray: Tray = null
+var _clue_active: bool = false
 
 @onready var _area: Area2D = $Area
 @onready var _sprite: Sprite2D = $Sprite
@@ -29,13 +30,16 @@ func _process(_delta: float) -> void:
 		return
 	_held_orb.global_position = mouse
 
+func set_clue_active(active: bool) -> void:
+	_clue_active = active
+
 func _input(event: InputEvent) -> void:
 	if not event is InputEventMouseButton:
 		return
 	var mb := event as InputEventMouseButton
 	if not mb.pressed:
 		return
-	if Playback.is_playing:
+	if Playback.is_playing or _clue_active:
 		return
 	# Right click
 	if mb.button_index == MOUSE_BUTTON_RIGHT:
@@ -63,16 +67,24 @@ func _input(event: InputEvent) -> void:
 		return
 	
 	if _held_orb != null:
+		var candidates: Array[Slot] = []
 		for area: Area2D in _area.get_overlapping_areas():
 			var parent = area.get_parent()
-			var slot_to_handle = null
-			if(parent is Slot):
+			var slot_to_handle: Slot = null
+			if parent is Slot:
 				slot_to_handle = parent as Slot
-			elif(parent is Tray):
+			elif parent is Tray:
 				var tray := parent as Tray
 				slot_to_handle = tray.get_slot_for_orb(_held_orb)
-			if slot_to_handle == null:
+			if slot_to_handle == null or slot_to_handle.disabled:
 				continue
+			if not slot_to_handle.is_visible_in_tree():
+				continue
+			candidates.append(slot_to_handle)
+		if not candidates.is_empty():
+			candidates.sort_custom(func(a: Slot, b: Slot) -> bool:
+				return a.is_hinting() and not b.is_hinting())
+			var slot_to_handle: Slot = candidates[0]
 			var held_type: Orb.OrbType = _held_orb.orb_id
 			var shift_held: bool = Input.is_key_pressed(KEY_SHIFT) and not slot_to_handle.in_tray
 			try_drop(slot_to_handle)
@@ -87,10 +99,23 @@ func _input(event: InputEvent) -> void:
 			var slot := area.get_parent() as Slot
 			if slot == null:
 				continue
-			if slot.is_occupied():
+			if slot.is_occupied() and not slot.disabled:
 				pick_up(slot.eject_orb())
 				get_viewport().set_input_as_handled()
 				return
+
+func return_held_to_tray(tray: Tray) -> void:
+	if _held_orb == null or _held_orb.is_pearl:
+		return
+	var tray_slot: Slot = tray.get_slot_for_orb(_held_orb)
+	if tray_slot != null:
+		try_drop(tray_slot)
+	else:
+		_held_orb.queue_free()
+		_held_orb = null
+		_hide_all_drophints()
+		_refresh_texture()
+		dropped.emit()
 
 func set_tray(tray: Tray) -> void:
 	_tray = tray
@@ -154,7 +179,7 @@ func _show_all_drophints() -> void:
 	var pearl_held: bool = _held_orb != null and _held_orb.is_pearl
 	for node: Node in get_tree().get_nodes_in_group("slots"):
 		var slot := node as Slot
-		if slot == null or slot.is_occupied() or not slot.is_visible_in_tree():
+		if slot == null or slot.is_occupied() or not slot.is_visible_in_tree() or slot.disabled:
 			continue
 		if pearl_held and slot.get_parent().get_parent() is Ring:
 			continue

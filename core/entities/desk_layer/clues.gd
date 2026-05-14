@@ -1,6 +1,8 @@
 class_name Clues
 extends Node2D
 
+signal clue_active_changed(active: bool)
+
 const CLUE_CARD_SCENE: PackedScene = preload("res://core/entities/clue_card/clue_card.tscn")
 
 ## Position in Clues-node local space where each card floats to when presenting or inspecting.
@@ -51,11 +53,13 @@ func _on_card_became_active() -> void:
 	_active_card_count += 1
 	if _active_card_count == 1:
 		_fade_scrim(scrim_opacity)
+		clue_active_changed.emit(true)
 
 func _on_card_dismiss_complete() -> void:
 	_active_card_count = maxi(_active_card_count - 1, 0)
 	if _active_card_count == 0:
 		_fade_scrim(0.0)
+		clue_active_changed.emit(false)
 
 func _on_clue_note_triggered(note_count: int) -> void:
 	_clue_note_player.play()

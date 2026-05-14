@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b5x3d8ndx7yln"]
 
 [ext_resource type="Script" uid="uid://bouws8cpknl0" path="res://core/levels/level_select_item.gd" id="1_c6hew"]
-[ext_resource type="Script" path="res://core/entities/constellation_display/constellation_display.gd" id="2_cdscr"]
+[ext_resource type="Script" uid="uid://c2ihntqa43wcq" path="res://core/entities/constellation_display/constellation_display.gd" id="2_cdscr"]
 [ext_resource type="Texture2D" uid="uid://dafw1qq6yxib5" path="res://core/assets/stars/big-ridged-star.png" id="3_qsyu7"]
 [ext_resource type="Texture2D" uid="uid://chvfu1l1qh1cs" path="res://core/assets/stars/big-four-star.png" id="4_d2k66"]
 [ext_resource type="Texture2D" uid="uid://rpa0s5hl67vy" path="res://core/assets/stars/big-five-star.png" id="5_iq0g6"]

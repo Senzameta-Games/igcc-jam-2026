@@ -61,9 +61,11 @@ func _ready() -> void:
 	_lockbox.unlocked.connect(_on_lockbox_unlocked)
 	_extra_tray.position = extra_tray_hidden_pos
 	_extra_tray2.position = extra_tray2_hidden_pos
+	_set_extra_trays_disabled(true)
 
 
 func _on_lockbox_unlocked() -> void:
+	_set_extra_trays_disabled(false)
 	var t1 := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	t1.tween_property(_extra_tray, "position", extra_tray_revealed_pos, tray_reveal_duration)
 	var t2 := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
@@ -181,6 +183,16 @@ func _on_playback_stopped() -> void:
 	for ring: Ring in _rings:
 		ring.set_rotation_speed(0.0)
 	_resetting = true
+
+func _set_extra_trays_disabled(value: bool) -> void:
+	for tray: Node2D in [_extra_tray, _extra_tray2]:
+		var slots_node: Node = tray.get_node_or_null("Slots")
+		if slots_node == null:
+			continue
+		for child: Node in slots_node.get_children():
+			var slot := child as Slot
+			if slot != null:
+				slot.disabled = value
 
 func get_ring_for_orb(orb: Orb) -> Ring:
 	for ring: Ring in _rings:

@@ -8,10 +8,12 @@ signal orb_placed(orb: Orb)
 @export var texture_hover: Texture2D
 
 @export var in_tray: bool = false
+@export var disabled: bool = false
 
 var index: int
 var _orb: Orb = null
 var _hovered: bool = false
+var _hinting: bool = false
 
 @onready var _sprite: Sprite2D = $Sprite
 @onready var _area: Area2D = $Handle
@@ -64,7 +66,11 @@ func is_occupied() -> bool:
 func get_orb() -> Orb:
 	return _orb
 
+func is_hinting() -> bool:
+	return _hinting
+
 func show_drophint() -> void:
+	_hinting = true
 	_drophint.scale = Vector2.ZERO
 	_drophint.visible = true
 	var tween := create_tween()
@@ -73,6 +79,7 @@ func show_drophint() -> void:
 		.set_trans(Tween.TRANS_BACK)
 
 func hide_drophint() -> void:
+	_hinting = false
 	var tween := create_tween()
 	tween.tween_property(_drophint, "scale", Vector2.ZERO, 0.1)\
 		.set_ease(Tween.EASE_IN)
@@ -87,9 +94,13 @@ func _refresh_visual() -> void:
 		_sprite.texture = texture_empty
 
 func _on_area_mouse_entered() -> void:
+	if disabled:
+		return
 	_hovered = true
 	_refresh_visual()
 
 func _on_area_mouse_exited() -> void:
+	if disabled:
+		return
 	_hovered = false
 	_refresh_visual()

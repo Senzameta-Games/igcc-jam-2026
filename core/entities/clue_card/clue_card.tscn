@@ -28,8 +28,10 @@ position = Vector2(0, -9)
 script = ExtResource("3_chdscr")
 star_textures = Array[Texture2D]([ExtResource("4_qsyu7"), ExtResource("5_d2k66"), ExtResource("4_qsyu7"), ExtResource("6_iq0g6")])
 fan_radius_inner = 60.0
-fan_radius_outer = 90.0
+fan_radius_outer = 120.0
 grid_star_scale = 0.2
+tick_padding = 3
+ring_padding = 0
 
 [node name="Area" type="Area2D" parent="." unique_id=1175856262]
 

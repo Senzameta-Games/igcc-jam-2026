@@ -9,7 +9,7 @@
 radius = 24.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wt1ix"]
-radius = 48.0
+radius = 28.0
 
 [node name="Slot" type="Node2D" unique_id=136360553]
 script = ExtResource("1_l5duc")
@@ -35,6 +35,7 @@ collision_layer = 8
 collision_mask = 0
 
 [node name="Shape" type="CollisionShape2D" parent="Bucket" unique_id=95527769]
+scale = Vector2(0.8, 1)
 shape = SubResource("CircleShape2D_wt1ix")
 
 [connection signal="input_event" from="Handle" to="." method="_on_area_input_event"]

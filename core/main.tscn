@@ -202,8 +202,8 @@ script = ExtResource("22_bc33c")
 present_position = Vector2(0, -300)
 pile_x = -1280.0
 pile_top_y = -900.0
-pile_gap = 160.0
-scrim_opacity = 1.0
+pile_gap = 80.0
+scrim_opacity = 0.96
 
 [node name="Scrim" type="Sprite2D" parent="Clues" unique_id=1828588868]
 modulate = Color(1, 1, 1, 0)

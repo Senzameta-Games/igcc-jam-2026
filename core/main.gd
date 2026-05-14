@@ -8,7 +8,7 @@ extends Node2D
 @onready var _sky_layer: SkyLayer = $SkyLayer
 @onready var _level_manager: LevelManager = $LevelManager
 @onready var _level_select: LevelSelect = $SkyLayer/LevelSelect
-@onready var _stash: Stash = $DeskLayer/Stash
+@onready var _pentacle: Pentacle = $DeskLayer/Pentacle
 @onready var _console_mode: ConsoleMode = $ConsoleMode
 @onready var _audio_manager: AudioManager = $AudioManager
 @onready var _lockbox: Lockbox = $DeskLayer/Lockbox
@@ -25,6 +25,7 @@ extends Node2D
 @export var sequencer_trans: Tween.TransitionType = Tween.TRANS_CUBIC
 @export var sequencer_z_index_desk: int = 0
 @export var sequencer_z_index_sky: int = -1
+@export var sequencer_z_index_level_select: int = 1
 
 var _sequencer_tween: Tween = null
 var _hints_pending: bool = false
@@ -39,12 +40,13 @@ func _ready() -> void:
 	_console_mode.mode_changed.connect(_audio_manager.on_mode_changed)
 	_console_mode.mode_changed.connect(_sky_layer.on_mode_changed)
 	_console_mode.mode_changed.connect(_tray.on_mode_changed)
-	_console_mode.mode_changed.connect(_stash.on_mode_changed)
+	_console_mode.mode_changed.connect(_pentacle.on_mode_changed)
 	_sky_layer.desk_area_hovered.connect(_desk_layer.set_frame_glow)
 	_level_select.level_selected.connect(_on_level_selected)
 	_piano_roll.constellation_completed.connect(_on_constellation_completed)
 	_piano_roll.completion_pending.connect(_on_completion_pending)
 
+	_clues.clue_active_changed.connect(_hand.set_clue_active)
 	_lockbox.unlocked.connect(_on_lockbox_opened)
 	_hand.connect_button(_playback_button)
 	_desk_layer.note_triggered.connect(_on_note_triggered)
@@ -99,8 +101,25 @@ func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 			_desk_layer.z_index = sequencer_z_index_desk
 			_lockbox.visible = true
 		ConsoleMode.Mode.LEVEL_SELECT:
+			_hand.return_held_to_tray(_tray)
+			_sweep_non_pearl_orbs_to_tray()
 			_move_sequencer(sequencer_position_level_select)
-			_desk_layer.z_index = sequencer_z_index_sky
+			_desk_layer.z_index = sequencer_z_index_level_select
+
+func _sweep_non_pearl_orbs_to_tray() -> void:
+	for node: Node in get_tree().get_nodes_in_group("slots"):
+		var slot := node as Slot
+		if slot == null or slot.in_tray or not slot.is_occupied():
+			continue
+		var orb: Orb = slot.get_orb()
+		if orb.is_pearl:
+			continue
+		slot.eject_orb()
+		var tray_slot: Slot = _tray.get_slot_for_orb(orb)
+		if tray_slot != null:
+			tray_slot.receive_orb(orb)
+		else:
+			orb.queue_free()
 
 func _move_sequencer(target: Vector2) -> void:
 	if _sequencer_tween != null and _sequencer_tween.is_running():
