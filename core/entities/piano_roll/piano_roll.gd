@@ -10,13 +10,25 @@ extends Node2D
 ## Dots: player input orbs from sequencer playback.
 
 ## Radius of the innermost arc (ring 0).
-@export var fan_radius_inner: float = 300.0
+@export var fan_radius_inner: float = 300.0:
+	set(value):
+		fan_radius_inner = value
+		_on_fan_geometry_changed()
 ## Radius of the outermost arc (ring 2).
-@export var fan_radius_outer: float = 600.0
+@export var fan_radius_outer: float = 600.0:
+	set(value):
+		fan_radius_outer = value
+		_on_fan_geometry_changed()
 ## Total degrees the 16 ticks span across the fan.
-@export var fan_angle_span: float = 120.0
+@export var fan_angle_span: float = 120.0:
+	set(value):
+		fan_angle_span = value
+		_on_fan_geometry_changed()
 ## Vanishing point of the fan in local space. Move down to push the arc higher.
-@export var fan_origin: Vector2 = Vector2(512.0, 800.0)
+@export var fan_origin: Vector2 = Vector2(512.0, 800.0):
+	set(value):
+		fan_origin = value
+		_on_fan_geometry_changed()
 @export var playhead_lerp_speed: float = 18.0
 
 ## Star field configuration.
@@ -70,6 +82,10 @@ var _solution_position_count: int = 0
 var _pending_completion: bool = false
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		_rebuild_stars()
+		queue_redraw()
+		return
 	Playback.stopped.connect(_on_playback_stopped)
 	Playback.started.connect(_on_playback_started)
 	Playback.tick_advanced.connect(_on_tick_advanced)
@@ -282,6 +298,12 @@ func get_constellation_points(solution: Array) -> Array[Vector2]:
 		result.append((p - centroid) / norm_scale)
 	return result
 
+func _on_fan_geometry_changed() -> void:
+	if not is_node_ready():
+		return
+	_rebuild_stars()
+	queue_redraw()
+
 func _grid_reference_scale() -> float:
 	var grid_centroid := Vector2.ZERO
 	for tick: int in range(TICKS):
@@ -297,31 +319,3 @@ func _grid_reference_scale() -> float:
 			var radius: float = _note_radius(ring)
 			ref = maxf(ref, (Vector2(cos(angle_rad), sin(angle_rad)) * radius - grid_centroid).length())
 	return ref
-
-# --- Debug draw ---
-
-#func _draw() -> void:
-	## Concentric arcs. One per ring.
-	#for ring: int in range(RING_COUNT):
-		#_draw_arc_segment(_note_radius(ring), _DEBUG_ARC_COLOR)
-#
-	## Radial lines. One per tick
-	#for tick: int in range(TICKS):
-		#var angle_rad: float = _tick_angle_rad(float(tick))
-		#var dir: Vector2 = Vector2(cos(angle_rad), sin(angle_rad))
-		#var from: Vector2 = fan_origin + dir * fan_radius_inner
-		#var to: Vector2 = fan_origin + dir * fan_radius_outer
-		#draw_line(from, to, _DEBUG_RADIAL_COLOR, 1.0)
-#
-	## Fan origin marker
-	#draw_circle(fan_origin, 6.0, _DEBUG_ORIGIN_COLOR)
-#
-#func _draw_arc_segment(radius: float, color: Color) -> void:
-	#var points: PackedVector2Array = []
-	#for i: int in range(_DEBUG_ARC_SEGMENTS + 1):
-		#var t: float = float(i) / float(_DEBUG_ARC_SEGMENTS)
-		#var angle_deg: float = -fan_angle_span * 0.5 + t * fan_angle_span
-		#var angle_rad: float = deg_to_rad(angle_deg - 90.0)
-		#points.append(fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * radius)
-	#for i: int in range(points.size() - 1):
-		#draw_line(points[i], points[i + 1], color, 1.5)

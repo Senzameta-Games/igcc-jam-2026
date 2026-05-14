@@ -105,10 +105,12 @@ texture = ExtResource("7_cus2n")
 [node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
 position = Vector2(-524.0001, -349)
 scale = Vector2(0.99999994, 0.99999994)
-fan_radius_inner = 540.0
+fan_radius_inner = 600.0
 fan_radius_outer = 800.0
-fan_angle_span = 80.0
-fan_origin = Vector2(521, 556)
+fan_angle_span = 135.0
+fan_origin = Vector2(521, 555)
+star_scale_min = 0.15
+star_scale_max = 0.2
 
 [node name="LevelSelect" parent="SkyLayer" unique_id=302540498 instance=ExtResource("11_7ua4h")]
 position = Vector2(-960, -1600)
