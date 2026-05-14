@@ -60,8 +60,9 @@ func lift() -> void:
 	_lift.play()
 	_pitchhint.play()
 
-func land() -> void:
+func land(silent: bool = false) -> void:
 	# position is now in Slot local space. Lerp to center.
 	_state = State.LERPING
-	_land.play()
-	_pitchhint.play()
+	if not silent:
+		_land.play()
+		_pitchhint.play()

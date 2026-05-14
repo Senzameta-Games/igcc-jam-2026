@@ -94,7 +94,7 @@ func _sweep_non_pearl_orbs_to_tray() -> void:
 		slot.eject_orb()
 		var tray_slot: Slot = _tray.get_slot_for_orb(orb)
 		if tray_slot != null:
-			tray_slot.receive_orb(orb)
+			tray_slot.receive_orb(orb, true)
 		else:
 			orb.queue_free()
 
