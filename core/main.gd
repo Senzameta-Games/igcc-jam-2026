@@ -43,6 +43,10 @@ func _ready() -> void:
 
 	_hint_level_select.mouse_filter = Control.MOUSE_FILTER_STOP
 	_hint_level_select.gui_input.connect(_on_level_select_hint_gui_input)
+	_hint_playback.mouse_filter = Control.MOUSE_FILTER_STOP
+	_hint_playback.gui_input.connect(_on_playback_hint_gui_input)
+	_hint_return_orbs.mouse_filter = Control.MOUSE_FILTER_STOP
+	_hint_return_orbs.gui_input.connect(_on_return_orbs_hint_gui_input)
 	_clues.clue_active_changed.connect(_hand.set_clue_active)
 	#_lockbox.unlocked.connect(_on_lockbox_opened)
 	_hand.connect_button(_playback_button)
@@ -87,7 +91,7 @@ func _toggle_playback() -> void:
 	_flash_hint(_hint_playback)
 
 func _return_orbs_to_tray() -> void:
-	if _console_mode.current_mode != ConsoleMode.Mode.CONSOLE:
+	if _console_mode.current_mode != ConsoleMode.Mode.CONSOLE or Playback.is_playing:
 		return
 	_sweep_non_pearl_orbs_to_tray()
 	_flash_hint(_hint_return_orbs)
@@ -99,6 +103,22 @@ func _on_level_select_hint_gui_input(event: InputEvent) -> void:
 	if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
 		_toggle_level_select()
 		_hint_level_select.accept_event()
+
+func _on_playback_hint_gui_input(event: InputEvent) -> void:
+	if not event is InputEventMouseButton:
+		return
+	var mb := event as InputEventMouseButton
+	if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+		_toggle_playback()
+		_hint_playback.accept_event()
+
+func _on_return_orbs_hint_gui_input(event: InputEvent) -> void:
+	if not event is InputEventMouseButton:
+		return
+	var mb := event as InputEventMouseButton
+	if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+		_return_orbs_to_tray()
+		_hint_return_orbs.accept_event()
 
 func _flash_hint(hint: Control) -> void:
 	if not _hints.visible:
