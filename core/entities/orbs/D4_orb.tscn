@@ -29,7 +29,7 @@ animations = [{
 texture = ExtResource("2_vhy4q")
 key_star_texture = ExtResource("3_cql8p")
 note = SubResource("AudioStreamRandomizer_gp6pl")
-orb_id = 5
+orb_id = 4
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]
 scale = Vector2(0.29, 0.29)

@@ -18,6 +18,7 @@ enum OrbType { Bb3, F3, G3, A4, D4 }
 
 var source_level: int = -1
 var _state: State = State.IN_SLOT
+var _pulse_tween: Tween = null
 
 @onready var _sprite: AnimatedSprite2D = $Sprite
 @onready var _note: AudioStreamPlayer = $Note
@@ -49,13 +50,23 @@ func play_note() -> void:
 	_note.stream = note
 	_note.play()
 
+func pulse() -> void:
+	if _pulse_tween != null:
+		_pulse_tween.kill()
+	_pulse_tween = create_tween()
+	_pulse_tween.tween_property(_sprite, "modulate", Color(3.0, 3.0, 3.0, 1.0), 0.05) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+	_pulse_tween.tween_property(_sprite, "modulate", Color(1.0, 1.0, 1.0, 1.0), 3.15) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+
 func lift() -> void:
 	_state = State.HELD
 	_lift.play()
 	_pitchhint.play()
 
-func land() -> void:
+func land(silent: bool = false) -> void:
 	# position is now in Slot local space. Lerp to center.
 	_state = State.LERPING
-	_land.play()
-	_pitchhint.play()
+	if not silent:
+		_land.play()
+		_pitchhint.play()

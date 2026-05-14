@@ -19,8 +19,6 @@
 [ext_resource type="AudioStream" uid="uid://d1ljj0td0n10i" path="res://core/assets/audio/one_shot_music/level_start.wav" id="17_bc33c"]
 [ext_resource type="AudioStream" uid="uid://cl3mfscv62x5k" path="res://core/assets/audio/background/noise.wav" id="17_g0q11"]
 [ext_resource type="Texture2D" uid="uid://ujiywbs5a06e" path="res://core/assets/input_glyphs/tab_key.png" id="17_i2u5h"]
-[ext_resource type="Texture2D" uid="uid://csr17srdwcaks" path="res://core/assets/action_glyphs/to_piano_roll.png" id="18_7akvt"]
-[ext_resource type="Texture2D" uid="uid://dp6a5hxqgfc5t" path="res://core/assets/input_glyphs/shift_key.png" id="19_bc33c"]
 [ext_resource type="Script" uid="uid://b6ha8286hyu0d" path="res://core/entities/desk_layer/clues.gd" id="22_bc33c"]
 [ext_resource type="Texture2D" uid="uid://c4modcxmfp002" path="res://core/assets/background/fullscreen_scrim.png" id="23_s2qte"]
 [ext_resource type="AudioStream" uid="uid://crmgp5cwkleyd" path="res://core/assets/audio/slot/orbPlace1.wav" id="24_rjnh8"]
@@ -52,14 +50,9 @@ stream_4/stream = ExtResource("28_8dldp")
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
-sequencer_position_desk = Vector2(0, -20)
-sequencer_position_sky = Vector2(0, 280)
-sequencer_transition_duration = 1.4
-sequencer_trans = 3
 
 [node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
 layer = 100
-visible = false
 
 [node name="ColorRect" type="ColorRect" parent="SSShader" unique_id=1170456765]
 material = SubResource("ShaderMaterial_7ua4h")
@@ -81,6 +74,10 @@ script = ExtResource("4_7ua4h")
 
 [node name="DeskLayer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
 position = Vector2(0, -60)
+position_console = Vector2(0, 180)
+position_playback = Vector2(0, 240)
+position_transition_duration = 1.4
+position_trans = 3
 
 [node name="Rings" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="0" unique_id=123070447]
 rotation = -1.5707964
@@ -91,10 +88,10 @@ rotation = -1.5707964
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
 position = Vector2(960, 520)
 script = ExtResource("6_brq4u")
-position_active = Vector2(960, 640)
-position_minimized = Vector2(960, 320)
+position_console = Vector2(960, 400)
+position_playback = Vector2(960, 640)
 mode_transition_duration = 1.2
-mode_trans = 4
+mode_trans = 3
 
 [node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]
 z_index = -3
@@ -105,10 +102,18 @@ texture = ExtResource("7_cus2n")
 [node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
 position = Vector2(-524.0001, -349)
 scale = Vector2(0.99999994, 0.99999994)
-fan_radius_inner = 540.0
+fan_radius_inner = 600.0
 fan_radius_outer = 800.0
-fan_angle_span = 80.0
-fan_origin = Vector2(521, 556)
+fan_angle_span = 135.0
+fan_origin = Vector2(521, 560)
+line_star_scale_min = 0.16
+line_star_scale_max = 0.28
+line_star_color = Color(1, 1, 1, 0.7254902)
+line_enter_duration = 2.1
+line_enter_step_delay = 0.025
+max_constellation_distance = 430.0
+star_scale_min = 0.15
+star_scale_max = 0.2
 
 [node name="LevelSelect" parent="SkyLayer" unique_id=302540498 instance=ExtResource("11_7ua4h")]
 position = Vector2(-960, -1600)
@@ -175,24 +180,6 @@ custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_vertical = 0
 texture = ExtResource("17_i2u5h")
-expand_mode = 3
-
-[node name="ModeToggleHint" type="HBoxContainer" parent="Hints/Hints" unique_id=1365049071]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_constants/separation = 8
-
-[node name="ActionHint" type="TextureRect" parent="Hints/Hints/ModeToggleHint" unique_id=1969527188]
-layout_mode = 2
-texture = ExtResource("18_7akvt")
-expand_mode = 3
-stretch_mode = 4
-
-[node name="InputGlyph" type="TextureRect" parent="Hints/Hints/ModeToggleHint" unique_id=2079797316]
-custom_minimum_size = Vector2(0, 48)
-layout_mode = 2
-texture = ExtResource("19_bc33c")
 expand_mode = 3
 
 [node name="Clues" type="Node2D" parent="." unique_id=1266064845]

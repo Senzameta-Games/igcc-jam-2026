@@ -5,6 +5,8 @@ extends Node2D
 ## Slots are spawned at runtime based on interval_type.
 ## ring_index maps this ring to its entry in Sequencer._rotations.
 
+signal slots_rebuilt
+
 enum IntervalType { QUARTER, EIGHTH, SIXTEENTH }
 
 const SLOT_COUNTS: Dictionary = {
@@ -115,6 +117,8 @@ func _calculate_slot_positions() -> void:
 		_slots[i].index = i
 		var angle: float = (TAU / float(count)) * float(i) * -1
 		_slots[i].position = Vector2(cos(angle), sin(angle)) * radius
+	if _slots_container != null:
+		slots_rebuilt.emit()
 
 
 func slot_at_modified_index(index: int) -> Slot:

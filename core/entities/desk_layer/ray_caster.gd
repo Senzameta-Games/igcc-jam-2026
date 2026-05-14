@@ -67,6 +67,7 @@ func _sweep(tick: int) -> void:
 		var orb := area.get_parent() as Orb
 		if orb != null:
 			orb.play_note()
+			orb.pulse()
 			note_triggered.emit(orb.orb_id, orb.key_star_texture, result["position"], tick, orb)
 		exclude.append(result["rid"])
 

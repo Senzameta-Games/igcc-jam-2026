@@ -163,22 +163,26 @@ func _fire_current_tick() -> void:
 	clue_note_triggered.emit(notes.size())
 	_constellation.flash_at_tick(actual_tick)
 
+func _input(event: InputEvent) -> void:
+	if _state != State.PRESENTING and _state != State.INSPECTING:
+		return
+	if not event is InputEventMouseButton:
+		return
+	var mb := event as InputEventMouseButton
+	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
+		return
+	dismiss()
+	get_viewport().set_input_as_handled()
+
 func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if not event is InputEventMouseButton:
 		return
 	var mb := event as InputEventMouseButton
 	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
 		return
-	match _state:
-		State.PRESENTING:
-			dismiss()
-			get_viewport().set_input_as_handled()
-		State.MINIMIZED:
-			inspect()
-			get_viewport().set_input_as_handled()
-		State.INSPECTING:
-			dismiss()
-			get_viewport().set_input_as_handled()
+	if _state == State.MINIMIZED:
+		inspect()
+		get_viewport().set_input_as_handled()
 
 func _update_outline() -> void:
 	_sprite.material = _outline_material if (_state == State.MINIMIZED and _is_hovered) else null

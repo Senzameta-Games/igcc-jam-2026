@@ -8,26 +8,14 @@ extends Node2D
 @onready var _sky_layer: SkyLayer = $SkyLayer
 @onready var _level_manager: LevelManager = $LevelManager
 @onready var _level_select: LevelSelect = $SkyLayer/LevelSelect
-@onready var _pentacle: Pentacle = $DeskLayer/Pentacle
+#@onready var _pentacle: Pentacle = $DeskLayer/Pentacle
 @onready var _console_mode: ConsoleMode = $ConsoleMode
 @onready var _audio_manager: AudioManager = $AudioManager
-@onready var _lockbox: Lockbox = $DeskLayer/Lockbox
+#@onready var _lockbox: Lockbox = $DeskLayer/Lockbox
 @onready var _hints: Control = $Hints
-@onready var _hint_mode_toggle: Control = $Hints/Hints/ModeToggleHint
 @onready var _hint_level_select: Control = $Hints/Hints/LevelSelectHint
 @onready var _clues: Clues = $Clues
 
-@export var sequencer_position_desk: Vector2 = Vector2(0, -100)
-@export var sequencer_position_sky: Vector2 = Vector2(0, 341)
-@export var sequencer_position_level_select: Vector2 = Vector2(0, 1500)
-@export var sequencer_transition_duration: float = 0.5
-@export var sequencer_ease: Tween.EaseType = Tween.EASE_IN_OUT
-@export var sequencer_trans: Tween.TransitionType = Tween.TRANS_CUBIC
-@export var sequencer_z_index_desk: int = 0
-@export var sequencer_z_index_sky: int = -1
-@export var sequencer_z_index_level_select: int = 1
-
-var _sequencer_tween: Tween = null
 var _hints_pending: bool = false
 
 
@@ -39,17 +27,22 @@ func _ready() -> void:
 	_console_mode.mode_changed.connect(_on_mode_changed)
 	_console_mode.mode_changed.connect(_audio_manager.on_mode_changed)
 	_console_mode.mode_changed.connect(_sky_layer.on_mode_changed)
+	_console_mode.mode_changed.connect(_desk_layer.on_mode_changed)
 	_console_mode.mode_changed.connect(_tray.on_mode_changed)
-	_console_mode.mode_changed.connect(_pentacle.on_mode_changed)
-	_sky_layer.desk_area_hovered.connect(_desk_layer.set_frame_glow)
+	#_console_mode.mode_changed.connect(_pentacle.on_mode_changed)
+	_console_mode.playback_state_changed.connect(_desk_layer.on_playback_state_changed)
+	_console_mode.playback_state_changed.connect(_sky_layer.on_playback_state_changed)
+	_console_mode.playback_state_changed.connect(_tray.on_playback_state_changed)
+	_desk_layer.console_settled.connect(_on_console_settled)
 	_level_select.level_selected.connect(_on_level_selected)
 	_piano_roll.constellation_completed.connect(_on_constellation_completed)
 	_piano_roll.completion_pending.connect(_on_completion_pending)
 
 	_clues.clue_active_changed.connect(_hand.set_clue_active)
-	_lockbox.unlocked.connect(_on_lockbox_opened)
+	#_lockbox.unlocked.connect(_on_lockbox_opened)
 	_hand.connect_button(_playback_button)
 	_desk_layer.note_triggered.connect(_on_note_triggered)
+	_desk_layer.slot_changed.connect(_piano_roll.on_slot_changed)
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_level_manager.initialize(_desk_layer, _tray, _piano_roll)
 	_hand.set_tray(_tray)
@@ -62,21 +55,12 @@ func _ready() -> void:
 	if initial_data.has("solution"):
 		_piano_roll.set_solution(initial_data["solution"])
 
-	_desk_layer.position = sequencer_position_level_select
-	_desk_layer.z_index = sequencer_z_index_sky
 	_console_mode.initialize()
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("mode_toggle"):
-		if _console_mode.current_mode == ConsoleMode.Mode.SKY:
-			_console_mode.request_desk()
-		else:
-			_console_mode.request_sky()
-		_flash_hint(_hint_mode_toggle)
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("level_select"):
+	if event.is_action_pressed("level_select"):
 		if _console_mode.current_mode == ConsoleMode.Mode.LEVEL_SELECT:
-			_console_mode.request_desk()
+			_console_mode.request_console()
 		else:
 			_console_mode.request_level_select()
 		_flash_hint(_hint_level_select)
@@ -93,18 +77,11 @@ func _flash_hint(hint: Control) -> void:
 
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
-		ConsoleMode.Mode.SKY:
-			_move_sequencer(sequencer_position_sky)
-			_desk_layer.z_index = sequencer_z_index_sky
-		ConsoleMode.Mode.DESK:
-			_move_sequencer(sequencer_position_desk)
-			_desk_layer.z_index = sequencer_z_index_desk
-			_lockbox.visible = true
+		#ConsoleMode.Mode.CONSOLE:
+			#_lockbox.visible = true
 		ConsoleMode.Mode.LEVEL_SELECT:
 			_hand.return_held_to_tray(_tray)
 			_sweep_non_pearl_orbs_to_tray()
-			_move_sequencer(sequencer_position_level_select)
-			_desk_layer.z_index = sequencer_z_index_level_select
 
 func _sweep_non_pearl_orbs_to_tray() -> void:
 	for node: Node in get_tree().get_nodes_in_group("slots"):
@@ -117,21 +94,11 @@ func _sweep_non_pearl_orbs_to_tray() -> void:
 		slot.eject_orb()
 		var tray_slot: Slot = _tray.get_slot_for_orb(orb)
 		if tray_slot != null:
-			tray_slot.receive_orb(orb)
+			tray_slot.receive_orb(orb, true)
 		else:
 			orb.queue_free()
 
-func _move_sequencer(target: Vector2) -> void:
-	if _sequencer_tween != null and _sequencer_tween.is_running():
-		_sequencer_tween.kill()
-	_sequencer_tween = create_tween()
-	_sequencer_tween.set_ease(sequencer_ease)
-	_sequencer_tween.set_trans(sequencer_trans)
-	_sequencer_tween.tween_property(_desk_layer, "position", target, sequencer_transition_duration)
-	if target == sequencer_position_desk:
-		_sequencer_tween.tween_callback(_on_desk_settled)
-
-func _on_desk_settled() -> void:
+func _on_console_settled() -> void:
 	_clues.on_desk_settled()
 	if _hints_pending:
 		_hints_pending = false
@@ -165,7 +132,7 @@ func _on_level_selected(index: int) -> void:
 	_playback_button.disabled = false
 	_level_manager.load_level_at_index(index)
 	_present_clue_for_current_level()
-	_console_mode.request_desk()
+	_console_mode.request_console()
 
 func _present_clue_for_current_level() -> void:
 	var data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())

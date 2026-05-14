@@ -17,6 +17,7 @@ var _current_angle_rad: float = 0.0
 var _arc_tween: Tween = null
 var _is_rotated_in: bool = false
 var _mode_ready: bool = false
+var _current_mode: ConsoleMode.Mode = ConsoleMode.Mode.LEVEL_SELECT
 
 ## Maps Orb.OrbType → Array[Slot]. Supports multiple same-type slots per level.
 var _slots_by_type: Dictionary = {}
@@ -26,17 +27,13 @@ func _ready() -> void:
 	position = desk_pos
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
+	_current_mode = mode
 	if not _mode_ready:
 		_mode_ready = true
 		_snap_to_mode(mode)
 		return
 	match mode:
-		ConsoleMode.Mode.SKY:
-			if Playback.is_playing and not _is_rotated_in:
-				_is_rotated_in = true
-				_wind_down_sfx.play()
-				_animate_to(deg_to_rad(angle_sky_deg), sky_pos)
-		ConsoleMode.Mode.DESK:
+		ConsoleMode.Mode.CONSOLE:
 			if _is_rotated_in:
 				_is_rotated_in = false
 				_wind_up_sfx.play()
@@ -47,14 +44,28 @@ func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 				_wind_down_sfx.play()
 				_animate_to(deg_to_rad(angle_sky_deg), sky_pos)
 
+func on_playback_state_changed(is_playing: bool) -> void:
+	if _current_mode != ConsoleMode.Mode.CONSOLE:
+		return
+	if is_playing:
+		if not _is_rotated_in:
+			_is_rotated_in = true
+			_wind_down_sfx.play()
+			_animate_to(deg_to_rad(angle_sky_deg), sky_pos)
+	else:
+		if _is_rotated_in:
+			_is_rotated_in = false
+			_wind_up_sfx.play()
+			_animate_to(deg_to_rad(angle_desk_deg), desk_pos)
+
 func _snap_to_mode(mode: ConsoleMode.Mode) -> void:
 	match mode:
-		ConsoleMode.Mode.SKY, ConsoleMode.Mode.LEVEL_SELECT:
+		ConsoleMode.Mode.LEVEL_SELECT:
 			_is_rotated_in = true
 			_current_angle_rad = deg_to_rad(angle_sky_deg)
 			rotation = _current_angle_rad - deg_to_rad(angle_desk_deg)
 			position = sky_pos
-		ConsoleMode.Mode.DESK:
+		ConsoleMode.Mode.CONSOLE:
 			_is_rotated_in = false
 			_current_angle_rad = deg_to_rad(angle_desk_deg)
 			rotation = 0.0

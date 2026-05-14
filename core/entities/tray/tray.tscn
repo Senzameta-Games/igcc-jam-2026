@@ -23,23 +23,27 @@ texture = ExtResource("2_d5w34")
 position = Vector2(0, 167)
 
 [node name="Slot0" parent="Slots" unique_id=136360553 instance=ExtResource("1_ulkqu")]
-position = Vector2(-349, -380)
+position = Vector2(-346, -380)
 in_tray = true
 
 [node name="Slot1" parent="Slots" unique_id=849978761 instance=ExtResource("1_ulkqu")]
-position = Vector2(-208, -511)
+position = Vector2(-238, -490)
 in_tray = true
 
 [node name="Slot2" parent="Slots" unique_id=694147557 instance=ExtResource("1_ulkqu")]
-position = Vector2(0, -565)
+position = Vector2(-93, -555)
 in_tray = true
 
 [node name="Slot3" parent="Slots" unique_id=341874409 instance=ExtResource("1_ulkqu")]
-position = Vector2(201, -511)
+position = Vector2(93, -555)
 in_tray = true
 
 [node name="Slot4" parent="Slots" unique_id=1912150730 instance=ExtResource("1_ulkqu")]
-position = Vector2(343, -380)
+position = Vector2(236, -490)
+in_tray = true
+
+[node name="Slot5" parent="Slots" unique_id=521193706 instance=ExtResource("1_ulkqu")]
+position = Vector2(345, -380)
 in_tray = true
 
 [node name="Area" type="Area2D" parent="." unique_id=484502034]

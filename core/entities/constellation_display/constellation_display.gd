@@ -11,6 +11,9 @@ extends Node2D
 @export var line_star_scale_min: float = 0.06
 @export var line_star_scale_max: float = 0.10
 @export var line_star_color: Color = Color(1.0, 1.0, 1.0, 0.5)
+## Maximum segment length (in post-radius pixels) before the line is omitted.
+## 0 = no limit — all sequential points are connected.
+@export var max_line_distance: float = 0.0
 
 var stars: Array[Sprite2D] = []
 var star_base_scales: Array[Vector2] = []
@@ -27,9 +30,8 @@ func setup(points: Array[Vector2]) -> void:
 	for i: int in range(scaled.size() - 1):
 		var a: Vector2 = scaled[i]
 		var b: Vector2 = scaled[i + 1]
-		var seg: Vector2 = b - a
-		var seg_len: float = seg.length()
-		if seg_len < 0.001:
+		var seg_len: float = a.distance_to(b)
+		if seg_len < 0.001 or (max_line_distance > 0.0 and seg_len > max_line_distance):
 			continue
 		var steps: int = int(seg_len / line_star_spacing)
 		for s: int in range(1, steps):
