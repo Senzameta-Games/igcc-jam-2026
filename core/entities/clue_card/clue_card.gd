@@ -11,7 +11,6 @@ const OUTLINE_SHADER: Shader = preload("res://core/entities/clue_card/outline.gd
 
 @export var slide_in_offset: Vector2 = Vector2(0.0, 800.0)
 @export var slide_in_duration: float = 0.5
-@export var display_duration: float = 1.0
 @export var minimized_position: Vector2 = Vector2.ZERO
 @export var minimized_scale: Vector2 = Vector2(0.5, 0.5)
 @export var minimize_duration: float = 0.5
@@ -86,8 +85,6 @@ func present() -> void:
 	_tween.tween_property(self, "position", _present_position, slide_in_duration) \
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 	_tween.tween_property(self, "modulate:a", 1.0, slide_in_duration * 0.6)
-	_tween.chain().tween_interval(display_duration)
-	_tween.chain().tween_callback(dismiss)
 
 func dismiss() -> void:
 	if _dismissed:
@@ -155,13 +152,13 @@ func _find_start_tick() -> int:
 func _fire_current_tick() -> void:
 	var actual_tick: int = (_start_tick + _measure_pos) % 16
 	_measure_pos = (_measure_pos + 1) % 16
-	if actual_tick >= _solution.size():
-		return
-	var notes: Array = _solution[actual_tick]
-	if notes.is_empty():
-		return
-	clue_note_triggered.emit(notes.size())
-	_constellation.flash_at_tick(actual_tick)
+	if actual_tick < _solution.size():
+		var notes: Array = _solution[actual_tick]
+		if not notes.is_empty():
+			clue_note_triggered.emit(notes.size())
+			_constellation.flash_at_tick(actual_tick)
+	if _measure_pos == 0 and _state == State.PRESENTING:
+		dismiss()
 
 func _input(event: InputEvent) -> void:
 	if _state != State.PRESENTING and _state != State.INSPECTING:
