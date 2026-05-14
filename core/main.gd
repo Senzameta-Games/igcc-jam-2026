@@ -39,6 +39,8 @@ func _ready() -> void:
 	_piano_roll.constellation_completed.connect(_on_constellation_completed)
 	_piano_roll.completion_pending.connect(_on_completion_pending)
 
+	_hint_level_select.mouse_filter = Control.MOUSE_FILTER_STOP
+	_hint_level_select.gui_input.connect(_on_level_select_hint_gui_input)
 	_clues.clue_active_changed.connect(_hand.set_clue_active)
 	#_lockbox.unlocked.connect(_on_lockbox_opened)
 	_hand.connect_button(_playback_button)
@@ -60,12 +62,23 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("level_select"):
-		if _console_mode.current_mode == ConsoleMode.Mode.LEVEL_SELECT:
-			_console_mode.request_console()
-		else:
-			_console_mode.request_level_select()
-		_flash_hint(_hint_level_select)
+		_toggle_level_select()
 		get_viewport().set_input_as_handled()
+
+func _toggle_level_select() -> void:
+	if _console_mode.current_mode == ConsoleMode.Mode.LEVEL_SELECT:
+		_console_mode.request_console()
+	else:
+		_console_mode.request_level_select()
+	_flash_hint(_hint_level_select)
+
+func _on_level_select_hint_gui_input(event: InputEvent) -> void:
+	if not event is InputEventMouseButton:
+		return
+	var mb := event as InputEventMouseButton
+	if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+		_toggle_level_select()
+		_hint_level_select.accept_event()
 
 func _flash_hint(hint: Control) -> void:
 	if not _hints.visible:

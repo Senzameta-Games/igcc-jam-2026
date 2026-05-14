@@ -150,8 +150,8 @@ volume_db = -10.0
 [node name="Hints" type="MarginContainer" parent="." unique_id=1895240326]
 offset_left = 1753.0
 offset_top = 4.0
-offset_right = 1915.0
-offset_bottom = 148.0
+offset_right = 1898.0
+offset_bottom = 84.0
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
