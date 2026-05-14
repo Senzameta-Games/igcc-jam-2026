@@ -25,6 +25,10 @@ var _state: State = State.IN_SLOT
 @onready var _lift: AudioStreamPlayer = $Lift
 @onready var _pitchhint: AudioStreamPlayer = $PitchHint
 
+func _init() -> void:
+	if (key_star_texture == null):
+		key_star_texture = KeyStar.KEY_STAR_TEXTURES[orb_id]
+
 func _ready() -> void:
 	_sprite.play("default")
 

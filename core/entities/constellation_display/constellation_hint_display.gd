@@ -51,12 +51,22 @@ func setup(solution: Array) -> void:
 
 	for tick: int in range(solution.size()):
 		for entry: Variant in (solution[tick] as Array):
-			var ring: int = 0 if not (entry is Array) else int((entry as Array)[0])
+			var ring: int = 0
+			var orb_id: Orb.OrbType = Orb.OrbType.F3
+			if(entry is Array):
+				var entry_size = entry.size()
+				if(entry_size > 0):
+					ring = entry[0]
+				if(entry_size > 1):
+					orb_id = entry[1]
 			min_tick = mini(min_tick, tick)
 			max_tick = maxi(max_tick, tick)
 			min_ring = mini(min_ring, ring)
 			max_ring = maxi(max_ring, ring)
-			constellation_keys[tick * 100 + ring] = true
+			constellation_keys[tick * 100 + ring] = {
+				entryExists = true,
+				orb_id = orb_id
+			}
 			found = true
 
 	if not found:
@@ -94,6 +104,7 @@ func setup(solution: Array) -> void:
 				star.scale = Vector2(scale_val, scale_val)
 				star.modulate = constellation_star_color
 				star.set_meta("base_scale", star.scale)
+				star.texture = KeyStar.KEY_STAR_TEXTURES[constellation_keys[key].orb_id]
 				if not _tick_stars.has(tick):
 					_tick_stars[tick] = []
 				(_tick_stars[tick] as Array).append(star)

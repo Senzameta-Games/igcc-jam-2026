@@ -1,7 +1,7 @@
 class_name KeyStar
 extends Node2D
 
-const _TEXTURES: Dictionary = {
+const KEY_STAR_TEXTURES: Dictionary = {
 	Orb.OrbType.Bb3: preload("res://core/assets/stars/keys/Bb.png"),
 	Orb.OrbType.F3:  preload("res://core/assets/stars/keys/F.png"),
 	Orb.OrbType.G3:  preload("res://core/assets/stars/keys/G.png"),
@@ -20,7 +20,7 @@ const _COLORS: Dictionary = {
 @onready var _sprite: Sprite2D = $Sprite
 
 func setup(orb_type: Orb.OrbType, shader: Shader = null) -> void:
-	_sprite.texture = _TEXTURES.get(orb_type) as Texture2D
+	_sprite.texture = KEY_STAR_TEXTURES.get(orb_type) as Texture2D
 	modulate = _COLORS.get(orb_type, Color.WHITE)
 	if shader != null:
 		var mat := ShaderMaterial.new()
