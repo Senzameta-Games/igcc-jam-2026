@@ -3,6 +3,7 @@ extends Node2D
 
 signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int, orb: Orb)
 signal console_settled
+signal slot_changed(tick: int, ring_index: int, is_occupied: bool)
 
 enum RotationModel { QUANTIZED, CUSTOM }
 
@@ -74,6 +75,9 @@ func _ready() -> void:
 	_extra_tray.position = extra_tray_hidden_pos
 	_extra_tray2.position = extra_tray2_hidden_pos
 	_set_extra_trays_disabled(true)
+	for ring: Ring in _rings:
+		ring.slots_rebuilt.connect(_bind_ring_slots.bind(ring))
+	_bind_all_ring_slots()
 
 
 func _on_lockbox_unlocked() -> void:
@@ -227,6 +231,23 @@ func _on_playback_stopped() -> void:
 	for ring: Ring in _rings:
 		ring.set_rotation_speed(0.0)
 	_resetting = true
+
+func _bind_all_ring_slots() -> void:
+	for ring: Ring in _rings:
+		_bind_ring_slots(ring)
+
+func _bind_ring_slots(ring: Ring) -> void:
+	for slot: Slot in ring.get_slots():
+		slot.orb_placed.connect(_on_ring_orb_placed.bind(slot, ring))
+		slot.orb_ejected.connect(_on_ring_orb_ejected.bind(slot, ring))
+
+func _on_ring_orb_placed(_orb: Orb, slot: Slot, ring: Ring) -> void:
+	var tick: int = slot.index * (16 / ring.get_slot_count())
+	slot_changed.emit(tick, ring.ring_index, true)
+
+func _on_ring_orb_ejected(slot: Slot, ring: Ring) -> void:
+	var tick: int = slot.index * (16 / ring.get_slot_count())
+	slot_changed.emit(tick, ring.ring_index, false)
 
 func _set_extra_trays_disabled(value: bool) -> void:
 	for tray: Node2D in [_extra_tray, _extra_tray2]:

@@ -34,6 +34,19 @@ extends Node2D
 ## Star field configuration.
 ## Pool of star textures to randomly sample from. Assign in inspector.
 @export var star_textures: Array[Texture2D] = []
+@export var slot_texture: Texture2D
+@export var slot_marker_scale: float = 0.3
+@export var line_star_spacing: float = 18.0
+@export var line_star_scale_min: float = 0.06
+@export var line_star_scale_max: float = 0.12
+@export var line_star_color: Color = Color(1.0, 1.0, 1.0, 0.5)
+@export var line_position_jitter: float = 8.0
+@export var line_spacing_jitter: float = 0.35
+@export var line_enter_duration: float = 0.12
+@export var line_enter_step_delay: float = 0.015
+## Points farther than this (in fan local pixels) are treated as separate constellations.
+## 0 = no limit.
+@export var max_constellation_distance: float = 200.0
 ## Scale range for random star sizing (min, max). Stars are 2x res, scale down here.
 @export var star_scale_min: float = 0.15
 @export var star_scale_max: float = 0.35
@@ -48,6 +61,8 @@ extends Node2D
 @export var key_star_shader: Shader = null
 
 @onready var _stars_container: Node2D = $Stars
+@onready var _lines_container: Node2D = $Lines
+@onready var _slot_markers_container: Node2D = $Slots
 @onready var _keys_container: Node2D = $Keys
 @onready var _dots_container: Node2D = $Dots
 @onready var _playhead: Node2D = $Playhead
@@ -72,6 +87,10 @@ signal completion_pending
 ## Persistent key stars placed on first detection. key = tick * 100 + ring_index.
 var _dots: Dictionary = {}
 var _dot_tweens: Dictionary = {}
+var _slot_markers: Dictionary = {}
+## Each constellation: {keys: Array[int], positions: Array[Vector2], segments: Array[Array]}
+## segments[i] is the Array[Sprite2D] connecting positions[i] to positions[i+1].
+var _constellations: Array[Dictionary] = []
 
 var _sequencer: DeskLayer = null
 var _playing: bool = false
@@ -91,6 +110,7 @@ func _ready() -> void:
 	Playback.tick_advanced.connect(_on_tick_advanced)
 
 func setup(tray: Tray) -> void:
+	_clear_slot_markers()
 	_rebuild_stars()
 	queue_redraw()
 
@@ -121,6 +141,165 @@ func get_cell_position(tick: int, ring_index: int) -> Vector2:
 func clear_keys() -> void:
 	for child: Node in _keys_container.get_children():
 		child.queue_free()
+
+func on_slot_changed(tick: int, ring_index: int, is_occupied: bool) -> void:
+	var key: int = _cell_key(tick, ring_index)
+	if is_occupied:
+		if _slot_markers.has(key) or slot_texture == null:
+			return
+		var pos: Vector2 = _cell_pos(tick, ring_index)
+		var marker := Sprite2D.new()
+		marker.texture = slot_texture
+		marker.scale = Vector2(slot_marker_scale, slot_marker_scale)
+		marker.position = pos
+		_slot_markers_container.add_child(marker)
+		_slot_markers[key] = marker
+		_add_chain_point(key, pos)
+	else:
+		if _slot_markers.has(key):
+			(_slot_markers[key] as Sprite2D).queue_free()
+			_slot_markers.erase(key)
+			_remove_chain_point(key)
+
+func _add_chain_point(key: int, pos: Vector2) -> void:
+	# Find nearest endpoint across all constellations.
+	var best_ci: int = -1
+	var best_end: int = -1  # 0 = first, 1 = last
+	var best_dist: float = INF
+	for ci: int in range(_constellations.size()):
+		var positions: Array = (_constellations[ci] as Dictionary)["positions"] as Array
+		if positions.is_empty():
+			continue
+		var d_last: float = pos.distance_to(positions[-1] as Vector2)
+		if d_last < best_dist:
+			best_dist = d_last
+			best_ci = ci
+			best_end = 1
+		if positions.size() > 1:
+			var d_first: float = pos.distance_to(positions[0] as Vector2)
+			if d_first < best_dist:
+				best_dist = d_first
+				best_ci = ci
+				best_end = 0
+
+	if best_ci == -1 or (max_constellation_distance > 0.0 and best_dist > max_constellation_distance):
+		_constellations.append({"keys": [key], "positions": [pos], "segments": []})
+		return
+
+	var c: Dictionary = _constellations[best_ci]
+	var keys: Array = c["keys"] as Array
+	var positions: Array = c["positions"] as Array
+	var segments: Array = c["segments"] as Array
+
+	if best_end == 1:
+		var dots: Array = _build_segment_dots(positions[-1] as Vector2, pos)
+		positions.append(pos)
+		keys.append(key)
+		segments.append(dots)
+		_animate_segment_in(dots)
+	else:
+		var dots: Array = _build_segment_dots(pos, positions[0] as Vector2)
+		positions.insert(0, pos)
+		keys.insert(0, key)
+		segments.insert(0, dots)
+		_animate_segment_in(dots)
+
+func _remove_chain_point(key: int) -> void:
+	for ci: int in range(_constellations.size()):
+		var c: Dictionary = _constellations[ci]
+		var keys: Array = c["keys"] as Array
+		var idx: int = keys.find(key)
+		if idx == -1:
+			continue
+		var positions: Array = c["positions"] as Array
+		var segments: Array = c["segments"] as Array
+
+		if positions.size() == 1:
+			_constellations.remove_at(ci)
+			return
+
+		if idx == 0:
+			_animate_segment_out(segments[0] as Array)
+			segments.remove_at(0)
+			keys.remove_at(0)
+			positions.remove_at(0)
+		elif idx == positions.size() - 1:
+			_animate_segment_out(segments[-1] as Array)
+			segments.remove_at(segments.size() - 1)
+			keys.remove_at(keys.size() - 1)
+			positions.remove_at(positions.size() - 1)
+		else:
+			_animate_segment_out(segments[idx - 1] as Array)
+			_animate_segment_out(segments[idx] as Array)
+			segments.remove_at(idx)
+			segments.remove_at(idx - 1)
+			keys.remove_at(idx)
+			positions.remove_at(idx)
+			var new_dots: Array = _build_segment_dots(positions[idx - 1] as Vector2, positions[idx] as Vector2)
+			segments.insert(idx - 1, new_dots)
+			_animate_segment_in(new_dots)
+
+		if (c["positions"] as Array).is_empty():
+			_constellations.remove_at(ci)
+		return
+
+func _build_segment_dots(a: Vector2, b: Vector2) -> Array:
+	var dots: Array = []
+	if star_textures.is_empty():
+		return dots
+	var seg_len: float = a.distance_to(b)
+	if seg_len < 0.001 or (max_constellation_distance > 0.0 and seg_len > max_constellation_distance):
+		return dots
+	var dir: Vector2 = (b - a) / seg_len
+	var perp: Vector2 = Vector2(-dir.y, dir.x)
+	var walked: float = 0.0
+	while true:
+		walked += line_star_spacing * randf_range(1.0 - line_spacing_jitter, 1.0 + line_spacing_jitter)
+		if walked >= seg_len:
+			break
+		var dot := Sprite2D.new()
+		dot.texture = star_textures[randi() % star_textures.size()]
+		var target_scale: float = randf_range(line_star_scale_min, line_star_scale_max)
+		dot.scale = Vector2.ZERO
+		dot.rotation = randf_range(0.0, TAU)
+		dot.position = a + dir * walked + perp * randf_range(-line_position_jitter, line_position_jitter)
+		dot.modulate = line_star_color
+		dot.set_meta("target_scale", target_scale)
+		_lines_container.add_child(dot)
+		dots.append(dot)
+	return dots
+
+func _animate_segment_in(dots: Array) -> void:
+	for i: int in range(dots.size()):
+		var dot := dots[i] as Node2D
+		var target: float = dot.get_meta("target_scale")
+		var tween := dot.create_tween()
+		tween.tween_interval(i * line_enter_step_delay)
+		tween.tween_property(dot, "scale", Vector2(target, target), line_enter_duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+
+func _animate_segment_out(dots: Array) -> void:
+	var n: int = dots.size()
+	for i: int in range(n):
+		var dot := dots[n - 1 - i] as Node2D
+		var tween := dot.create_tween()
+		tween.tween_interval(i * line_enter_step_delay)
+		tween.tween_property(dot, "scale", Vector2.ZERO, line_enter_duration * 0.6) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+		tween.tween_callback(dot.queue_free)
+
+func _clear_slot_markers() -> void:
+	for marker in _slot_markers.values():
+		(marker as Node).queue_free()
+	_slot_markers.clear()
+	_clear_chain()
+
+func _clear_chain() -> void:
+	if _lines_container != null:
+		for c: Dictionary in _constellations:
+			for seg: Variant in (c["segments"] as Array):
+				_animate_segment_out(seg as Array)
+	_constellations.clear()
 
 func show_keys(solution: Array) -> void:
 	clear_keys()
@@ -302,6 +481,8 @@ func _on_fan_geometry_changed() -> void:
 	if not is_node_ready():
 		return
 	_rebuild_stars()
+	for key: int in _slot_markers:
+		(_slot_markers[key] as Sprite2D).position = _cell_pos(key / 100, key % 100)
 	queue_redraw()
 
 func _grid_reference_scale() -> float:

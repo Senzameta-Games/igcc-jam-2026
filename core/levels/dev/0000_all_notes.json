@@ -6,7 +6,7 @@
 		{ "interval": "SIXTEENTH" },
 		{ "interval": "SIXTEENTH" }
 	],
-	"tray_orbs": [0, 1, 2, 3, 4],
+	"tray_orbs": [0, 1, 2, 3, 4, 0],
 	"solution": [
 		[],
 		[[0, 0]], [[0, 1]], [[0, 2]], [[0, 3]], [[0, 4]],

@@ -11,11 +11,14 @@
 [ext_resource type="Texture2D" uid="uid://chvfu1l1qh1cs" path="res://core/assets/stars/big-four-star.png" id="8_qfohk"]
 [ext_resource type="Texture2D" uid="uid://2geknl8omchm" path="res://core/assets/stars/little-four-star.png" id="9_3oedg"]
 [ext_resource type="Shader" uid="uid://x55w0niueyu2" path="res://core/entities/piano_roll/key_star.gdshader" id="10_badv7"]
+[ext_resource type="Texture2D" uid="uid://i4dpfqel82uy" path="res://core/assets/stars/slotted_orb.png" id="10_r05h8"]
 
 [node name="PianoRoll" type="Node2D" unique_id=1962974652]
 script = ExtResource("1_xwehd")
 playhead_lerp_speed = 12.0
 star_textures = Array[Texture2D]([ExtResource("2_5r246"), ExtResource("3_badv7"), ExtResource("4_r05h8"), ExtResource("5_ebl2u"), ExtResource("6_7oart"), ExtResource("7_1jlqo"), ExtResource("8_qfohk"), ExtResource("9_3oedg")])
+slot_texture = ExtResource("10_r05h8")
+slot_marker_scale = 0.6
 star_scale_min = 0.1
 star_scale_max = 0.15
 star_jitter = 4.0
@@ -26,12 +29,16 @@ key_star_shader = ExtResource("10_badv7")
 
 [node name="Stars" type="Node2D" parent="." unique_id=1316850787]
 
+[node name="Lines" type="Node2D" parent="." unique_id=1048576001]
+
 [node name="Keys" type="Node2D" parent="." unique_id=2068998042]
 
 [node name="Dots" type="Node2D" parent="." unique_id=1664500733]
+
+[node name="Slots" type="Node2D" parent="." unique_id=1932659534]
 
 [node name="Playhead" type="Sprite2D" parent="." unique_id=787794317]
 rotation = 3.1415927
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_u0hqk")
-offset = Vector2(0, 40)
+offset = Vector2(0, 20)

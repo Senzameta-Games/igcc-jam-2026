@@ -2,6 +2,7 @@ class_name Slot
 extends Node2D
 
 signal orb_placed(orb: Orb)
+signal orb_ejected
 
 @export var texture_empty: Texture2D
 @export var texture_occupied: Texture2D
@@ -58,6 +59,7 @@ func eject_orb() -> Orb:
 	var orb: Orb = _orb
 	_orb = null
 	_refresh_visual()
+	orb_ejected.emit()
 	return orb
 
 func is_occupied() -> bool:
