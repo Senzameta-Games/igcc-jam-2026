@@ -11,8 +11,7 @@ func _ready() -> void:
 			slot.disabled = true
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
-	if mode == ConsoleMode.Mode.DESK:
-		visible = true
+	visible = (mode == ConsoleMode.Mode.CONSOLE)
 
 ## Returns a count of each OrbType held in the Pentacle that originated from level_index.
 ## Keys are int(OrbType). Filters by source_level so cross-level orbs don't

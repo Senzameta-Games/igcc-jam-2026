@@ -20,9 +20,6 @@
 [ext_resource type="AudioStream" uid="uid://bjt8dxbjy7i0f" path="res://core/assets/audio/ring/playbackSpin.wav" id="14_52j4s"]
 [ext_resource type="Texture2D" uid="uid://brctjjt72mrxc" path="res://core/assets/layout/bottom_frame.png" id="19_sxubq"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="20_oyf0e"]
-[ext_resource type="PackedScene" uid="uid://u3aqduwfjcbo" path="res://core/entities/pentacle/pentacle.tscn" id="20_toom1"]
-[ext_resource type="Script" uid="uid://nn88q4x5gfeu" path="res://core/entities/pentacle/pentacle.gd" id="21_toom1"]
-[ext_resource type="PackedScene" uid="uid://cv2gbijini7cf" path="res://core/entities/lockbox/lockbox.tscn" id="22_ebywj"]
 [ext_resource type="PackedScene" uid="uid://bbmvjaukbxutq" path="res://core/entities/tray/extra_tray.tscn" id="23_bibdu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ebywj"]
@@ -139,14 +136,3 @@ z_index = 2
 position = Vector2(975.99994, 875.99994)
 scale = Vector2(0.55, 0.55)
 texture = ExtResource("19_sxubq")
-
-[node name="Pentacle" parent="." unique_id=1974781458 instance=ExtResource("20_toom1")]
-visible = false
-z_index = 2
-position = Vector2(1551, 820)
-script = ExtResource("21_toom1")
-
-[node name="Lockbox" parent="." unique_id=9991812 instance=ExtResource("22_ebywj")]
-visible = false
-z_index = 2
-position = Vector2(347, 916)

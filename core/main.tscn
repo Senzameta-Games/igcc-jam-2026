@@ -52,10 +52,6 @@ stream_4/stream = ExtResource("28_8dldp")
 
 [node name="Main" type="Node2D" unique_id=1746196733]
 script = ExtResource("1_csopv")
-sequencer_position_desk = Vector2(0, -20)
-sequencer_position_sky = Vector2(0, 280)
-sequencer_transition_duration = 1.4
-sequencer_trans = 3
 
 [node name="SSShader" type="CanvasLayer" parent="." unique_id=482454611]
 layer = 100
@@ -81,6 +77,10 @@ script = ExtResource("4_7ua4h")
 
 [node name="DeskLayer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
 position = Vector2(0, -60)
+position_console = Vector2(0, 180)
+position_playback = Vector2(0, 240)
+position_transition_duration = 1.4
+position_trans = 3
 
 [node name="Rings" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="0" unique_id=123070447]
 rotation = -1.5707964
@@ -91,10 +91,10 @@ rotation = -1.5707964
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
 position = Vector2(960, 520)
 script = ExtResource("6_brq4u")
-position_active = Vector2(960, 640)
-position_minimized = Vector2(960, 320)
+position_console = Vector2(960, 400)
+position_playback = Vector2(960, 640)
 mode_transition_duration = 1.2
-mode_trans = 4
+mode_trans = 3
 
 [node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]
 z_index = -3

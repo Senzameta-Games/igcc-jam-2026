@@ -3,71 +3,74 @@ extends Node2D
 
 signal transition_finished
 signal transition_midpoint
-signal desk_area_hovered(active: bool)  # SKY hover near bottom → sequencer frame glow
 
 @export var transition_duration: float = 2.0
 @export var transition_ease: Tween.EaseType = Tween.EASE_IN_OUT
 @export var transition_trans: Tween.TransitionType = Tween.TRANS_SINE
 
-## Position when Sky is the active mode (fully visible).
-@export var position_active: Vector2 = Vector2(960, 900)
-## Position when Sky is minimized (Desk is active, peek at top).
-@export var position_minimized: Vector2 = Vector2(960, 200)
-## Duration for the active/minimized position+scale tween.
+## SkyLayer world position in CONSOLE mode (piano roll peeking above sequencer).
+@export var position_console: Vector2 = Vector2(960, 200)
+## SkyLayer world position during playback (shifted down, more piano roll visible).
+@export var position_playback: Vector2 = Vector2(960, 900)
+## SkyLayer world position in LEVEL_SELECT.
+@export var position_level_select: Vector2 = Vector2(960, 1900)
+
+## Duration for mode and playback position+scale tweens.
 @export var mode_transition_duration: float = 0.5
 @export var mode_ease: Tween.EaseType = Tween.EASE_IN_OUT
 @export var mode_trans: Tween.TransitionType = Tween.TRANS_CUBIC
 
-## PianoRoll scale when Sky is the active mode.
-@export var piano_roll_scale_sky: Vector2 = Vector2(1.0, 1.0)
-## PianoRoll scale when Desk is active (piano roll peeks above sequencer).
-@export var piano_roll_scale_desk: Vector2 = Vector2(0.7, 0.7)
-
-## SkyLayer world position for LEVEL_SELECT.
-@export var position_level_select: Vector2 = Vector2(960, 1900)
-
-## SKY hover affordance: viewport y above which hovering near the bottom emits desk_area_hovered.
-@export var desk_hover_y_threshold: float = 850.0
+## PianoRoll scale in CONSOLE mode (not playing).
+@export var piano_roll_scale_console: Vector2 = Vector2(0.7, 0.7)
+## PianoRoll scale during playback.
+@export var piano_roll_scale_playback: Vector2 = Vector2(1.0, 1.0)
+## PianoRoll scale in LEVEL_SELECT.
+@export var piano_roll_scale_level_select: Vector2 = Vector2(1.0, 1.0)
 
 var _tween: Tween = null
 var _mode_tween: Tween = null
-var _is_minimized: bool = false
-var _desk_glow_active: bool = false
-var _current_mode: ConsoleMode.Mode = ConsoleMode.Mode.DESK
+var _mode_ready: bool = false
+var _current_mode: ConsoleMode.Mode = ConsoleMode.Mode.LEVEL_SELECT
 
 @onready var _piano_roll: PianoRoll = $PianoRoll
 @onready var _level_select: LevelSelect = $LevelSelect
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	_current_mode = mode
-	# Clear desk glow when leaving SKY.
-	if mode != ConsoleMode.Mode.SKY and _desk_glow_active:
-		_desk_glow_active = false
-		desk_area_hovered.emit(false)
-	match mode:
-		ConsoleMode.Mode.SKY:
-			_is_minimized = false
-			_tween_to(position_active, piano_roll_scale_sky)
-		ConsoleMode.Mode.DESK:
-			_is_minimized = true
-			_tween_to(position_minimized, piano_roll_scale_desk)
-		ConsoleMode.Mode.LEVEL_SELECT:
-			_is_minimized = false
-			_tween_to(position_level_select, piano_roll_scale_sky)
+	if not _mode_ready:
+		_mode_ready = true
+		_snap_to_mode(mode)
+	else:
+		match mode:
+			ConsoleMode.Mode.CONSOLE:
+				_tween_to(position_console, piano_roll_scale_console)
+			ConsoleMode.Mode.LEVEL_SELECT:
+				_tween_to(position_level_select, piano_roll_scale_level_select)
 	_level_select.on_mode_changed(mode)
 
-func _process(_delta: float) -> void:
-	if _mode_tween != null and _mode_tween.is_running():
+func on_playback_state_changed(is_playing: bool) -> void:
+	if _current_mode != ConsoleMode.Mode.CONSOLE:
 		return
-	if _current_mode == ConsoleMode.Mode.SKY:
-		_update_desk_glow(get_viewport().get_mouse_position().y)
+	if is_playing:
+		_tween_to(position_playback, piano_roll_scale_playback)
+	else:
+		_tween_to(position_console, piano_roll_scale_console)
 
-func _update_desk_glow(mouse_y: float) -> void:
-	var should_glow: bool = mouse_y > desk_hover_y_threshold
-	if should_glow == _desk_glow_active:
-		return
-	_desk_glow_active = should_glow
-	desk_area_hovered.emit(should_glow)
+func _snap_to_mode(mode: ConsoleMode.Mode) -> void:
+	var target_pos: Vector2
+	var target_scale: Vector2
+	match mode:
+		ConsoleMode.Mode.CONSOLE:
+			target_pos = position_console
+			target_scale = piano_roll_scale_console
+		_:
+			target_pos = position_level_select
+			target_scale = piano_roll_scale_level_select
+	position = target_pos
+	var pivot_local: Vector2 = _piano_roll.fan_origin
+	var pivot_in_sky: Vector2 = _piano_roll.position + pivot_local * _piano_roll.scale
+	_piano_roll.scale = target_scale
+	_piano_roll.position = pivot_in_sky - pivot_local * target_scale
 
 func rotate_to_next() -> void:
 	if _tween != null and _tween.is_running():

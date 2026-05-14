@@ -12,7 +12,7 @@ extends Node
 @onready var _level_start: AudioStreamPlayer = $LevelStart
 
 var _audio_tween: Tween = null
-var _prev_mode: ConsoleMode.Mode = ConsoleMode.Mode.DESK
+var _prev_mode: ConsoleMode.Mode = ConsoleMode.Mode.CONSOLE
 var _mode_ready: bool = false
 var _bgm_base_db: float = 0.0
 var _room_tone_base_db: float = 0.0
@@ -60,7 +60,6 @@ func play_level_start() -> void:
 
 func _mode_rank(mode: ConsoleMode.Mode) -> int:
 	match mode:
-		ConsoleMode.Mode.DESK: return 0
-		ConsoleMode.Mode.SKY: return 1
-		ConsoleMode.Mode.LEVEL_SELECT: return 2
+		ConsoleMode.Mode.CONSOLE: return 0
+		ConsoleMode.Mode.LEVEL_SELECT: return 1
 	return 0
