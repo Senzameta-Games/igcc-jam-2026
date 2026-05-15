@@ -28,6 +28,8 @@ script = ExtResource("1_x131a")
 slide_in_offset = Vector2(0, -80)
 slide_in_duration = 0.8
 minimized_position = Vector2(400, 120)
+solve_flash_duration = 0.1
+solve_slide_duration = 0.8
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=159149063]
 scale = Vector2(0.6, 0.6)
