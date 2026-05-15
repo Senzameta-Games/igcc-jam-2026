@@ -10,10 +10,8 @@ var is_playing: bool = false
 func _ready() -> void:
 	var randomizer := stream as AudioStreamRandomizer
 	if randomizer != null:
-		randomizer.get_stream(0)  # touch each stream to ensure it decodes
-		randomizer.get_stream(1)
-		randomizer.get_stream(2)
-		randomizer.get_stream(3)
+		for i: int in range(randomizer.streams_count):
+			randomizer.get_stream(i)
 	Playback.started.connect(_on_playback_started)
 	Playback.stopped.connect(_on_playback_stopped)
 	Playback.tick_advanced.connect(_on_tick_advanced)

@@ -44,6 +44,17 @@ func set_completed(done: bool) -> void:
 	_set_hover(done)
 
 func _refresh_modulate() -> void:
+	if _constellation.stars.is_empty():
+		_sprite.visible = not _locked
+		if not _locked and not _completed:
+			if _hover_material == null and hover_shader != null:
+				_hover_material = ShaderMaterial.new()
+				_hover_material.shader = hover_shader
+			_sprite.material = _hover_material
+		else:
+			_sprite.material = null
+			_sprite.modulate = completed_color if _completed else Color.WHITE
+		return
 	if _completed:
 		_sprite.modulate = completed_color
 	elif _locked:
@@ -63,6 +74,8 @@ func _on_mouse_exited() -> void:
 func _set_hover(active: bool) -> void:
 	if _hover_tween != null and _hover_tween.is_running():
 		_hover_tween.kill()
+	if _constellation.stars.is_empty():
+		return
 	var mat: ShaderMaterial = null
 	if active and hover_shader != null:
 		if _hover_material == null:

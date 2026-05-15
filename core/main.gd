@@ -12,11 +12,15 @@ extends Node2D
 @onready var _console_mode: ConsoleMode = $ConsoleMode
 @onready var _audio_manager: AudioManager = $AudioManager
 #@onready var _lockbox: Lockbox = $DeskLayer/Lockbox
-@onready var _hints: Control = $Hints
-@onready var _hint_level_select: Control = $Hints/Hints/LevelSelectHint
-@onready var _hint_playback: Control = $Hints/Hints/PlaybackHint
-@onready var _hint_return_orbs: Control = $Hints/Hints/ReturnOrbsHint
+@onready var _hints: Control = $HintsLayer/Hints
+@onready var _hint_level_select: Control = $HintsLayer/Hints/Hints/LevelSelectHint
+@onready var _hint_playback: Control = $HintsLayer/Hints/Hints/PlaybackHint
+@onready var _hint_return_orbs: Control = $HintsLayer/Hints/Hints/ReturnOrbsHint
 @onready var _clues: Clues = $Clues
+@onready var _camera: Camera2D = $Camera2D
+
+## World-space Y coordinate that should sit at the bottom of the viewport.
+@export var console_bottom: float = 900.0
 
 var _hints_pending: bool = false
 var _post_completion: bool = false
@@ -66,6 +70,14 @@ func _ready() -> void:
 		_piano_roll.set_solution(initial_data["solution"])
 
 	_console_mode.initialize()
+	get_viewport().size_changed.connect(_update_camera)
+	_update_camera()
+
+func _update_camera() -> void:
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	var cam_y: float = console_bottom - viewport_size.y * 0.5
+	_camera.position = Vector2(960.0, cam_y)
+	_clues.present_position = Vector2(0.0, cam_y - _clues.position.y)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("level_select"):
@@ -209,7 +221,7 @@ func _setup_level_select() -> void:
 		if data.has("solution"):
 			all_points.append(_piano_roll.get_constellation_points(data["solution"]))
 		else:
-			all_points.append([])
+			all_points.append([] as Array[Vector2])
 	_level_select.setup(all_points)
 	for i: int in range(_level_manager.level_count()):
 		_level_select.set_locked(i, not _level_manager.is_unlocked(i))
@@ -218,7 +230,13 @@ func _on_level_selected(index: int) -> void:
 	Playback.stop()
 	_playback_button.disabled = false
 	_level_manager.load_level_at_index(index)
-	_present_clue_for_current_level()
+	var data: Dictionary = _level_manager.get_level_data_at_index(index)
+	if not data.has("solution"):
+		_piano_roll.set_solution([])
+		_clues.clear()
+		_desk_layer.reveal_extra_trays()
+	else:
+		_present_clue_for_current_level()
 	_console_mode.request_console()
 
 func _present_clue_for_current_level() -> void:
@@ -249,15 +267,6 @@ func _on_constellation_completed() -> void:
 	if next < _level_manager.level_count():
 		_level_manager.unlock_level(next)
 		_level_select.set_locked(next, false)
-		var next_data: Dictionary = _level_manager.get_level_data_at_index(next)
-		if not next_data.has("solution"):
-			Playback.stop()
-			_playback_button.disabled = false
-			_level_manager.load_level_at_index(next)
-			_piano_roll.set_solution([])
-			_clues.clear()
-			_desk_layer.reveal_extra_trays()
-			return
 	_post_completion = true
 	_console_mode.force_level_select()
 
