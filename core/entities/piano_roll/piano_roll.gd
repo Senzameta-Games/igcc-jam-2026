@@ -36,6 +36,12 @@ extends Node2D
 @export var star_textures: Array[Texture2D] = []
 @export var slot_texture: Texture2D
 @export var slot_marker_scale: float = 0.3
+@export var slot_marker_enter_duration: float = 0.15
+@export var slot_marker_enter_trans: Tween.TransitionType = Tween.TRANS_BACK
+@export var ghost_marker_opacity: float = 0.5
+@export var ghost_marker_scale_min: float = 0.22
+@export var ghost_marker_scale_max: float = 0.28
+@export var ghost_marker_pulse_duration: float = 0.4
 @export var line_star_spacing: float = 18.0
 @export var line_star_scale_min: float = 0.06
 @export var line_star_scale_max: float = 0.12
@@ -91,6 +97,10 @@ var _slot_markers: Dictionary = {}
 ## Each constellation: {keys: Array[int], positions: Array[Vector2], segments: Array[Array]}
 ## segments[i] is the Array[Sprite2D] connecting positions[i] to positions[i+1].
 var _constellations: Array[Dictionary] = []
+
+var _ghost_marker: Sprite2D = null
+var _ghost_tween: Tween = null
+var _ghost_key: int = -1
 
 var _sequencer: DeskLayer = null
 var _playing: bool = false
@@ -171,16 +181,23 @@ func on_slot_changed(tick: int, ring_index: int, is_occupied: bool, from_load: b
 		var pos: Vector2 = _cell_pos(tick, ring_index)
 		var marker := Sprite2D.new()
 		marker.texture = slot_texture
-		marker.scale = Vector2(slot_marker_scale, slot_marker_scale)
+		marker.scale = Vector2.ZERO
 		marker.position = pos
 		_slot_markers_container.add_child(marker)
 		_slot_markers[key] = marker
+		var t := marker.create_tween()
+		t.tween_property(marker, "scale", Vector2(slot_marker_scale, slot_marker_scale), slot_marker_enter_duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(slot_marker_enter_trans)
 		_add_chain_point(key, pos)
 	else:
 		if _slot_markers.has(key):
-			(_slot_markers[key] as Sprite2D).queue_free()
+			var marker := _slot_markers[key] as Sprite2D
 			_slot_markers.erase(key)
 			_remove_chain_point(key)
+			var t := marker.create_tween()
+			t.tween_property(marker, "scale", Vector2.ZERO, slot_marker_enter_duration) \
+				.set_ease(Tween.EASE_IN).set_trans(slot_marker_enter_trans)
+			t.tween_callback(marker.queue_free)
 
 func _add_chain_point(key: int, pos: Vector2) -> void:
 	# Find nearest endpoint across all constellations.
@@ -308,6 +325,44 @@ func _animate_segment_out(dots: Array) -> void:
 		tween.tween_property(dot, "scale", Vector2.ZERO, line_enter_duration * 0.6) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 		tween.tween_callback(dot.queue_free)
+
+func set_ghost_marker(tick: int, ring_index: int) -> void:
+	var key: int = _cell_key(tick, ring_index)
+	if _ghost_key == key:
+		return
+	_erase_ghost_marker()
+	_ghost_key = key
+	if slot_texture == null:
+		return
+	_ghost_marker = Sprite2D.new()
+	_ghost_marker.texture = slot_texture
+	_ghost_marker.scale = Vector2(ghost_marker_scale_min, ghost_marker_scale_min)
+	_ghost_marker.position = _cell_pos(tick, ring_index)
+	_ghost_marker.modulate.a = ghost_marker_opacity
+	_slot_markers_container.add_child(_ghost_marker)
+	_ghost_tween = _ghost_marker.create_tween().set_loops()
+	_ghost_tween.tween_property(_ghost_marker, "scale",
+		Vector2(ghost_marker_scale_max, ghost_marker_scale_max), ghost_marker_pulse_duration) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	_ghost_tween.tween_property(_ghost_marker, "scale",
+		Vector2(ghost_marker_scale_min, ghost_marker_scale_min), ghost_marker_pulse_duration) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+
+func clear_ghost_marker() -> void:
+	_ghost_key = -1
+	_erase_ghost_marker()
+
+func _erase_ghost_marker() -> void:
+	if _ghost_tween != null and _ghost_tween.is_running():
+		_ghost_tween.kill()
+		_ghost_tween = null
+	if _ghost_marker != null:
+		var dying := _ghost_marker
+		_ghost_marker = null
+		var t := dying.create_tween()
+		t.tween_property(dying, "scale", Vector2.ZERO, slot_marker_enter_duration) \
+			.set_ease(Tween.EASE_IN).set_trans(slot_marker_enter_trans)
+		t.tween_callback(dying.queue_free)
 
 func _clear_slot_markers() -> void:
 	for marker in _slot_markers.values():

@@ -6,16 +6,30 @@
 [ext_resource type="Texture2D" uid="uid://dafw1qq6yxib5" path="res://core/assets/stars/big-ridged-star.png" id="4_qsyu7"]
 [ext_resource type="Texture2D" uid="uid://chvfu1l1qh1cs" path="res://core/assets/stars/big-four-star.png" id="5_d2k66"]
 [ext_resource type="Texture2D" uid="uid://rpa0s5hl67vy" path="res://core/assets/stars/big-five-star.png" id="6_iq0g6"]
+[ext_resource type="AudioStream" uid="uid://llc6hpvi5wy4" path="res://core/assets/audio/clue_card/page1.wav" id="7_5icfg"]
+[ext_resource type="AudioStream" uid="uid://gp67ul50an3q" path="res://core/assets/audio/clue_card/page2.wav" id="8_jqr7m"]
+[ext_resource type="AudioStream" uid="uid://cigkfbj16bdlf" path="res://core/assets/audio/clue_card/page3.wav" id="9_7npc0"]
+[ext_resource type="AudioStream" uid="uid://bm37b1vw0id5u" path="res://core/assets/audio/clue_card/page4.wav" id="10_udpy2"]
+[ext_resource type="AudioStream" uid="uid://uo46bofnpuuu" path="res://core/assets/audio/clue_card/page5.wav" id="11_wohuq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v52qp"]
 size = Vector2(280, 170)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_1i65u"]
+streams_count = 5
+stream_0/stream = ExtResource("7_5icfg")
+stream_1/stream = ExtResource("8_jqr7m")
+stream_2/stream = ExtResource("9_7npc0")
+stream_3/stream = ExtResource("10_udpy2")
+stream_4/stream = ExtResource("11_wohuq")
 
 [node name="ClueCard" type="Node2D" unique_id=1129193832]
 script = ExtResource("1_x131a")
 slide_in_offset = Vector2(0, -80)
 slide_in_duration = 0.8
-display_duration = 3.0
 minimized_position = Vector2(400, 120)
+solve_flash_duration = 0.1
+solve_slide_duration = 0.8
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=159149063]
 scale = Vector2(0.6, 0.6)
@@ -30,6 +44,8 @@ star_textures = Array[Texture2D]([ExtResource("4_qsyu7"), ExtResource("5_d2k66")
 fan_radius_inner = 60.0
 fan_radius_outer = 120.0
 grid_star_scale = 0.2
+constellation_star_scale_min = 0.4
+constellation_star_scale_max = 0.5
 tick_padding = 3
 ring_padding = 0
 
@@ -38,3 +54,11 @@ ring_padding = 0
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1872269837]
 position = Vector2(-2, -6)
 shape = SubResource("RectangleShape2D_v52qp")
+
+[node name="SFX" type="Node" parent="." unique_id=2118203437]
+
+[node name="Touch" type="AudioStreamPlayer" parent="SFX" unique_id=621713348]
+stream = SubResource("AudioStreamRandomizer_1i65u")
+volume_db = -18.0
+
+[node name="SlideInOut" type="AudioStreamPlayer" parent="SFX" unique_id=1983831533]

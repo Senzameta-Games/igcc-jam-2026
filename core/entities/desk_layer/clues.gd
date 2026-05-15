@@ -37,6 +37,13 @@ func clear() -> void:
 	_active_card_count = 0
 	_fade_scrim(0.0)
 
+func dismiss_solved() -> void:
+	_has_pending = false
+	var departing := _cards.duplicate()
+	_cards.clear()
+	for card: ClueCard in departing:
+		card.dismiss_solved()
+
 func queue_clue(solution: Array[LevelManager.SolutionData], measure_duration: float) -> void:
 	_pending_solution = solution
 	_pending_measure_duration = measure_duration

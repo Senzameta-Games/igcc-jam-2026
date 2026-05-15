@@ -31,8 +31,7 @@ key_star_texture = ExtResource("3_2j0bw")
 note = SubResource("AudioStreamRandomizer_sk2ke")
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]
-scale = Vector2(0.29, 0.29)
 sprite_frames = SubResource("SpriteFrames_ceag1")
 
-[node name="PitchHint" parent="." index="5" unique_id=1478975366]
+[node name="PitchHint" parent="." index="6" unique_id=1478975366]
 stream = ExtResource("6_ytgsy")

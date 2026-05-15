@@ -6,9 +6,6 @@
 [ext_resource type="AudioStream" uid="uid://dpvx4kpf7drcl" path="res://core/assets/audio/tray/wind-up.wav" id="4_olegs"]
 [ext_resource type="AudioStream" uid="uid://cca60e3n1wncq" path="res://core/assets/audio/tray/wind-down.wav" id="5_1dufa"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jn6ln"]
-size = Vector2(829, 94)
-
 [node name="Tray" type="Node2D" unique_id=835271133]
 script = ExtResource("1_5r44a")
 arc_transition_duration = 1.0
@@ -45,13 +42,6 @@ in_tray = true
 [node name="Slot5" parent="Slots" unique_id=521193706 instance=ExtResource("1_ulkqu")]
 position = Vector2(345, -380)
 in_tray = true
-
-[node name="Area" type="Area2D" parent="." unique_id=484502034]
-position = Vector2(0, -297)
-
-[node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1107463542]
-position = Vector2(-0.5, -95)
-shape = SubResource("RectangleShape2D_jn6ln")
 
 [node name="WindUp" type="AudioStreamPlayer" parent="." unique_id=500931271]
 stream = ExtResource("4_olegs")

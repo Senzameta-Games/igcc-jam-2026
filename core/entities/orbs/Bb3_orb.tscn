@@ -33,8 +33,7 @@ orb_id = 0
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]
 position = Vector2(0, -1)
-scale = Vector2(0.28, 0.28)
 sprite_frames = SubResource("SpriteFrames_eqgwp")
 
-[node name="PitchHint" parent="." index="5" unique_id=1478975366]
+[node name="PitchHint" parent="." index="6" unique_id=1478975366]
 stream = ExtResource("6_7upxd")

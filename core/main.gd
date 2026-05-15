@@ -52,6 +52,7 @@ func _ready() -> void:
 	_hand.connect_button(_playback_button)
 	_desk_layer.note_triggered.connect(_on_note_triggered)
 	_desk_layer.slot_changed.connect(_piano_roll.on_slot_changed)
+	_hand.hovered_ring_slot_changed.connect(_on_hovered_ring_slot_changed)
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_level_manager.initialize(_desk_layer, _tray, _piano_roll)
 	_hand.set_tray(_tray)
@@ -150,6 +151,8 @@ func _sweep_non_pearl_orbs_to_tray() -> void:
 			continue
 		slot.eject_orb()
 		var tray_slot: Slot = _tray.get_slot_for_orb(orb)
+		if tray_slot == null:
+			tray_slot = _find_any_empty_tray_slot()
 		if tray_slot != null:
 			tray_slot.receive_orb(orb, true)
 			returned.append(orb)
@@ -172,6 +175,24 @@ func _on_console_settled() -> void:
 		_hints.visible = true
 		var t := create_tween()
 		t.tween_property(_hints, "modulate:a", 1.0, 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+
+func _find_any_empty_tray_slot() -> Slot:
+	for node: Node in get_tree().get_nodes_in_group("slots"):
+		var slot := node as Slot
+		if slot != null and slot.in_tray and not slot.is_occupied() and not slot.disabled:
+			return slot
+	return null
+
+func _on_hovered_ring_slot_changed(slot: Slot) -> void:
+	if slot == null:
+		_piano_roll.clear_ghost_marker()
+		return
+	var ring := slot.get_parent().get_parent() as Ring
+	if ring == null:
+		_piano_roll.clear_ghost_marker()
+		return
+	var tick: int = slot.index * (16 / ring.get_slot_count())
+	_piano_roll.set_ghost_marker(tick, ring.ring_index)
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, _from_position: Vector2, tick: int, orb: Orb) -> void:
 	var ring: Ring = _desk_layer.get_ring_for_orb(orb)
@@ -201,6 +222,7 @@ func _on_level_selected(index: int) -> void:
 	_console_mode.request_console()
 
 func _present_clue_for_current_level() -> void:
+	_clues.clear()
 	var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(_level_manager.current_index())
 	if data.solution.is_empty():
 		return
@@ -217,6 +239,7 @@ func _on_completion_pending() -> void:
 	_playback_button.disabled = true
 	_audio_manager.play_level_complete()
 	_audio_manager.fade_for_completion()
+	_clues.dismiss_solved()
 
 func _on_constellation_completed() -> void:
 	var completed: int = _level_manager.current_index()
