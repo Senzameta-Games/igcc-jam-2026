@@ -16,7 +16,7 @@
 			{
 				"orb_type": 1,
 				"ring": 0,
-				"locked": 0
+				"locked": false
 			}
 		],
 		[],
@@ -26,7 +26,7 @@
 			{
 				"orb_type": 2,
 				"ring": 0,
-				"locked": 0
+				"locked": false
 			}
 		],
 		[],
@@ -36,7 +36,7 @@
 			{
 				"orb_type": 0,
 				"ring": 0,
-				"locked": 0
+				"locked": false
 			}
 		],
 		[],
