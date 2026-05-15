@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bn60o4b8y1qud" path="res://core/entities/orbs/orb.gd" id="1_7f7e3"]
 [ext_resource type="Texture2D" uid="uid://kv4docnsqg5w" path="res://core/assets/orbs/NoStar.png" id="2_qgeok"]
+[ext_resource type="Texture2D" uid="uid://ky7txjjw01bm" path="res://core/assets/orbs/locked/empty.png" id="3_i83og"]
 [ext_resource type="AudioStream" uid="uid://crmgp5cwkleyd" path="res://core/assets/audio/slot/orbPlace1.wav" id="3_qgeok"]
 [ext_resource type="AudioStream" uid="uid://2xld5m41asnv" path="res://core/assets/audio/pickup/OrbPickup.wav" id="3_tat5o"]
 [ext_resource type="AudioStream" uid="uid://3vxp0pflrn6c" path="res://core/assets/audio/pickup/OrbPickup2.wav" id="4_8gtwf"]
@@ -24,6 +25,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_i83og")
+}],
+"loop": true,
+"name": &"locked",
 "speed": 5.0
 }]
 
@@ -52,6 +61,7 @@ stream_3/stream = ExtResource("6_k8k4c")
 z_index = 1
 script = ExtResource("1_7f7e3")
 texture = ExtResource("2_qgeok")
+locked_texture = ExtResource("3_i83og")
 note = SubResource("AudioStreamRandomizer_i83og")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1751710394]

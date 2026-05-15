@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var _hand: Hand = $Hand
+@onready var _hand: Hand = $HandLayer/Hand
 @onready var _desk_layer: DeskLayer = $DeskLayer
 @onready var _tray: Tray = $DeskLayer/Tray
 @onready var _piano_roll: PianoRoll = $SkyLayer/PianoRoll
@@ -56,6 +56,7 @@ func _ready() -> void:
 	_hand.connect_button(_playback_button)
 	_desk_layer.note_triggered.connect(_on_note_triggered)
 	_desk_layer.slot_changed.connect(_piano_roll.on_slot_changed)
+	_desk_layer.locked_orb_placed.connect(_piano_roll.on_locked_orb_placed)
 	_hand.hovered_ring_slot_changed.connect(_on_hovered_ring_slot_changed)
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_level_manager.initialize(_desk_layer, _tray, _piano_roll)
@@ -159,7 +160,7 @@ func _sweep_non_pearl_orbs_to_tray() -> void:
 		if slot == null or slot.in_tray or not slot.is_occupied():
 			continue
 		var orb: Orb = slot.get_orb()
-		if orb.is_pearl:
+		if orb.is_pearl or orb.is_locked:
 			continue
 		slot.eject_orb()
 		var tray_slot: Slot = _tray.get_slot_for_orb(orb)
@@ -230,8 +231,8 @@ func _on_level_selected(index: int) -> void:
 	Playback.stop()
 	_playback_button.disabled = false
 	_level_manager.load_level_at_index(index)
-	var data: Dictionary = _level_manager.get_level_data_at_index(index)
-	if not data.has("solution"):
+	var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(index)
+	if data.solution.is_empty():
 		_piano_roll.set_solution([])
 		_clues.clear()
 		_desk_layer.reveal_extra_trays()
