@@ -32,8 +32,7 @@ note = SubResource("AudioStreamRandomizer_bndwn")
 orb_id = 2
 
 [node name="Sprite" parent="." index="0" unique_id=1751710394]
-scale = Vector2(0.29, 0.29)
 sprite_frames = SubResource("SpriteFrames_3o115")
 
-[node name="PitchHint" parent="." index="5" unique_id=1478975366]
+[node name="PitchHint" parent="." index="6" unique_id=1478975366]
 stream = ExtResource("5_ni0p8")

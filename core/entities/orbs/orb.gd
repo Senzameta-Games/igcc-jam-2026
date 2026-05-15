@@ -16,6 +16,8 @@ enum OrbType { Bb3, F3, G3, A4, D4 }
 @export var orb_id: OrbType = OrbType.F3
 @export var is_pearl: bool = false
 
+static var _highlight_material: ShaderMaterial = null
+
 var source_level: int = -1
 var _state: State = State.IN_SLOT
 var _pulse_tween: Tween = null
@@ -33,6 +35,13 @@ func _init() -> void:
 
 func _ready() -> void:
 	_sprite.play("default")
+	if _highlight_material == null:
+		_highlight_material = ShaderMaterial.new()
+		_highlight_material.shader = preload("res://core/entities/orbs/orb_highlight.gdshader")
+	Playback.started.connect(_on_playback_started)
+	Playback.stopped.connect(_on_playback_stopped)
+	if not Playback.is_playing:
+		_sprite.material = _highlight_material
 
 func _process(delta: float) -> void:
 	if _state != State.LERPING:
@@ -74,3 +83,9 @@ func land(silent: bool = false) -> void:
 
 func play_return_to_tray() -> void:
 	_return_to_tray_sfx.play()
+
+func _on_playback_started() -> void:
+	_sprite.material = null
+
+func _on_playback_stopped() -> void:
+	_sprite.material = _highlight_material

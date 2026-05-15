@@ -3,6 +3,7 @@ extends Node2D
 
 signal picked_up(orb: Orb)
 signal dropped
+signal hovered_ring_slot_changed(slot: Slot)
 
 @export var texture_empty: Texture2D
 @export var texture_holding: Texture2D
@@ -12,6 +13,7 @@ var _held_orb: Orb = null
 var _pointing: bool = false
 var _tray: Tray = null
 var _clue_active: bool = false
+var _hovered_ring_slot: Slot = null
 
 @onready var _area: Area2D = $Area
 @onready var _sprite: Sprite2D = $Sprite
@@ -26,9 +28,27 @@ func _process(_delta: float) -> void:
 	var mouse: Vector2 = get_global_mouse_position()
 	_area.global_position = mouse
 	_sprite.global_position = mouse
+	_update_hovered_ring_slot()
 	if _held_orb == null:
 		return
 	_held_orb.global_position = mouse
+
+func _update_hovered_ring_slot() -> void:
+	if _held_orb == null or _held_orb.is_pearl:
+		if _hovered_ring_slot != null:
+			_hovered_ring_slot = null
+			hovered_ring_slot_changed.emit(null)
+		return
+	var best: Slot = null
+	for area: Area2D in _area.get_overlapping_areas():
+		var slot := area.get_parent() as Slot
+		if slot == null or slot.in_tray or not slot.is_hinting():
+			continue
+		best = slot
+		break
+	if best != _hovered_ring_slot:
+		_hovered_ring_slot = best
+		hovered_ring_slot_changed.emit(best)
 
 func set_clue_active(active: bool) -> void:
 	_clue_active = active

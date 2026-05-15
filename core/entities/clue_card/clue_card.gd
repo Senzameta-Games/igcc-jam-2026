@@ -18,6 +18,8 @@ const OUTLINE_SHADER: Shader = preload("res://core/entities/clue_card/outline.gd
 @onready var _sprite: Sprite2D = $Sprite
 @onready var _area: Area2D = $Area
 @onready var _constellation: ConstellationHintDisplay = $Keys/Constellation
+@onready var _touch_sfx: AudioStreamPlayer = $SFX/Touch
+@onready var _slide_sfx: AudioStreamPlayer = $SFX/SlideInOut
 
 var _pile_position: Vector2 = Vector2.ZERO
 var _present_position: Vector2 = Vector2.ZERO
@@ -80,6 +82,7 @@ func present() -> void:
 	position = _present_position + slide_in_offset
 	visible = true
 	modulate.a = 0.0
+	_slide_sfx.play()
 	_tween = create_tween()
 	_tween.set_parallel(true)
 	_tween.tween_property(self, "position", _present_position, slide_in_duration) \
@@ -100,6 +103,8 @@ func inspect() -> void:
 	_start_clock()
 	_base_z_index = z_index
 	z_index = _base_z_index + 10
+	_touch_sfx.play()
+	_slide_sfx.play()
 	if _tween != null and _tween.is_running():
 		_tween.kill()
 	_tween = create_tween()
@@ -114,6 +119,7 @@ func _minimize() -> void:
 	_state = State.MINIMIZED
 	_update_outline()
 	z_index = _base_z_index
+	_slide_sfx.play()
 	if _tween != null and _tween.is_running():
 		_tween.kill()
 	var target_pos: Vector2 = _pile_position + minimized_position
@@ -168,6 +174,7 @@ func _input(event: InputEvent) -> void:
 	var mb := event as InputEventMouseButton
 	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
 		return
+	_touch_sfx.play()
 	dismiss()
 	get_viewport().set_input_as_handled()
 

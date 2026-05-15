@@ -52,6 +52,7 @@ func _ready() -> void:
 	_hand.connect_button(_playback_button)
 	_desk_layer.note_triggered.connect(_on_note_triggered)
 	_desk_layer.slot_changed.connect(_piano_roll.on_slot_changed)
+	_hand.hovered_ring_slot_changed.connect(_on_hovered_ring_slot_changed)
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_level_manager.initialize(_desk_layer, _tray, _piano_roll)
 	_hand.set_tray(_tray)
@@ -172,6 +173,17 @@ func _on_console_settled() -> void:
 		_hints.visible = true
 		var t := create_tween()
 		t.tween_property(_hints, "modulate:a", 1.0, 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+
+func _on_hovered_ring_slot_changed(slot: Slot) -> void:
+	if slot == null:
+		_piano_roll.clear_ghost_marker()
+		return
+	var ring := slot.get_parent().get_parent() as Ring
+	if ring == null:
+		_piano_roll.clear_ghost_marker()
+		return
+	var tick: int = slot.index * (16 / ring.get_slot_count())
+	_piano_roll.set_ghost_marker(tick, ring.ring_index)
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, _from_position: Vector2, tick: int, orb: Orb) -> void:
 	var ring: Ring = _desk_layer.get_ring_for_orb(orb)
