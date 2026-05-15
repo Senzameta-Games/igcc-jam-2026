@@ -5,6 +5,66 @@ signal level_loaded
 signal level_ready
 signal all_levels_complete
 
+
+class RingData: 
+	var interval: String = "QUARTER"
+	
+	func _init(dict: Dictionary) -> void:
+		interval = dict['interval'] if dict.has('interval') else ''
+
+class SolutionData:
+	var rings: Array[SlotData]
+	
+	func _init(dict: Variant) -> void:
+		var data_rings: Array
+		if (dict is Array):
+			data_rings = dict
+		else:
+			data_rings = dict['rings'] if dict.has('rings') else []
+		rings = []
+		for ring in data_rings:
+			rings.append(SlotData.new(ring))
+		
+class SlotData:
+	var orb_type: Orb.OrbType
+	var ring: int
+	var locked: bool = false
+	
+	func _init(dict: Variant) -> void:
+		if (dict is Array):
+			ring = dict[0]
+			orb_type = dict[1]
+			return
+		orb_type = int(dict['orb_type']) as Orb.OrbType if dict.has('orb_type') else Orb.OrbType.F3
+		ring = dict['ring'] if dict.has('ring') else 0
+		locked = dict['locked'] if dict.has('locked') else false
+
+class LevelData:
+	var id: int
+	var name: String
+	var rings: Array[RingData]
+	var tray_orbs: Array[Orb.OrbType]
+	var solution: Array[SolutionData]
+	
+	func _init(dict: Dictionary) -> void:
+		id = dict['id'] if dict.has('id') else -1
+		name = dict['name'] if dict.has('name') else ''
+		tray_orbs = []
+		var dict_tray_orbs = dict['tray_orbs'] if dict.has('tray_orbs') else []
+		
+		for id: Variant in dict_tray_orbs:
+			tray_orbs.append(int(id) as Orb.OrbType)
+		
+		var data_rings = dict['rings'] if dict.has('rings') else []
+		rings = []
+		for ring in data_rings:
+			rings.append(RingData.new(ring))
+		
+		var data_solution = dict['solution'] if dict.has('solution') else []
+		solution = []
+		for sol in data_solution:
+			solution.append(SolutionData.new(sol))
+
 const LEVELS_DIR: String = "res://core/levels/dev/"
 
 var _sequencer: DeskLayer = null
@@ -69,17 +129,18 @@ func load_level_at_index(index: int) -> void:
 
 ## Returns the parsed JSON data for a level without loading it.
 ## Returns empty Dictionary if the index is invalid or file can't be read.
-func get_level_data_at_index(index: int) -> Dictionary:
+func get_level_data_at_index(index: int) -> LevelData:
+	var empty_ret = LevelData.new({})
 	if index < 0 or index >= _level_files.size():
-		return {}
+		return empty_ret
 	var file := FileAccess.open(_level_files[index], FileAccess.READ)
 	if file == null:
-		return {}
+		return empty_ret
 	var data: Variant = JSON.parse_string(file.get_as_text())
 	file.close()
 	if data is Dictionary:
-		return data
-	return {}
+		return LevelData.new(data)
+	return empty_ret
 
 func current_index() -> int:
 	return _current_index
@@ -156,73 +217,13 @@ func _present_level(data: Dictionary) -> void:
 	level_loaded.emit()
 	level_ready.emit()
 
-class RingData: 
-	var interval: String = "QUARTER"
-	
-	func _init(dict: Dictionary) -> void:
-		interval = dict['interval'] if dict.has('interval') else ''
-
-class SolutionData:
-	var rings: Array[SlotData]
-	
-	func _init(dict: Variant) -> void:
-		var data_rings: Array
-		if (dict is Array):
-			data_rings = dict
-		else:
-			data_rings = dict['rings'] if dict.has('rings') else []
-		rings = []
-		for ring in data_rings:
-			rings.append(SlotData.new(ring))
-		
-class SlotData:
-	var orb_type: Orb.OrbType
-	var ring: int
-	var locked: bool = false
-	
-	func _init(dict: Variant) -> void:
-		if (dict is Array):
-			ring = dict[0]
-			orb_type = dict[1]
-			return
-		orb_type = int(dict['orb_type']) as Orb.OrbType if dict.has('orb_type') else Orb.OrbType.F3
-		ring = dict['ring'] if dict.has('ring') else 0
-		locked = dict['locked'] if dict.has('locked') else false
-
-class LevelData:
-	var id: int
-	var name: String
-	var rings: Array[RingData]
-	var tray_orbs: Array[Orb.OrbType]
-	var solution: Array[SolutionData]
-	
-	func _init(dict: Dictionary) -> void:
-		id = dict['id'] if dict.has('id') else -1
-		name = dict['name'] if dict.has('name') else ''
-		tray_orbs = []
-		var dict_tray_orbs = dict['tray_orbs'] if dict.has('tray_orbs') else []
-		
-		var types: Array[Orb.OrbType] = []
-		for id: Variant in dict_tray_orbs:
-			types.append(int(id) as Orb.OrbType)
-		
-		var data_rings = dict['rings'] if dict.has('rings') else []
-		rings = []
-		for ring in data_rings:
-			rings.append(RingData.new(ring))
-		
-		var data_solution = dict['solution'] if dict.has('solution') else []
-		solution = []
-		for sol in data_solution:
-			solution.append(SolutionData.new(sol))
-
 
 
 func _load_game(json_data: Dictionary) -> void:
 	_sequencer.eject_orbs()
 	_sequencer.bpm = 40.0
 	var load_data = LevelData.new(json_data)
-	if load_data.rings.size() > 0:
+	if not load_data.rings.is_empty():
 		var rings: Array[Ring] = _sequencer.get_rings()
 		var ring_data: Array = load_data.rings
 		for i: int in range(rings.size()):
@@ -231,12 +232,12 @@ func _load_game(json_data: Dictionary) -> void:
 			if active:
 				var interval_str: String = ring_data[i].interval
 				rings[i].interval_type = Ring.IntervalType.get(interval_str, Ring.IntervalType.QUARTER)
-	if load_data.tray_orbs.size() > 0:
+	if not load_data.tray_orbs.is_empty():
 		var types: Array[Orb.OrbType] = []
 		for id: Variant in load_data.tray_orbs:
 			types.append(int(id) as Orb.OrbType)
 		_tray.populate(types, _current_index)
-	elif load_data.solution.size() > 0:
+	elif not load_data.solution.is_empty():
 		_tray.populate(_extract_orb_types(load_data.solution), _current_index)
 
 func _extract_orb_types(solution: Array[SolutionData]) -> Array[Orb.OrbType]:

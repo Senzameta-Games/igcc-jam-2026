@@ -60,9 +60,9 @@ func _ready() -> void:
 	_setup_level_select()
 
 	# Prime the solution for the default-loaded level (no ClueCard shown at level select).
-	var initial_data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())
-	if initial_data.has("solution"):
-		_piano_roll.set_solution(initial_data["solution"])
+	var initial_data: LevelManager.LevelData = _level_manager.get_level_data_at_index(_level_manager.current_index())
+	if not initial_data.solution.is_empty():
+		_piano_roll.set_solution(initial_data.solution)
 
 	_console_mode.initialize()
 
@@ -184,9 +184,9 @@ func _on_sky_transition_midpoint() -> void:
 func _setup_level_select() -> void:
 	var all_points: Array = []
 	for i: int in range(_level_manager.level_count()):
-		var data: Dictionary = _level_manager.get_level_data_at_index(i)
-		if data.has("solution"):
-			all_points.append(_piano_roll.get_constellation_points(data["solution"]))
+		var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(i)
+		if not data.solution.is_empty():
+			all_points.append(_piano_roll.get_constellation_points(data.solution))
 		else:
 			all_points.append([])
 	_level_select.setup(all_points)
@@ -201,14 +201,14 @@ func _on_level_selected(index: int) -> void:
 	_console_mode.request_console()
 
 func _present_clue_for_current_level() -> void:
-	var data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())
-	if not data.has("solution"):
+	var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(_level_manager.current_index())
+	if data.solution.is_empty():
 		return
-	_piano_roll.set_solution(data["solution"])
+	_piano_roll.set_solution(data.solution)
 	var idx: int = _level_manager.current_index()
 	if not _level_manager.is_clue_shown(idx):
 		_level_manager.mark_clue_shown(idx)
-		_clues.queue_clue(data["solution"], _desk_layer.get_measure_duration())
+		_clues.queue_clue(data.solution, _desk_layer.get_measure_duration())
 		_audio_manager.play_level_start()
 		if idx == 0:
 			_hints_pending = true
@@ -226,8 +226,8 @@ func _on_constellation_completed() -> void:
 	if next < _level_manager.level_count():
 		_level_manager.unlock_level(next)
 		_level_select.set_locked(next, false)
-		var next_data: Dictionary = _level_manager.get_level_data_at_index(next)
-		if not next_data.has("solution"):
+		var next_data: LevelManager.LevelData = _level_manager.get_level_data_at_index(next)
+		if next_data.solution.is_empty():
 			Playback.stop()
 			_playback_button.disabled = false
 			_level_manager.load_level_at_index(next)

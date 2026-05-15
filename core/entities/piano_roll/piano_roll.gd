@@ -95,7 +95,7 @@ var _constellations: Array[Dictionary] = []
 var _sequencer: DeskLayer = null
 var _playing: bool = false
 
-var _solution: Array = []
+var _solution: Array[LevelManager.SolutionData] = []
 var _hit_positions: Dictionary = {}
 var _solution_position_count: int = 0
 var _pending_completion: bool = false
@@ -326,15 +326,14 @@ func show_keys(solution: Array) -> void:
 			ks.setup(orb_type, _get_key_star_material())
 
 ## Stores the current level solution for playback validation. Does not display any hints.
-func set_solution(solution: Array) -> void:
+func set_solution(solution: Array[LevelManager.SolutionData]) -> void:
 	_solution = solution
 	_hit_positions.clear()
 	_completion_signaled = false
 	var unique_keys: Dictionary = {}
 	for tick: int in range(solution.size()):
-		for entry: Variant in (solution[tick] as Array):
-			var ring_idx: int = 0 if not (entry is Array) else int((entry as Array)[0])
-			unique_keys[_cell_key(tick, ring_idx)] = true
+		for entry: LevelManager.SlotData in solution[tick].rings:
+			unique_keys[_cell_key(tick, entry.ring)] = true
 	_solution_position_count = unique_keys.size()
 
 func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index: int, measure_duration: float) -> void:
@@ -453,21 +452,18 @@ func _cell_key(tick: int, ring_index: int) -> int:
 func _is_solution_hit(tick: int, ring_index: int, orb_id: Orb.OrbType) -> bool:
 	if tick >= _solution.size():
 		return false
-	for entry: Variant in (_solution[tick] as Array):
-		var r: int = 0 if not (entry is Array) else int((entry as Array)[0])
-		var o: int = int(entry) if not (entry is Array) else int((entry as Array)[1])
-		if r == ring_index and o == int(orb_id):
+	for entry: LevelManager.SlotData in (_solution[tick].rings as Array):
+		if entry.ring == ring_index and entry.orb_type == orb_id:
 			return true
 	return false
 
 ## Returns solution positions as normalized Vector2 values in [-1, 1] space.
-func get_constellation_points(solution: Array) -> Array[Vector2]:
+func get_constellation_points(solution: Array[LevelManager.SolutionData]) -> Array[Vector2]:
 	var positions: Array[Vector2] = []
 	for tick: int in range(solution.size()):
-		for entry: Variant in (solution[tick] as Array):
-			var ring_idx: int = 0 if not (entry is Array) else int((entry as Array)[0])
+		for entry: LevelManager.SlotData in solution[tick].rings:
 			var angle_rad: float = _tick_angle_rad(float(tick))
-			var radius: float = _note_radius(ring_idx)
+			var radius: float = _note_radius(entry.ring)
 			positions.append(Vector2(cos(angle_rad), sin(angle_rad)) * radius)
 
 	if positions.is_empty():
