@@ -239,6 +239,9 @@ func _load_game(json_data: Dictionary) -> void:
 		_tray.populate(types, _current_index)
 	elif not load_data.solution.is_empty():
 		_tray.populate(_extract_orb_types(load_data.solution), _current_index)
+	
+	if not load_data.solution.is_empty():
+		_sequencer.load_locked_orbs(load_data.solution)
 
 func _extract_orb_types(solution: Array[SolutionData]) -> Array[Orb.OrbType]:
 	var counts: Dictionary = {}

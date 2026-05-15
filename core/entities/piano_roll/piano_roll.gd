@@ -102,6 +102,13 @@ var _pending_completion: bool = false
 var _completion_signaled: bool = false
 var _key_star_material: ShaderMaterial = null
 
+class _LoadSlotMarker:
+	var tick: int = -1
+	var ring_index: int = -1
+	var is_occupied: bool = false
+
+var _load_slot_markers: Array[_LoadSlotMarker] = []
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		_rebuild_stars()
@@ -115,6 +122,11 @@ func setup(tray: Tray) -> void:
 	_clear_slot_markers()
 	_rebuild_stars()
 	queue_redraw()
+	
+	for mark in _load_slot_markers:
+		on_slot_changed(mark.tick, mark.ring_index, mark.is_occupied, false)
+
+	_load_slot_markers = []
 
 func _process(delta: float) -> void:
 	if _playhead == null or _sequencer == null:
@@ -144,7 +156,14 @@ func clear_keys() -> void:
 	for child: Node in _keys_container.get_children():
 		child.queue_free()
 
-func on_slot_changed(tick: int, ring_index: int, is_occupied: bool) -> void:
+func on_slot_changed(tick: int, ring_index: int, is_occupied: bool, from_load: bool) -> void:
+	if (from_load):
+		var marker = _LoadSlotMarker.new()
+		marker.tick = tick
+		marker.ring_index = ring_index
+		marker.is_occupied = is_occupied
+		_load_slot_markers.append(marker)
+		return
 	var key: int = _cell_key(tick, ring_index)
 	if is_occupied:
 		if _slot_markers.has(key) or slot_texture == null:
