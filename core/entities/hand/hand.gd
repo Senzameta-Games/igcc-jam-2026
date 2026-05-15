@@ -126,6 +126,7 @@ func connect_button(button: PlaybackButton) -> void:
 	button.mouse_entered.connect(_on_button_mouse_entered)
 	button.mouse_exited.connect(_on_button_mouse_exited)
 
+
 func pick_up(orb: Orb) -> void:
 	if orb == null:
 		return
@@ -142,6 +143,8 @@ func try_drop(slot: Slot) -> void:
 	if _held_orb == null:
 		return
 	if _held_orb.is_pearl and slot.get_parent().get_parent() is Ring:
+		return
+	if slot.is_occupied() and slot.get_orb().is_pearl:
 		return
 	var orb_to_drop: Orb = _held_orb
 	_held_orb = null

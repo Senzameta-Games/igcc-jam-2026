@@ -42,16 +42,20 @@ func populate_with_orb(orb: Orb) -> void:
 	_orb = orb
 	_refresh_visual()
 
-## Accepts an orb into this slot. Returns the orb if rejected (slot occupied).
+## Accepts an orb into this slot. If occupied, displaces the existing orb
+## and returns it; otherwise returns null.
 func receive_orb(incoming: Orb, silent: bool = false) -> Orb:
-	if _orb == null:
-		_orb = incoming
-		_orb.reparent(self, true)
-		_orb.land(silent)
-		_refresh_visual()
-		orb_placed.emit(_orb)
-		return null
-	return incoming
+	var displaced: Orb = null
+	if _orb != null:
+		displaced = _orb
+		_orb = null
+		orb_ejected.emit()
+	_orb = incoming
+	_orb.reparent(self, true)
+	_orb.land(silent)
+	_refresh_visual()
+	orb_placed.emit(_orb)
+	return displaced
 
 func eject_orb() -> Orb:
 	if _orb == null:
