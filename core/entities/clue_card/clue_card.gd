@@ -14,6 +14,8 @@ const OUTLINE_SHADER: Shader = preload("res://core/entities/clue_card/outline.gd
 @export var minimized_position: Vector2 = Vector2.ZERO
 @export var minimized_scale: Vector2 = Vector2(0.5, 0.5)
 @export var minimize_duration: float = 0.5
+@export var solve_flash_duration: float = 0.08
+@export var solve_slide_duration: float = 0.5
 
 @onready var _sprite: Sprite2D = $Sprite
 @onready var _area: Area2D = $Area
@@ -94,6 +96,27 @@ func dismiss() -> void:
 		return
 	_dismissed = true
 	_minimize()
+
+func dismiss_solved() -> void:
+	_dismissed = true
+	if _tween != null and _tween.is_running():
+		_tween.kill()
+	_stop_clock()
+	_slide_sfx.play()
+	_tween = create_tween()
+	_tween.tween_property(self, "modulate", Color(1.5, 1.5, 1.5, 1.0), solve_flash_duration) \
+		.set_ease(Tween.EASE_OUT)
+	_tween.tween_interval(0.06)
+	_tween.set_parallel(true)
+	_tween.tween_property(self, "position:x", position.x - 1500.0, solve_slide_duration) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	_tween.tween_property(self, "modulate:a", 0.0, solve_slide_duration * 0.75) \
+		.set_ease(Tween.EASE_IN)
+	_tween.set_parallel(false)
+	_tween.tween_callback(func() -> void:
+		dismiss_complete.emit()
+		queue_free()
+	)
 
 func inspect() -> void:
 	_dismissed = false

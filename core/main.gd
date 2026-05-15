@@ -213,6 +213,7 @@ func _on_level_selected(index: int) -> void:
 	_console_mode.request_console()
 
 func _present_clue_for_current_level() -> void:
+	_clues.clear()
 	var data: Dictionary = _level_manager.get_level_data_at_index(_level_manager.current_index())
 	if not data.has("solution"):
 		return
@@ -229,6 +230,7 @@ func _on_completion_pending() -> void:
 	_playback_button.disabled = true
 	_audio_manager.play_level_complete()
 	_audio_manager.fade_for_completion()
+	_clues.dismiss_solved()
 
 func _on_constellation_completed() -> void:
 	var completed: int = _level_manager.current_index()
