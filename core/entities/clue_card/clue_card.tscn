@@ -41,8 +41,8 @@ position = Vector2(0, -9)
 [node name="Constellation" type="Node2D" parent="Keys" unique_id=234567890]
 script = ExtResource("3_chdscr")
 star_textures = Array[Texture2D]([ExtResource("4_qsyu7"), ExtResource("5_d2k66"), ExtResource("4_qsyu7"), ExtResource("6_iq0g6")])
-fan_radius_inner = 60.0
 fan_radius_outer = 120.0
+fan_angle_span = 40.0
 grid_star_scale = 0.2
 constellation_star_scale_min = 0.4
 constellation_star_scale_max = 0.5

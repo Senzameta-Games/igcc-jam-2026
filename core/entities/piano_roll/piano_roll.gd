@@ -83,7 +83,6 @@ extends Node2D
 @onready var _keys_container: Node2D = $Keys
 @onready var _dots_container: Node2D = $Dots
 @onready var _playhead: Node2D = $Playhead
-@export var playhead_fade_speed: float = 8.0
 
 const TICKS: int = 16
 const RING_COUNT: int = 3
@@ -101,13 +100,25 @@ const _DEBUG_ARC_SEGMENTS: int = 48
 signal constellation_completed
 signal completion_pending
 
+class _LoadSlotMarker:
+	var tick: int = -1
+	var ring_index: int = -1
+	var is_occupied: bool = false
+	var is_locked: bool = false
+	var orb_type: Orb.OrbType = Orb.OrbType.F3
+
+class _Constellation:
+	var keys: Array[int] = []
+	var positions: Array[Vector2] = []
+	var segments: Array = []
+
 ## Persistent key stars placed on first detection. key = tick * 100 + ring_index.
 var _dots: Dictionary = {}
 var _dot_tweens: Dictionary = {}
 var _slot_markers: Dictionary = {}
-## Each constellation: {keys: Array[int], positions: Array[Vector2], segments: Array[Array]}
 ## segments[i] is the Array[Sprite2D] connecting positions[i] to positions[i+1].
-var _constellations: Array[Dictionary] = []
+var _constellations: Array[_Constellation] = []
+var _load_slot_markers: Array[_LoadSlotMarker] = []
 
 var _locked_key_stars: Dictionary = {}
 
@@ -126,15 +137,6 @@ var _solution_position_count: int = 0
 var _pending_completion: bool = false
 var _completion_signaled: bool = false
 var _key_star_material: ShaderMaterial = null
-
-class _LoadSlotMarker:
-	var tick: int = -1
-	var ring_index: int = -1
-	var is_occupied: bool = false
-	var is_locked: bool = false
-	var orb_type: Orb.OrbType = Orb.OrbType.F3
-
-var _load_slot_markers: Array[_LoadSlotMarker] = []
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -245,79 +247,75 @@ func _add_chain_point(key: int, pos: Vector2) -> void:
 	var best_end: int = -1  # 0 = first, 1 = last
 	var best_dist: float = INF
 	for ci: int in range(_constellations.size()):
-		var positions: Array = (_constellations[ci] as Dictionary)["positions"] as Array
-		if positions.is_empty():
+		var candidate: _Constellation = _constellations[ci]
+		if candidate.positions.is_empty():
 			continue
-		var d_last: float = pos.distance_to(positions[-1] as Vector2)
+		var d_last: float = pos.distance_to(candidate.positions[-1])
 		if d_last < best_dist:
 			best_dist = d_last
 			best_ci = ci
 			best_end = 1
-		if positions.size() > 1:
-			var d_first: float = pos.distance_to(positions[0] as Vector2)
+		if candidate.positions.size() > 1:
+			var d_first: float = pos.distance_to(candidate.positions[0])
 			if d_first < best_dist:
 				best_dist = d_first
 				best_ci = ci
 				best_end = 0
 
 	if best_ci == -1 or (max_constellation_distance > 0.0 and best_dist > max_constellation_distance):
-		_constellations.append({"keys": [key], "positions": [pos], "segments": []})
+		var nc := _Constellation.new()
+		nc.keys.append(key)
+		nc.positions.append(pos)
+		_constellations.append(nc)
 		return
 
-	var c: Dictionary = _constellations[best_ci]
-	var keys: Array = c["keys"] as Array
-	var positions: Array = c["positions"] as Array
-	var segments: Array = c["segments"] as Array
-
+	var c: _Constellation = _constellations[best_ci]
 	if best_end == 1:
-		var dots: Array = _build_segment_dots(positions[-1] as Vector2, pos)
-		positions.append(pos)
-		keys.append(key)
-		segments.append(dots)
+		var dots: Array = _build_segment_dots(c.positions[-1], pos)
+		c.positions.append(pos)
+		c.keys.append(key)
+		c.segments.append(dots)
 		_animate_segment_in(dots)
 	else:
-		var dots: Array = _build_segment_dots(pos, positions[0] as Vector2)
-		positions.insert(0, pos)
-		keys.insert(0, key)
-		segments.insert(0, dots)
+		var dots: Array = _build_segment_dots(pos, c.positions[0])
+		c.positions.insert(0, pos)
+		c.keys.insert(0, key)
+		c.segments.insert(0, dots)
 		_animate_segment_in(dots)
 
 func _remove_chain_point(key: int) -> void:
 	for ci: int in range(_constellations.size()):
-		var c: Dictionary = _constellations[ci]
-		var keys: Array = c["keys"] as Array
-		var idx: int = keys.find(key)
+		var c: _Constellation = _constellations[ci]
+		var idx: int = c.keys.find(key)
 		if idx == -1:
 			continue
-		var positions: Array = c["positions"] as Array
-		var segments: Array = c["segments"] as Array
 
-		if positions.size() == 1:
+		if c.positions.size() == 1:
 			_constellations.remove_at(ci)
 			return
 
 		if idx == 0:
-			_animate_segment_out(segments[0] as Array)
-			segments.remove_at(0)
-			keys.remove_at(0)
-			positions.remove_at(0)
-		elif idx == positions.size() - 1:
-			_animate_segment_out(segments[-1] as Array)
-			segments.remove_at(segments.size() - 1)
-			keys.remove_at(keys.size() - 1)
-			positions.remove_at(positions.size() - 1)
+			_animate_segment_out(c.segments[0] as Array)
+			c.segments.remove_at(0)
+			c.keys.remove_at(0)
+			c.positions.remove_at(0)
+		elif idx == c.positions.size() - 1:
+			_animate_segment_out(c.segments[-1] as Array)
+			c.segments.remove_at(c.segments.size() - 1)
+			c.keys.remove_at(c.keys.size() - 1)
+			c.positions.remove_at(c.positions.size() - 1)
 		else:
-			_animate_segment_out(segments[idx - 1] as Array)
-			_animate_segment_out(segments[idx] as Array)
-			segments.remove_at(idx)
-			segments.remove_at(idx - 1)
-			keys.remove_at(idx)
-			positions.remove_at(idx)
-			var new_dots: Array = _build_segment_dots(positions[idx - 1] as Vector2, positions[idx] as Vector2)
-			segments.insert(idx - 1, new_dots)
+			_animate_segment_out(c.segments[idx - 1] as Array)
+			_animate_segment_out(c.segments[idx] as Array)
+			c.segments.remove_at(idx)
+			c.segments.remove_at(idx - 1)
+			c.keys.remove_at(idx)
+			c.positions.remove_at(idx)
+			var new_dots: Array = _build_segment_dots(c.positions[idx - 1], c.positions[idx])
+			c.segments.insert(idx - 1, new_dots)
 			_animate_segment_in(new_dots)
 
-		if (c["positions"] as Array).is_empty():
+		if c.positions.is_empty():
 			_constellations.remove_at(ci)
 		return
 
@@ -412,8 +410,8 @@ func _clear_slot_markers() -> void:
 
 func _clear_chain() -> void:
 	if _lines_container != null:
-		for c: Dictionary in _constellations:
-			for seg: Variant in (c["segments"] as Array):
+		for c: _Constellation in _constellations:
+			for seg: Variant in c.segments:
 				_animate_segment_out(seg as Array)
 	_constellations.clear()
 
@@ -424,20 +422,6 @@ func _get_key_star_material() -> ShaderMaterial:
 		_key_star_material = ShaderMaterial.new()
 		_key_star_material.shader = key_star_shader
 	return _key_star_material
-
-func show_keys(solution: Array) -> void:
-	clear_keys()
-	for tick: int in range(solution.size()):
-		for entry: Variant in (solution[tick] as Array):
-			var ring_idx: int = 0 if not (entry is Array) else int((entry as Array)[0])
-			var orb_type := (int(entry) if not (entry is Array) else int((entry as Array)[1])) as Orb.OrbType
-			var ks := KEY_STAR_SCENE.instantiate() as KeyStar
-			var scale_val: float = randf_range(key_star_scale_min, key_star_scale_max)
-			ks.scale = Vector2(scale_val, scale_val)
-			ks.rotation = randf_range(0.0, TAU)
-			ks.position = _cell_pos(tick, ring_idx)
-			_keys_container.add_child(ks)
-			ks.setup(orb_type, _get_key_star_material())
 
 ## Stores the current level solution for playback validation. Does not display any hints.
 func set_solution(solution: Array[LevelManager.SolutionData]) -> void:
@@ -452,10 +436,13 @@ func set_solution(solution: Array[LevelManager.SolutionData]) -> void:
 
 func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index: int, measure_duration: float) -> void:
 	var key: int = _cell_key(tick, ring_index)
-	var correct: bool = _is_solution_hit(tick, ring_index, orb_id)
+	var correct: bool = is_solution_hit(tick, ring_index, orb_id)
 
 	if not correct:
-		_spawn_falling_star(tick, ring_index)
+		var position_correct: bool = _is_solution_position(tick, ring_index)
+		if position_correct:
+			_flash_slot_marker_correct(tick, ring_index)
+		_spawn_falling_star(tick, ring_index, position_correct)
 		return
 
 	if _dots.has(key):
@@ -487,16 +474,20 @@ func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index:
 				_completion_signaled = true
 				completion_pending.emit()
 
+func _flash_slot_marker_correct(tick: int, ring_index: int) -> void:
+	var marker: Sprite2D = _slot_markers.get(_cell_key(tick, ring_index)) as Sprite2D
+	if marker == null:
+		return
+	var flash := marker.create_tween()
+	flash.tween_property(marker, "modulate", Color(2.0, 2.0, 1.6, 1.0), 0.07) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	flash.tween_property(marker, "modulate", Color.WHITE, 2.4) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+
 func _spawn_correct_burst(tick: int, ring_index: int, texture: Texture2D) -> void:
 	if texture == null:
 		return
-	var marker: Sprite2D = _slot_markers.get(_cell_key(tick, ring_index)) as Sprite2D
-	if marker != null:
-		var flash := marker.create_tween()
-		flash.tween_property(marker, "modulate", Color(2.0, 2.0, 1.6, 1.0), 0.07) \
-			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-		flash.tween_property(marker, "modulate", Color.WHITE, 2.4) \
-			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_flash_slot_marker_correct(tick, ring_index)
 	var cell_pos: Vector2 = _cell_pos(tick, ring_index)
 	var mat: ShaderMaterial = _get_key_star_material()
 	for _i: int in range(correct_burst_count):
@@ -534,14 +525,15 @@ func _spawn_correct_burst(tick: int, ring_index: int, texture: Texture2D) -> voi
 		tween.tween_method(arc_fn, 0.0, 1.0, correct_burst_duration)
 		tween.tween_callback(cleanup_fn)
 
-func _spawn_falling_star(tick: int, ring_index: int) -> void:
-	var marker: Sprite2D = _slot_markers.get(_cell_key(tick, ring_index)) as Sprite2D
-	if marker != null:
-		var dim := marker.create_tween()
-		dim.tween_property(marker, "modulate", Color(0.35, 0.35, 0.5, 0.6), 0.08) \
-			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-		dim.tween_property(marker, "modulate", Color.WHITE, 2.4) \
-			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+func _spawn_falling_star(tick: int, ring_index: int, skip_marker_dim: bool = false) -> void:
+	if not skip_marker_dim:
+		var marker: Sprite2D = _slot_markers.get(_cell_key(tick, ring_index)) as Sprite2D
+		if marker != null:
+			var dim := marker.create_tween()
+			dim.tween_property(marker, "modulate", Color(0.35, 0.35, 0.5, 0.6), 0.08) \
+				.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+			dim.tween_property(marker, "modulate", Color.WHITE, 2.4) \
+				.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 
 	if star_textures.is_empty():
 		return
@@ -665,13 +657,18 @@ func _cell_key(tick: int, ring_index: int) -> int:
 	return tick * 100 + ring_index
 
 func is_solution_hit(tick: int, ring_index: int, orb_id: Orb.OrbType) -> bool:
-	return _is_solution_hit(tick, ring_index, orb_id)
-
-func _is_solution_hit(tick: int, ring_index: int, orb_id: Orb.OrbType) -> bool:
 	if tick >= _solution.size():
 		return false
 	for entry: LevelManager.SlotData in (_solution[tick].rings as Array):
 		if entry.ring == ring_index and entry.orb_type == orb_id:
+			return true
+	return false
+
+func _is_solution_position(tick: int, ring_index: int) -> bool:
+	if tick >= _solution.size():
+		return false
+	for entry: LevelManager.SlotData in (_solution[tick].rings as Array):
+		if entry.ring == ring_index:
 			return true
 	return false
 
@@ -710,7 +707,7 @@ func _on_fan_geometry_changed() -> void:
 		return
 	_rebuild_stars()
 	for key: int in _slot_markers:
-		(_slot_markers[key] as Sprite2D).position = _cell_pos(key / 100, key % 100)
+		(_slot_markers[key] as Sprite2D).position = _cell_pos(roundi(key / 100.0), key % 100)
 	queue_redraw()
 
 func _grid_reference_scale() -> float:

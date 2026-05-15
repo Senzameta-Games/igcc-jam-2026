@@ -208,7 +208,7 @@ func _on_hovered_ring_slot_changed(slot: Slot) -> void:
 	if ring == null:
 		_piano_roll.clear_ghost_marker()
 		return
-	var tick: int = slot.index * (16 / ring.get_slot_count())
+	var tick: int = slot.index * ring.load_modifier
 	_piano_roll.set_ghost_marker(tick, ring.ring_index)
 
 const INCORRECT_NOTE_DB_OFFSET: float = -8.0

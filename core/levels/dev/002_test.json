@@ -6,6 +6,9 @@
 			"interval": "EIGHTH"
 		},
 		{
+			"interval": "EIGHTH"
+		},
+		{
 			"interval": "SIXTEENTH"
 		}
 	],
@@ -13,9 +16,42 @@
 		0,
 		1,
 		2,
-		3
+		3,
+		4,
+		2
 	],
 	"solution": [
+		[
+			{
+				"orb_type": 2,
+				"ring": 2,
+				"locked": true
+			}
+		],
+		[],
+		[
+			{
+				"orb_type": 3,
+				"ring": 1,
+				"locked": false
+			}
+		],
+		[
+			{
+				"orb_type": 4,
+				"ring": 2,
+				"locked": false
+			}
+		],
+		[],
+		[
+			{
+				"orb_type": 1,
+				"ring": 2,
+				"locked": false
+			}
+		],
+		[],
 		[],
 		[
 			{
@@ -25,16 +61,21 @@
 			}
 		],
 		[],
-		[],
 		[
 			{
-				"orb_type": 1,
+				"orb_type": 2,
 				"ring": 0,
 				"locked": false
 			}
 		],
 		[],
-		[],
+		[
+			{
+				"orb_type": 4,
+				"ring": 0,
+				"locked": true
+			}
+		],
 		[
 			{
 				"orb_type": 2,
@@ -42,18 +83,6 @@
 				"locked": false
 			}
 		],
-		[],
-		[],
-		[
-			{
-				"orb_type": 3,
-				"ring": 0,
-				"locked": false
-			}
-		],
-		[],
-		[],
-		[],
 		[],
 		[]
 	]

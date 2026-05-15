@@ -36,7 +36,6 @@ const MAX_BPM: float = 90.0
 
 @onready var _rings_container: Node2D = $Sequencer/Rings
 @onready var _ray_caster: RayCaster = $Sequencer/RayCaster
-@onready var _sequencer: Node2D = $Sequencer
 @onready var _ring_spin_sfx: AudioStreamPlayer = $PassiveSound/RingRotate
 @onready var _return_all_orbs_sfx: AudioStreamPlayer = $PassiveSound/ReturnAllOrbs
 @onready var _playback_button_sfx: AudioStreamPlayer = $Sequencer/StartStop/ButtonPress
@@ -147,7 +146,7 @@ func _physics_process(delta: float) -> void:
 		_last_tick_threshold = tick_threshold
 		_current_tick = tick_threshold
 		_tick_has_fired = true
-		Playback.tick_advanced.emit(_current_tick)
+		Playback.advance_tick(_current_tick)
 
 func _process(delta: float) -> void:
 	if not _resetting:
@@ -250,11 +249,11 @@ func _bind_ring_slots(ring: Ring) -> void:
 		slot.orb_ejected.connect(_on_ring_orb_ejected.bind(slot, ring))
 
 func _on_ring_orb_placed(_orb: Orb, slot: Slot, ring: Ring) -> void:
-	var tick: int = slot.index * (16 / ring.get_slot_count())
+	var tick: int = slot.index * ring.load_modifier
 	slot_changed.emit(tick, ring.ring_index, true, false)
 
 func _on_ring_orb_ejected(slot: Slot, ring: Ring) -> void:
-	var tick: int = slot.index * (16 / ring.get_slot_count())
+	var tick: int = slot.index * ring.load_modifier
 	slot_changed.emit(tick, ring.ring_index, false, false)
 
 func _set_extra_trays_disabled(value: bool) -> void:
@@ -303,7 +302,7 @@ func export() -> Dictionary:
 	var ring_grids: Array = []
 	for ring: Ring in _rings:
 		var orbs: Array = ring.get_orbs()
-		var ticks_per_slot: int = 16 / ring.get_slot_count()
+		var ticks_per_slot: int = ring.load_modifier
 		var grid: Array = []
 		grid.resize(16)
 		grid.fill(null)
@@ -327,7 +326,7 @@ func load_locked_orbs(data: Array[LevelManager.SolutionData]) -> void:
 	for tick_i in range(data.size()):
 		for slot_data: LevelManager.SlotData in data[tick_i].rings:
 			if slot_data.locked:
-				var adjusted_index = tick_i / (16 / _rings[slot_data.ring].get_slot_count())
+				var adjusted_index = tick_i / _rings[slot_data.ring].load_modifier
 				var slot_for_orb = _rings[slot_data.ring].get_slots()[adjusted_index]
 				var orb: Orb = OrbRegistry.spawn(slot_data.orb_type)
 				slot_for_orb.populate_with_orb(orb)
