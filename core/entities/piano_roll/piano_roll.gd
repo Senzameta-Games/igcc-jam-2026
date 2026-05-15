@@ -98,6 +98,8 @@ var _slot_markers: Dictionary = {}
 ## segments[i] is the Array[Sprite2D] connecting positions[i] to positions[i+1].
 var _constellations: Array[Dictionary] = []
 
+var _locked_key_stars: Dictionary = {}
+
 var _ghost_marker: Sprite2D = null
 var _ghost_tween: Tween = null
 var _ghost_key: int = -1
@@ -116,6 +118,8 @@ class _LoadSlotMarker:
 	var tick: int = -1
 	var ring_index: int = -1
 	var is_occupied: bool = false
+	var is_locked: bool = false
+	var orb_type: Orb.OrbType = Orb.OrbType.F3
 
 var _load_slot_markers: Array[_LoadSlotMarker] = []
 
@@ -135,6 +139,8 @@ func setup(tray: Tray) -> void:
 	
 	for mark in _load_slot_markers:
 		on_slot_changed(mark.tick, mark.ring_index, mark.is_occupied, false)
+		if mark.is_locked and mark.is_occupied:
+			_place_locked_key_star(mark.tick, mark.ring_index, mark.orb_type)
 
 	_load_slot_markers = []
 
@@ -165,6 +171,7 @@ func get_cell_position(tick: int, ring_index: int) -> Vector2:
 func clear_keys() -> void:
 	for child: Node in _keys_container.get_children():
 		child.queue_free()
+	_locked_key_stars.clear()
 
 func on_slot_changed(tick: int, ring_index: int, is_occupied: bool, from_load: bool) -> void:
 	if (from_load):
@@ -198,6 +205,26 @@ func on_slot_changed(tick: int, ring_index: int, is_occupied: bool, from_load: b
 			t.tween_property(marker, "scale", Vector2.ZERO, slot_marker_enter_duration) \
 				.set_ease(Tween.EASE_IN).set_trans(slot_marker_enter_trans)
 			t.tween_callback(marker.queue_free)
+
+func on_locked_orb_placed(tick: int, ring_index: int, orb_type: Orb.OrbType) -> void:
+	var marker := _LoadSlotMarker.new()
+	marker.tick = tick
+	marker.ring_index = ring_index
+	marker.is_occupied = true
+	marker.is_locked = true
+	marker.orb_type = orb_type
+	_load_slot_markers.append(marker)
+
+func _place_locked_key_star(tick: int, ring_index: int, orb_type: Orb.OrbType) -> void:
+	var key: int = _cell_key(tick, ring_index)
+	var ks := KEY_STAR_SCENE.instantiate() as KeyStar
+	var scale_val: float = randf_range(key_star_scale_min, key_star_scale_max)
+	ks.scale = Vector2(scale_val, scale_val)
+	ks.rotation = randf_range(0.0, TAU)
+	ks.position = _cell_pos(tick, ring_index)
+	_keys_container.add_child(ks)
+	ks.setup(orb_type, _get_key_star_material())
+	_locked_key_stars[key] = ks
 
 func _add_chain_point(key: int, pos: Vector2) -> void:
 	# Find nearest endpoint across all constellations.
@@ -462,6 +489,8 @@ func _on_tick_advanced(tick: int) -> void:
 
 func _on_playback_started() -> void:
 	_playing = true
+	for ks in _locked_key_stars.values():
+		(ks as Node2D).visible = false
 
 func _on_playback_stopped() -> void:
 	_pending_completion = false
@@ -470,6 +499,8 @@ func _on_playback_stopped() -> void:
 	_playing = false
 	_playhead.modulate.a = 1.0
 	_update_playhead(0.0)
+	for ks in _locked_key_stars.values():
+		(ks as Node2D).visible = true
 
 func _clear_dots() -> void:
 	for dot in _dots.values():

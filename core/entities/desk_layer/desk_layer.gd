@@ -4,6 +4,7 @@ extends Node2D
 signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int, orb: Orb)
 signal console_settled
 signal slot_changed(tick: int, ring_index: int, is_occupied: bool, from_load: bool)
+signal locked_orb_placed(tick: int, ring_index: int, orb_type: Orb.OrbType)
 
 enum RotationModel { QUANTIZED, CUSTOM }
 
@@ -333,3 +334,4 @@ func load_locked_orbs(data: Array[LevelManager.SolutionData]) -> void:
 				orb.set_locked()
 				slot_for_orb.disabled = true
 				slot_changed.emit(tick_i, slot_data.ring, true, true)
+				locked_orb_placed.emit(tick_i, slot_data.ring, slot_data.orb_type as Orb.OrbType)

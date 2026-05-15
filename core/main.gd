@@ -56,6 +56,7 @@ func _ready() -> void:
 	_hand.connect_button(_playback_button)
 	_desk_layer.note_triggered.connect(_on_note_triggered)
 	_desk_layer.slot_changed.connect(_piano_roll.on_slot_changed)
+	_desk_layer.locked_orb_placed.connect(_piano_roll.on_locked_orb_placed)
 	_hand.hovered_ring_slot_changed.connect(_on_hovered_ring_slot_changed)
 	_sky_layer.transition_midpoint.connect(_on_sky_transition_midpoint)
 	_level_manager.initialize(_desk_layer, _tray, _piano_roll)
