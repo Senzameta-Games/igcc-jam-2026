@@ -76,6 +76,7 @@
 				"locked": true
 			}
 		],
+		[],
 		[
 			{
 				"orb_type": 2,
@@ -83,7 +84,6 @@
 				"locked": false
 			}
 		],
-		[],
 		[]
 	]
 }
