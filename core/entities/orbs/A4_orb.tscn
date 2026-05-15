@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://c2bgjsn7cioix" path="res://core/assets/audio/orb notes/play/A4/A4_2.wav" id="3_ek3l1"]
 [ext_resource type="AudioStream" uid="uid://64rbpovq2udp" path="res://core/assets/audio/orb notes/play/A4/A4_3.wav" id="4_d24uo"]
 [ext_resource type="AudioStream" uid="uid://kce6kl16nnjm" path="res://core/assets/audio/orb notes/pick-up/A4_pickup.wav" id="5_e3cj7"]
+[ext_resource type="Texture2D" uid="uid://bp2fsn1mmtyxt" path="res://core/assets/orbs/locked/A_locked.png" id="7_e3cj7"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_okk0i"]
 streams_count = 3
@@ -22,6 +23,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_e3cj7")
+}],
+"loop": true,
+"name": &"locked",
 "speed": 5.0
 }]
 

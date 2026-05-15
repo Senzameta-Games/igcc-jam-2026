@@ -11,10 +11,13 @@ const LERP_THRESHOLD: float = 0.5
 enum OrbType { Bb3, F3, G3, A4, D4 }
 @export var texture: Texture2D
 @export var key_star_texture: Texture2D
+@export var locked_texture: Texture2D
 @export var note: AudioStream
 
 @export var orb_id: OrbType = OrbType.F3
 @export var is_pearl: bool = false
+
+var is_locked: bool = false
 
 static var _highlight_material: ShaderMaterial = null
 
@@ -80,6 +83,13 @@ func land(silent: bool = false) -> void:
 	if not silent:
 		_land.play()
 		_pitchhint.play()
+
+func set_locked() -> void:
+	is_locked = true
+	_sprite.play("locked")
+	_sprite.material = null
+	Playback.started.disconnect(_on_playback_started)
+	Playback.stopped.disconnect(_on_playback_stopped)
 
 func play_return_to_tray() -> void:
 	_return_to_tray_sfx.play()

@@ -53,6 +53,7 @@ func _process(delta: float) -> void:
 
 func eject_all_orbs() -> void:
 	for slot: Slot in _slots:
+		slot.disabled = false
 		while slot.is_occupied():
 			var removed_orb = slot.eject_orb()
 			removed_orb.queue_free()
