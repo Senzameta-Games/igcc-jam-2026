@@ -24,6 +24,7 @@ extends Node2D
 
 var _hints_pending: bool = false
 var _post_completion: bool = false
+var _pending_freeplay: bool = false
 
 
 func _ready() -> void:
@@ -182,6 +183,9 @@ func _sweep_non_pearl_orbs_to_tray() -> void:
 
 func _on_console_settled() -> void:
 	_clues.on_desk_settled()
+	if _pending_freeplay:
+		_pending_freeplay = false
+		_desk_layer.reveal_extra_trays()
 	if _hints_pending:
 		_hints_pending = false
 		_hints.modulate.a = 0.0
@@ -239,7 +243,7 @@ func _on_level_selected(index: int) -> void:
 	if data.solution.is_empty():
 		_piano_roll.set_solution([])
 		_clues.clear()
-		_desk_layer.reveal_extra_trays()
+		_pending_freeplay = true
 	else:
 		_present_clue_for_current_level()
 	_console_mode.request_console()
@@ -272,15 +276,6 @@ func _on_constellation_completed() -> void:
 	if next < _level_manager.level_count():
 		_level_manager.unlock_level(next)
 		_level_select.set_locked(next, false)
-		var next_data: LevelManager.LevelData = _level_manager.get_level_data_at_index(next)
-		if next_data.solution.is_empty():
-			Playback.stop()
-			_playback_button.disabled = false
-			_level_manager.load_level_at_index(next)
-			_piano_roll.set_solution([])
-			_clues.clear()
-			_desk_layer.reveal_extra_trays()
-			return
 	_post_completion = true
 	_console_mode.force_level_select()
 
