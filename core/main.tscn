@@ -103,6 +103,12 @@ line_enter_step_delay = 0.025
 max_constellation_distance = 450.0
 star_scale_min = 0.15
 star_scale_max = 0.2
+incorrect_star_arc_duration = 4.8
+incorrect_star_arc_outward = 96.0
+incorrect_star_fall_distance = 0.0
+correct_burst_count = 5
+correct_burst_scale = 0.2
+correct_burst_opacity = 0.25
 
 [node name="LevelSelect" parent="SkyLayer" unique_id=302540498 instance=ExtResource("11_7ua4h")]
 position = Vector2(-960, -1600)

@@ -21,31 +21,31 @@ texture = ExtResource("1_bu8nn")
 position = Vector2(0, 172)
 
 [node name="Slot0" parent="Slots" unique_id=136360553 instance=ExtResource("2_kgwnm")]
-position = Vector2(-198, -190)
+position = Vector2(-195, -190)
 in_tray = true
 
 [node name="Orb" parent="Slots/Slot0" unique_id=552011164 instance=ExtResource("3_mgn7w")]
 
 [node name="Slot1" parent="Slots" unique_id=206346277 instance=ExtResource("2_kgwnm")]
-position = Vector2(-99, -190)
+position = Vector2(-96, -190)
 in_tray = true
 
 [node name="Orb" parent="Slots/Slot1" unique_id=1013342611 instance=ExtResource("4_0jld8")]
 
 [node name="Slot2" parent="Slots" unique_id=1091405632 instance=ExtResource("2_kgwnm")]
-position = Vector2(0, -190)
+position = Vector2(3, -190)
 in_tray = true
 
 [node name="Orb" parent="Slots/Slot2" unique_id=1956939905 instance=ExtResource("5_4keml")]
 
 [node name="Slot3" parent="Slots" unique_id=599064132 instance=ExtResource("2_kgwnm")]
-position = Vector2(101, -190)
+position = Vector2(104, -190)
 in_tray = true
 
 [node name="Orb" parent="Slots/Slot3" unique_id=346230539 instance=ExtResource("6_353ff")]
 
 [node name="Slot4" parent="Slots" unique_id=1713670140 instance=ExtResource("2_kgwnm")]
-position = Vector2(200, -190)
+position = Vector2(203, -190)
 in_tray = true
 
 [node name="Orb" parent="Slots/Slot4" unique_id=1790823450 instance=ExtResource("7_b6x6q")]

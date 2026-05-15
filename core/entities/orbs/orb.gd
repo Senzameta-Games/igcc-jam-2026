@@ -24,6 +24,7 @@ static var _highlight_material: ShaderMaterial = null
 var source_level: int = -1
 var _state: State = State.IN_SLOT
 var _pulse_tween: Tween = null
+var _note_base_db: float = 0.0
 
 @onready var _sprite: AnimatedSprite2D = $Sprite
 @onready var _note: AudioStreamPlayer = $Note
@@ -37,6 +38,7 @@ func _init() -> void:
 		key_star_texture = KeyStar.KEY_STAR_TEXTURES[orb_id]
 
 func _ready() -> void:
+	_note_base_db = _note.volume_db
 	_sprite.play("default")
 	if _highlight_material == null:
 		_highlight_material = ShaderMaterial.new()
@@ -61,7 +63,11 @@ func play_note() -> void:
 	if note == null:
 		return
 	_note.stream = note
+	_note.volume_db = _note_base_db
 	_note.play()
+
+func apply_note_volume_offset(offset_db: float) -> void:
+	_note.volume_db = _note_base_db + offset_db
 
 func pulse() -> void:
 	if _pulse_tween != null:

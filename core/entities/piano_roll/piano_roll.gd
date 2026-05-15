@@ -61,6 +61,17 @@ extends Node2D
 ## Base modulate for faint stars. Alpha drives overall brightness.
 @export var star_color: Color = Color(1.0, 1.0, 1.0, 0.18)
 
+## Incorrect-note falling star animation parameters.
+@export var incorrect_star_arc_duration: float = 0.85
+@export var incorrect_star_arc_outward: float = 50.0
+@export var incorrect_star_fall_distance: float = 280.0
+
+## Correct-note burst parameters.
+@export var correct_burst_count: int = 3
+@export var correct_burst_scale: float = 0.3
+@export var correct_burst_opacity: float = 0.55
+@export var correct_burst_duration: float = 4.8
+
 ## Key (hint) star scale range. Color/texture come from KeyStar per OrbType.
 @export var key_star_scale_min: float = 0.25
 @export var key_star_scale_max: float = 0.45
@@ -103,6 +114,8 @@ var _locked_key_stars: Dictionary = {}
 var _ghost_marker: Sprite2D = null
 var _ghost_tween: Tween = null
 var _ghost_key: int = -1
+
+var _falling_stars: Array[Sprite2D] = []
 
 var _sequencer: DeskLayer = null
 var _playing: bool = false
@@ -440,38 +453,131 @@ func set_solution(solution: Array[LevelManager.SolutionData]) -> void:
 func receive_orb(orb_id: Orb.OrbType, texture: Texture2D, tick: int, ring_index: int, measure_duration: float) -> void:
 	var key: int = _cell_key(tick, ring_index)
 	var correct: bool = _is_solution_hit(tick, ring_index, orb_id)
-	var arrival: float = CORRECT_ARRIVAL_SCALE if correct else KEY_STAR_ARRIVAL_SCALE
+
+	if not correct:
+		_spawn_falling_star(tick, ring_index)
+		return
 
 	if _dots.has(key):
 		# Already placed — jump back to arrival scale and restart decay.
 		var dot := _dots[key] as Sprite2D
-		dot.scale = Vector2(arrival, arrival)
+		dot.scale = Vector2(CORRECT_ARRIVAL_SCALE, CORRECT_ARRIVAL_SCALE)
 		if _dot_tweens.has(key):
 			(_dot_tweens[key] as Tween).kill()
 		_dot_tweens[key] = _start_key_star_decay(dot, measure_duration)
 	else:
 		# First detection — create the persistent key star.
 		var dot := Sprite2D.new()
-		if correct:
-			dot.texture = texture
-			dot.material = _get_key_star_material()
-		else:
-			if not star_textures.is_empty():
-				dot.texture = star_textures[randi() % star_textures.size()]
+		dot.texture = texture
+		dot.material = _get_key_star_material()
 		dot.rotation = randf_range(0.0, TAU)
-		dot.scale = Vector2(arrival, arrival)
+		dot.scale = Vector2(CORRECT_ARRIVAL_SCALE, CORRECT_ARRIVAL_SCALE)
 		dot.position = _cell_pos(tick, ring_index)
 		_dots_container.add_child(dot)
 		_dots[key] = dot
 		_dot_tweens[key] = _start_key_star_decay(dot, measure_duration)
 
-	if correct and not _hit_positions.has(key):
+	_spawn_correct_burst(tick, ring_index, texture)
+
+	if not _hit_positions.has(key):
 		_hit_positions[key] = true
 		if _hit_positions.size() >= _solution_position_count and _solution_position_count > 0:
 			_pending_completion = true
 			if not _completion_signaled:
 				_completion_signaled = true
 				completion_pending.emit()
+
+func _spawn_correct_burst(tick: int, ring_index: int, texture: Texture2D) -> void:
+	if texture == null:
+		return
+	var marker: Sprite2D = _slot_markers.get(_cell_key(tick, ring_index)) as Sprite2D
+	if marker != null:
+		var flash := marker.create_tween()
+		flash.tween_property(marker, "modulate", Color(2.0, 2.0, 1.6, 1.0), 0.07) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		flash.tween_property(marker, "modulate", Color.WHITE, 2.4) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	var cell_pos: Vector2 = _cell_pos(tick, ring_index)
+	var mat: ShaderMaterial = _get_key_star_material()
+	for _i: int in range(correct_burst_count):
+		var dot := Sprite2D.new()
+		dot.texture = texture
+		dot.material = mat
+		var initial_rot: float = randf_range(0.0, TAU)
+		dot.rotation = initial_rot
+		dot.scale = Vector2.ZERO
+		dot.modulate.a = correct_burst_opacity
+		dot.position = cell_pos
+		_dots_container.add_child(dot)
+		_falling_stars.append(dot)
+
+		var rand_dir: Vector2 = Vector2.from_angle(randf_range(0.0, TAU))
+		var p0: Vector2 = cell_pos
+		var p1: Vector2 = cell_pos + rand_dir * incorrect_star_arc_outward
+		var p2: Vector2 = cell_pos + rand_dir * (incorrect_star_arc_outward * 0.5) \
+			+ Vector2(0.0, incorrect_star_fall_distance)
+		var base_opacity: float = correct_burst_opacity
+		var arc_fn := func(t: float) -> void:
+			if not is_instance_valid(dot):
+				return
+			var it: float = 1.0 - t
+			dot.position = it * it * p0 + 2.0 * it * t * p1 + t * t * p2
+			dot.modulate.a = base_opacity * maxf(0.0, 1.0 - pow(t, 1.2))
+			dot.rotation = initial_rot + t * PI
+		var cleanup_fn := func() -> void:
+			_falling_stars.erase(dot)
+			dot.queue_free()
+		var arrival: Vector2 = Vector2(correct_burst_scale, correct_burst_scale)
+		var tween := dot.create_tween()
+		tween.tween_property(dot, "scale", arrival, 0.2) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+		tween.tween_method(arc_fn, 0.0, 1.0, correct_burst_duration)
+		tween.tween_callback(cleanup_fn)
+
+func _spawn_falling_star(tick: int, ring_index: int) -> void:
+	var marker: Sprite2D = _slot_markers.get(_cell_key(tick, ring_index)) as Sprite2D
+	if marker != null:
+		var dim := marker.create_tween()
+		dim.tween_property(marker, "modulate", Color(0.35, 0.35, 0.5, 0.6), 0.08) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+		dim.tween_property(marker, "modulate", Color.WHITE, 2.4) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+
+	if star_textures.is_empty():
+		return
+	var cell_pos: Vector2 = _cell_pos(tick, ring_index)
+	var dot := Sprite2D.new()
+	dot.texture = star_textures[randi() % star_textures.size()]
+	var initial_rot: float = randf_range(0.0, TAU)
+	dot.rotation = initial_rot
+	dot.scale = Vector2.ZERO
+	dot.position = cell_pos
+	_dots_container.add_child(dot)
+	_falling_stars.append(dot)
+
+	# Arc: random outward direction, then drops below the horizon.
+	var rand_dir: Vector2 = Vector2.from_angle(randf_range(0.0, TAU))
+	var p0: Vector2 = cell_pos
+	var p1: Vector2 = cell_pos + rand_dir * incorrect_star_arc_outward
+	var p2: Vector2 = cell_pos + rand_dir * (incorrect_star_arc_outward * 0.5) \
+		+ Vector2(0.0, incorrect_star_fall_distance)
+
+	var arc_fn := func(t: float) -> void:
+		if not is_instance_valid(dot):
+			return
+		var it: float = 1.0 - t
+		dot.position = it * it * p0 + 2.0 * it * t * p1 + t * t * p2
+		dot.modulate.a = maxf(0.0, 1.0 - pow(t, 1.2))
+		dot.rotation = initial_rot + t * PI
+	var cleanup_fn := func() -> void:
+		_falling_stars.erase(dot)
+		dot.queue_free()
+	var arrival: Vector2 = Vector2(KEY_STAR_ARRIVAL_SCALE, KEY_STAR_ARRIVAL_SCALE)
+	var tween := dot.create_tween()
+	tween.tween_property(dot, "scale", arrival, 0.43) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tween.tween_method(arc_fn, 0.0, 1.0, incorrect_star_arc_duration)
+	tween.tween_callback(cleanup_fn)
 
 func _start_key_star_decay(dot: Sprite2D, duration: float) -> Tween:
 	var tween := dot.create_tween()
@@ -507,6 +613,10 @@ func _clear_dots() -> void:
 		(dot as Node).queue_free()
 	_dots.clear()
 	_dot_tweens.clear()
+	for star: Sprite2D in _falling_stars:
+		if is_instance_valid(star):
+			star.queue_free()
+	_falling_stars.clear()
 
 func _rebuild_stars() -> void:
 	for child: Node in _stars_container.get_children():
@@ -553,6 +663,9 @@ func _note_radius(ring_index: int) -> float:
 
 func _cell_key(tick: int, ring_index: int) -> int:
 	return tick * 100 + ring_index
+
+func is_solution_hit(tick: int, ring_index: int, orb_id: Orb.OrbType) -> bool:
+	return _is_solution_hit(tick, ring_index, orb_id)
 
 func _is_solution_hit(tick: int, ring_index: int, orb_id: Orb.OrbType) -> bool:
 	if tick >= _solution.size():

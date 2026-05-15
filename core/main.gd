@@ -207,9 +207,13 @@ func _on_hovered_ring_slot_changed(slot: Slot) -> void:
 	var tick: int = slot.index * (16 / ring.get_slot_count())
 	_piano_roll.set_ghost_marker(tick, ring.ring_index)
 
+const INCORRECT_NOTE_DB_OFFSET: float = -8.0
+
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, _from_position: Vector2, tick: int, orb: Orb) -> void:
 	var ring: Ring = _desk_layer.get_ring_for_orb(orb)
 	var ring_index: int = ring.ring_index if ring != null else 0
+	if not _piano_roll.is_solution_hit(tick, ring_index, orb_id):
+		orb.apply_note_volume_offset(INCORRECT_NOTE_DB_OFFSET)
 	_piano_roll.receive_orb(orb_id, texture, tick, ring_index, _desk_layer.get_measure_duration())
 
 func _on_sky_transition_midpoint() -> void:
