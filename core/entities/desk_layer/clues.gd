@@ -21,7 +21,7 @@ const CLUE_CARD_SCENE: PackedScene = preload("res://core/entities/clue_card/clue
 @onready var _clue_note_player: AudioStreamPlayer = $ClueNote
 
 var _cards: Array[ClueCard] = []
-var _pending_solution: Array = []
+var _pending_solution: Array[LevelManager.SolutionData] = []
 var _pending_measure_duration: float = 0.125
 var _has_pending: bool = false
 var _active_card_count: int = 0
@@ -44,7 +44,7 @@ func dismiss_solved() -> void:
 	for card: ClueCard in departing:
 		card.dismiss_solved()
 
-func queue_clue(solution: Array, measure_duration: float) -> void:
+func queue_clue(solution: Array[LevelManager.SolutionData], measure_duration: float) -> void:
 	_pending_solution = solution
 	_pending_measure_duration = measure_duration
 	_has_pending = true
@@ -55,7 +55,7 @@ func on_desk_settled() -> void:
 	_has_pending = false
 	_spawn_card(_pending_solution, _pending_measure_duration)
 
-func _spawn_card(solution: Array, measure_duration: float) -> void:
+func _spawn_card(solution: Array[LevelManager.SolutionData], measure_duration: float) -> void:
 	var card := CLUE_CARD_SCENE.instantiate() as ClueCard
 	_cards.append(card)
 	add_child(card)

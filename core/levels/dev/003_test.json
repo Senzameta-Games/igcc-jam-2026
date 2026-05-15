@@ -2,12 +2,69 @@
 	"id": 3,
 	"name": "Test",
 	"rings": [
-		{ "interval": "QUARTER" },
-		{ "interval": "EIGHTH" },
-		{ "interval": "SIXTEENTH" }
+		{
+			"interval": "QUARTER"
+		},
+		{
+			"interval": "EIGHTH"
+		},
+		{
+			"interval": "SIXTEENTH"
+		}
 	],
-	"tray_orbs": [0, 1, 2, 3, 4],
+	"tray_orbs": [
+		0,
+		1,
+		2,
+		3,
+		4
+	],
 	"solution": [
-		[[0, 0]], [], [[1, 1]], [], [], [[2, 2]], [], [], [[0, 3]], [], [[1, 4]], [], [], [], [], []
+		[
+			{
+				"orb_type": 0,
+				"ring": 0,
+				"locked": false
+			}
+		],
+		[],
+		[
+			{
+				"orb_type": 1,
+				"ring": 1,
+				"locked": false
+			}
+		],
+		[],
+		[],
+		[
+			{
+				"orb_type": 2,
+				"ring": 2,
+				"locked": false
+			}
+		],
+		[],
+		[],
+		[
+			{
+				"orb_type": 3,
+				"ring": 0,
+				"locked": false
+			}
+		],
+		[],
+		[
+			{
+				"orb_type": 4,
+				"ring": 1,
+				"locked": false
+			}
+		],
+		[],
+		[],
+		[],
+		[],
+		[]
 	]
 }
