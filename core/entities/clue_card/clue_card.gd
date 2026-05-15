@@ -32,7 +32,7 @@ var _base_z_index: int = 0
 var _is_hovered: bool = false
 var _outline_material: ShaderMaterial = null
 
-var _solution: Array = []
+var _solution: Array[LevelManager.SolutionData] = []
 var _tick_duration: float = 0.125
 var _start_tick: int = 0
 var _measure_pos: int = 0
@@ -62,7 +62,7 @@ func set_pile_position(pos: Vector2) -> void:
 		position = _pile_position + minimized_position
 
 ## present_pos is in parent (Clues) local space — the shared centre where cards float to.
-func setup(solution: Array, present_pos: Vector2, measure_duration: float) -> void:
+func setup(solution: Array[LevelManager.SolutionData], present_pos: Vector2, measure_duration: float) -> void:
 	if _tween != null and _tween.is_running():
 		_tween.kill()
 	_stop_clock()
@@ -174,7 +174,7 @@ func _stop_clock() -> void:
 
 func _find_start_tick() -> int:
 	for tick: int in range(_solution.size()):
-		if not (_solution[tick] as Array).is_empty():
+		if not _solution[tick].rings.is_empty():
 			return (tick - 2 + 16) % 16
 	return 0
 
@@ -182,7 +182,7 @@ func _fire_current_tick() -> void:
 	var actual_tick: int = (_start_tick + _measure_pos) % 16
 	_measure_pos = (_measure_pos + 1) % 16
 	if actual_tick < _solution.size():
-		var notes: Array = _solution[actual_tick]
+		var notes: Array = _solution[actual_tick].rings
 		if not notes.is_empty():
 			clue_note_triggered.emit(notes.size())
 			_constellation.flash_at_tick(actual_tick)

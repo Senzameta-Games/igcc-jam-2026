@@ -37,7 +37,7 @@ const _MAX_RING: int = 2
 
 var _tick_stars: Dictionary = {}
 
-func setup(solution: Array) -> void:
+func setup(solution: Array[LevelManager.SolutionData]) -> void:
 	clear()
 	if star_textures.is_empty() or solution.is_empty():
 		return
@@ -50,22 +50,16 @@ func setup(solution: Array) -> void:
 	var found: bool = false
 
 	for tick: int in range(solution.size()):
-		for entry: Variant in (solution[tick] as Array):
-			var ring: int = 0
-			var orb_id: Orb.OrbType = Orb.OrbType.F3
-			if(entry is Array):
-				var entry_size = entry.size()
-				if(entry_size > 0):
-					ring = entry[0]
-				if(entry_size > 1):
-					orb_id = entry[1]
+		for entry: LevelManager.SlotData in solution[tick].rings:
+			var ring: int = entry.ring
+			
 			min_tick = mini(min_tick, tick)
 			max_tick = maxi(max_tick, tick)
 			min_ring = mini(min_ring, ring)
 			max_ring = maxi(max_ring, ring)
 			constellation_keys[tick * 100 + ring] = {
 				entryExists = true,
-				orb_id = orb_id
+				orb_id = entry.orb_type
 			}
 			found = true
 

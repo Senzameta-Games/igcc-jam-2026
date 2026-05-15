@@ -3,7 +3,7 @@ extends Node2D
 
 signal note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int, orb: Orb)
 signal console_settled
-signal slot_changed(tick: int, ring_index: int, is_occupied: bool)
+signal slot_changed(tick: int, ring_index: int, is_occupied: bool, from_load: bool)
 
 enum RotationModel { QUANTIZED, CUSTOM }
 
@@ -250,11 +250,11 @@ func _bind_ring_slots(ring: Ring) -> void:
 
 func _on_ring_orb_placed(_orb: Orb, slot: Slot, ring: Ring) -> void:
 	var tick: int = slot.index * (16 / ring.get_slot_count())
-	slot_changed.emit(tick, ring.ring_index, true)
+	slot_changed.emit(tick, ring.ring_index, true, false)
 
 func _on_ring_orb_ejected(slot: Slot, ring: Ring) -> void:
 	var tick: int = slot.index * (16 / ring.get_slot_count())
-	slot_changed.emit(tick, ring.ring_index, false)
+	slot_changed.emit(tick, ring.ring_index, false, false)
 
 func _set_extra_trays_disabled(value: bool) -> void:
 	for tray: Node2D in [_extra_tray, _extra_tray2]:
@@ -321,3 +321,14 @@ func export() -> Dictionary:
 	for ring: Ring in _rings:
 		rings_data.append({"interval": Ring.IntervalType.keys()[ring.interval_type]})
 	return {"solution": export_arr, "bpm": bpm, "rings": rings_data}
+
+func load_locked_orbs(data: Array[LevelManager.SolutionData]) -> void:
+	for tick_i in range(data.size()):
+		for slot_data: LevelManager.SlotData in data[tick_i].rings:
+			if(slot_data.locked):
+				var adjusted_index = tick_i / (16 / _rings[slot_data.ring].get_slot_count())
+				var slot_for_orb = _rings[slot_data.ring].get_slots()[adjusted_index]
+				slot_for_orb.populate_with_orb(OrbRegistry.spawn(slot_data.orb_type))
+				slot_for_orb.disabled = true
+				slot_changed.emit(tick_i, slot_data.ring, true, true)
+				pass
