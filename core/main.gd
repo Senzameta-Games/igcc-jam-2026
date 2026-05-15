@@ -151,6 +151,8 @@ func _sweep_non_pearl_orbs_to_tray() -> void:
 			continue
 		slot.eject_orb()
 		var tray_slot: Slot = _tray.get_slot_for_orb(orb)
+		if tray_slot == null:
+			tray_slot = _find_any_empty_tray_slot()
 		if tray_slot != null:
 			tray_slot.receive_orb(orb, true)
 			returned.append(orb)
@@ -173,6 +175,13 @@ func _on_console_settled() -> void:
 		_hints.visible = true
 		var t := create_tween()
 		t.tween_property(_hints, "modulate:a", 1.0, 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+
+func _find_any_empty_tray_slot() -> Slot:
+	for node: Node in get_tree().get_nodes_in_group("slots"):
+		var slot := node as Slot
+		if slot != null and slot.in_tray and not slot.is_occupied() and not slot.disabled:
+			return slot
+	return null
 
 func _on_hovered_ring_slot_changed(slot: Slot) -> void:
 	if slot == null:
