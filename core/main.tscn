@@ -83,15 +83,15 @@ position_console = Vector2(960, 450)
 position_playback = Vector2(960, 700)
 mode_transition_duration = 1.2
 mode_trans = 3
-cloud_layer = NodePath("Cloud")
-cloud_speed = 120.0
+cloud_layer = NodePath("Paralax")
+cloud_speed = 200.0
 cloud_wrap_right_x = 2500.0
 cloud_wrap_left_x = -2000.0
 
 [node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=401482841]
 z_index = -3
-position = Vector2(-29, -1175)
-scale = Vector2(0.5, 0.7)
+position = Vector2(-29, -788)
+scale = Vector2(0.493739, 0.521966)
 texture = SubResource("CompressedTexture2D_rjnh8")
 
 [node name="Foreground" type="Sprite2D" parent="SkyLayer" unique_id=1138337272]
@@ -124,10 +124,10 @@ correct_burst_opacity = 0.25
 [node name="LevelSelect" parent="SkyLayer" unique_id=1146152041 instance=ExtResource("11_7ua4h")]
 position = Vector2(-960, -1489)
 
-[node name="Cloud" type="Sprite2D" parent="SkyLayer" unique_id=792117348]
+[node name="Paralax" type="Sprite2D" parent="SkyLayer" unique_id=792117348]
 z_index = -3
 position = Vector2(-1150.9999, -1579)
-scale = Vector2(0.72, 0.9)
+scale = Vector2(0.7199944, 0.7846652)
 texture = ExtResource("9_k2fum")
 
 [node name="AudioManager" type="Node" parent="." unique_id=1340528299]
