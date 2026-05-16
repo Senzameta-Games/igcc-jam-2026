@@ -15,7 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://bhg5mp6284lns" path="res://core/assets/audio/clue_card/carddown2.wav" id="13_udpy2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v52qp"]
-size = Vector2(338, 200)
+size = Vector2(480, 350)
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_1i65u"]
 streams_count = 5
@@ -34,12 +34,14 @@ stream_1/stream = ExtResource("13_udpy2")
 script = ExtResource("1_x131a")
 slide_in_offset = Vector2(0, -80)
 slide_in_duration = 0.8
-minimized_position = Vector2(400, 120)
+minimized_position = Vector2(1800, 960)
+minimized_scale = Vector2(0.75, 0.75)
+minimize_duration = 0.8
 solve_flash_duration = 0.1
 solve_slide_duration = 0.8
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=159149063]
-scale = Vector2(0.75, 0.75)
+scale = Vector2(0.9, 0.9)
 texture = ExtResource("2_h3pfr")
 
 [node name="Keys" type="Node2D" parent="." unique_id=1170791373]
@@ -49,8 +51,9 @@ position = Vector2(0, -9)
 position = Vector2(0, 10)
 script = ExtResource("3_chdscr")
 star_textures = Array[Texture2D]([ExtResource("4_qsyu7"), ExtResource("5_d2k66"), ExtResource("4_qsyu7"), ExtResource("6_iq0g6")])
-fan_radius_inner = 100.0
-fan_angle_span = 80.0
+fan_radius_inner = 160.0
+fan_radius_outer = 240.0
+fan_angle_span = 90.0
 grid_star_scale = 0.2
 constellation_star_scale_min = 0.4
 constellation_star_scale_max = 0.5
@@ -60,15 +63,15 @@ ring_padding = 0
 [node name="Area" type="Area2D" parent="." unique_id=1175856262]
 
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1872269837]
-position = Vector2(-2, -13)
+position = Vector2(-2, -14)
 shape = SubResource("RectangleShape2D_v52qp")
 
 [node name="SFX" type="Node" parent="." unique_id=2118203437]
 
 [node name="Touch" type="AudioStreamPlayer" parent="SFX" unique_id=621713348]
 stream = SubResource("AudioStreamRandomizer_1i65u")
-volume_db = -18.0
+volume_db = -20.0
 
 [node name="SlideInOut" type="AudioStreamPlayer" parent="SFX" unique_id=1983831533]
 stream = SubResource("AudioStreamRandomizer_wohuq")
-volume_db = -12.0
+volume_db = -18.0

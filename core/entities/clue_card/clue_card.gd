@@ -34,7 +34,6 @@ var _outline_material: ShaderMaterial = null
 
 var _solution: Array[LevelManager.SolutionData] = []
 var _tick_duration: float = 0.125
-var _start_tick: int = 0
 var _measure_pos: int = 0
 var _clock_t: float = 0.0
 var _clock_running: bool = false
@@ -68,7 +67,6 @@ func setup(solution: Array[LevelManager.SolutionData], present_pos: Vector2, mea
 	_stop_clock()
 	_solution = solution
 	_tick_duration = measure_duration / 16.0 if measure_duration > 0.0 else 0.125
-	_start_tick = _find_start_tick()
 	_present_position = present_pos
 	_dismissed = false
 	_state = State.HIDDEN
@@ -108,7 +106,7 @@ func dismiss_solved() -> void:
 		.set_ease(Tween.EASE_OUT)
 	_tween.tween_interval(0.06)
 	_tween.set_parallel(true)
-	_tween.tween_property(self, "position:x", position.x - 1500.0, solve_slide_duration) \
+	_tween.tween_property(self, "position:y", position.y + 300, solve_slide_duration) \
 		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	_tween.tween_property(self, "modulate:a", 0.0, solve_slide_duration * 0.75) \
 		.set_ease(Tween.EASE_IN)
@@ -174,20 +172,14 @@ func _start_clock() -> void:
 func _stop_clock() -> void:
 	_clock_running = false
 
-func _find_start_tick() -> int:
-	for tick: int in range(_solution.size()):
-		if not _solution[tick].rings.is_empty():
-			return (tick - 2 + 16) % 16
-	return 0
-
 func _fire_current_tick() -> void:
-	var actual_tick: int = (_start_tick + _measure_pos) % 16
+	var actual_tick: int = _measure_pos
 	_measure_pos = (_measure_pos + 1) % 16
+	_constellation.flash_at_tick(actual_tick)
 	if actual_tick < _solution.size():
 		var notes: Array = _solution[actual_tick].rings
 		if not notes.is_empty():
 			clue_note_triggered.emit(notes.size())
-			_constellation.flash_at_tick(actual_tick)
 	if _measure_pos == 0 and _state == State.PRESENTING:
 		dismiss()
 
