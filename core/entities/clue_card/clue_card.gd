@@ -152,6 +152,8 @@ func _minimize() -> void:
 		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	_tween.tween_property(self, "scale", minimized_scale, minimize_duration) \
 		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	_tween.tween_property(self, "modulate:a", 1.0, minimize_duration * 0.3) \
+		.set_ease(Tween.EASE_OUT)
 	_tween.tween_callback(func() -> void:
 		dismiss_complete.emit()
 	)

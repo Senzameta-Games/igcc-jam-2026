@@ -41,6 +41,7 @@ func _ready() -> void:
 	_console_mode.playback_state_changed.connect(_desk_layer.on_playback_state_changed)
 	_console_mode.playback_state_changed.connect(_sky_layer.on_playback_state_changed)
 	_console_mode.playback_state_changed.connect(_tray.on_playback_state_changed)
+	_console_mode.playback_state_changed.connect(_on_playback_state_changed)
 	_desk_layer.console_settled.connect(_on_console_settled)
 	_level_select.level_selected.connect(_on_level_selected)
 	_piano_roll.constellation_completed.connect(_on_constellation_completed)
@@ -143,6 +144,15 @@ func _flash_hint(hint: Control) -> void:
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	t.tween_property(hint, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.35) \
 		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+
+func _on_playback_state_changed(is_playing: bool) -> void:
+	var target_alpha: float = 0.35 if is_playing else 1.0
+	var t := create_tween()
+	t.set_parallel(true)
+	t.tween_property(_hint_level_select, "modulate:a", target_alpha, 0.3) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+	t.tween_property(_hint_return_orbs, "modulate:a", target_alpha, 0.3) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
 
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
