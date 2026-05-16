@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://5daaeoqwopij"]
+
+[ext_resource type="PackedScene" uid="uid://qc0dwe3v7u2g" path="res://core/entities/button/button.tscn" id="1_83dqw"]
+[ext_resource type="AudioStream" uid="uid://d2do0hfqxb4qt" path="res://core/assets/audio/button_press/playbackpress.wav" id="2_2f5rf"]
+[ext_resource type="AudioStream" uid="uid://bqmk2a3lwlh16" path="res://core/assets/audio/button_press/playbackpress2.wav" id="3_b6227"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_oaf10"]
+random_pitch = 1.122462
+streams_count = 2
+stream_0/stream = ExtResource("2_2f5rf")
+stream_1/stream = ExtResource("3_b6227")
+
+[node name="TitleScreen" type="Node2D" unique_id=316518643]
+
+[node name="Button" type="Button" parent="." unique_id=1024231734]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="StartStop" parent="." unique_id=1422403098 instance=ExtResource("1_83dqw")]
+z_index = 2
+offset_left = -80.0
+offset_top = -80.0
+offset_right = 80.0
+offset_bottom = 80.0
+
+[node name="ButtonPress" type="AudioStreamPlayer" parent="StartStop" unique_id=144091384]
+stream = SubResource("AudioStreamRandomizer_oaf10")
+volume_db = -14.0
