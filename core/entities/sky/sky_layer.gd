@@ -29,9 +29,10 @@ signal transition_midpoint
 
 
 @export var cloud_layer: Sprite2D
-@export var cloud_speed: float = 20.0
+@export var cloud_speed: float = 1.0
 @export var cloud_wrap_right_x: float = 1920.0
 @export var cloud_wrap_left_x: float = -1920.0
+@export var cloud_loop_fade_duration: float = 0.4
 
 var _tween: Tween = null
 var _mode_tween: Tween = null
@@ -41,15 +42,23 @@ var _current_mode: ConsoleMode.Mode = ConsoleMode.Mode.LEVEL_SELECT
 @onready var _piano_roll: PianoRoll = $PianoRoll
 @onready var _level_select: LevelSelect = $LevelSelect
 
-func _process(delta: float) -> void:
-	move_clouds(delta)
+func _ready() -> void:
+	if cloud_layer != null:
+		cloud_layer.position.x = 0.0
+		cloud_layer.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		cloud_layer.region_enabled = true
+		if cloud_layer.region_rect.size == Vector2.ZERO and cloud_layer.texture != null:
+			cloud_layer.region_rect = Rect2(Vector2.ZERO, cloud_layer.texture.get_size())
 
-func move_clouds(delta: float) -> void:
+func _process(delta: float) -> void:
+	_move_clouds(delta)
+
+func _move_clouds(delta: float) -> void:
 	if cloud_layer == null:
 		return
-	cloud_layer.position.x += cloud_speed * delta
-	if cloud_layer.position.x > cloud_wrap_right_x:
-		cloud_layer.position.x = cloud_wrap_left_x
+	var rect := cloud_layer.region_rect
+	rect.position.x -= cloud_speed * delta
+	cloud_layer.region_rect = rect
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	_current_mode = mode
