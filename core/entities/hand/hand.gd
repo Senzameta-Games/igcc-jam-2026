@@ -215,13 +215,13 @@ func _on_button_mouse_exited() -> void:
 func _refresh_texture() -> void:
 	if _pointing and _held_orb == null:
 		_sprite.texture = texture_pointing
-		_sprite.offset = Vector2(76, 120)
+		_sprite.offset = Vector2(60, 45)
 	elif _held_orb != null:
 		_sprite.texture = texture_holding
-		_sprite.offset = Vector2(70, 80)
+		_sprite.offset = Vector2(60, 45)
 	else:
 		_sprite.texture = texture_empty
-		_sprite.offset = Vector2(70, 80)
+		_sprite.offset = Vector2(60, 45)
 
 func _show_all_drophints() -> void:
 	var pearl_held: bool = _held_orb != null and _held_orb.is_pearl

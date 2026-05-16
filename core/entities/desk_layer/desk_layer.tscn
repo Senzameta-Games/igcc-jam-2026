@@ -49,6 +49,8 @@ stream_3/stream = ExtResource("12_aen4v")
 [node name="DeskLayer" type="Node2D" unique_id=1975801920]
 script = ExtResource("1_7ojyt")
 bpm = 40.0
+position_console = Vector2(0, -120)
+position_playback = Vector2(0, 80)
 
 [node name="Sequencer" type="Node2D" parent="." unique_id=1677363772]
 position = Vector2(960, 555)

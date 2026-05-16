@@ -103,8 +103,13 @@ func setup(solution: Array[LevelManager.SolutionData]) -> void:
 					_tick_stars[tick] = []
 				(_tick_stars[tick] as Array).append(star)
 			else:
-				star.scale = Vector2(grid_star_scale, grid_star_scale)
+				var gs := Vector2(grid_star_scale, grid_star_scale)
+				star.scale = gs
 				star.modulate = grid_star_color
+				star.set_meta("base_scale", gs)
+				if not _tick_stars.has(tick):
+					_tick_stars[tick] = []
+				(_tick_stars[tick] as Array).append(star)
 			add_child(star)
 
 func flash_at_tick(tick: int) -> void:
