@@ -17,3 +17,6 @@ func stop() -> void:
 		return
 	is_playing = false
 	stopped.emit()
+
+func advance_tick(tick: int) -> void:
+	tick_advanced.emit(tick)

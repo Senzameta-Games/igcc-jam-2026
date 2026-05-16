@@ -25,4 +25,5 @@ star_textures = Array[Texture2D]([ExtResource("3_qsyu7"), ExtResource("4_d2k66")
 star_scale_min = 0.3
 star_scale_max = 0.4
 star_color = Color(1, 1, 1, 0.8784314)
-constellation_radius = 120.0
+constellation_radius = 160.0
+max_line_distance = 80.0

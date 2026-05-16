@@ -52,8 +52,8 @@ class LevelData:
 		tray_orbs = []
 		var dict_tray_orbs = dict['tray_orbs'] if dict.has('tray_orbs') else []
 		
-		for id: Variant in dict_tray_orbs:
-			tray_orbs.append(int(id) as Orb.OrbType)
+		for orb_int: Variant in dict_tray_orbs:
+			tray_orbs.append(int(orb_int) as Orb.OrbType)
 		
 		var data_rings = dict['rings'] if dict.has('rings') else []
 		rings = []
@@ -258,6 +258,6 @@ func _extract_orb_types(solution: Array[SolutionData]) -> Array[Orb.OrbType]:
 	return types
 
 
-func add_file_name(name: String) -> void:
-	_level_files.append(LEVELS_DIR + name)
+func add_file_name(file_name: String) -> void:
+	_level_files.append(LEVELS_DIR + file_name)
 	_level_files.sort()

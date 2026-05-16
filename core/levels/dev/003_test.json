@@ -14,9 +14,10 @@
 	],
 	"tray_orbs": [
 		0,
-		1,
+		2,
 		2,
 		3,
+		4,
 		4
 	],
 	"solution": [
@@ -24,6 +25,14 @@
 			{
 				"orb_type": 0,
 				"ring": 0,
+				"locked": true
+			}
+		],
+		[],
+		[
+			{
+				"orb_type": 3,
+				"ring": 1,
 				"locked": false
 			}
 		],
@@ -31,13 +40,9 @@
 		[
 			{
 				"orb_type": 1,
-				"ring": 1,
-				"locked": false
-			}
-		],
-		[],
-		[],
-		[
+				"ring": 0,
+				"locked": true
+			},
 			{
 				"orb_type": 2,
 				"ring": 2,
@@ -45,26 +50,51 @@
 			}
 		],
 		[],
+		[
+			{
+				"orb_type": 4,
+				"ring": 2,
+				"locked": false
+			}
+		],
 		[],
 		[
 			{
 				"orb_type": 3,
 				"ring": 0,
+				"locked": true
+			}
+		],
+		[],
+		[
+			{
+				"orb_type": 2,
+				"ring": 1,
 				"locked": false
+			}
+		],
+		[
+			{
+				"orb_type": 0,
+				"ring": 2,
+				"locked": false
+			}
+		],
+		[
+			{
+				"orb_type": 2,
+				"ring": 0,
+				"locked": true
 			}
 		],
 		[],
 		[
 			{
 				"orb_type": 4,
-				"ring": 1,
+				"ring": 2,
 				"locked": false
 			}
 		],
-		[],
-		[],
-		[],
-		[],
 		[]
 	]
 }

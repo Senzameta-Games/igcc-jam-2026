@@ -17,10 +17,7 @@ var _hovered: bool = false
 var _hinting: bool = false
 
 @onready var _sprite: Sprite2D = $Sprite
-@onready var _area: Area2D = $Handle
 @onready var _drophint: Sprite2D = $DropHint
-
-var _initial_orb_type: Orb.OrbType = -1
 
 func _ready() -> void:
 	add_to_group("slots")
