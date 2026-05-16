@@ -179,6 +179,8 @@ func _on_playback_state_changed(is_playing: bool) -> void:
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
 		ConsoleMode.Mode.CONSOLE:
+			if not _post_completion:
+				_level_manager.unmark_clue_for_current_level()
 			#_lockbox.visible = true
 			_post_completion = false
 		ConsoleMode.Mode.LEVEL_SELECT:
