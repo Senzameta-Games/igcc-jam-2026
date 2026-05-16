@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(Get-ChildItem -Path \"D:\\\\GameDev\\\\Projects\\\\igcc-jam-2026\" -Recurse -Filter \"playback.gd\")",
-      "Bash(Select-Object -ExpandProperty FullName)"
-    ]
-  }
-}
