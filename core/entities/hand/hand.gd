@@ -10,6 +10,7 @@ signal hovered_ring_slot_changed(slot: Slot)
 @export var texture_pointing: Texture2D
 
 var _held_orb: Orb = null
+var _hovered_orb: Orb = null
 var _pointing: bool = false
 var _tray: Tray = null
 var _clue_active: bool = false
@@ -28,10 +29,33 @@ func _process(_delta: float) -> void:
 	var mouse: Vector2 = get_global_mouse_position()
 	_area.global_position = mouse
 	_sprite.global_position = mouse
+	_update_hovered_orb()
 	_update_hovered_ring_slot()
 	if _held_orb == null:
 		return
 	_held_orb.global_position = mouse
+
+func _update_hovered_orb() -> void:
+	if _held_orb != null or Playback.is_playing or _clue_active:
+		_set_hovered_orb(null)
+		return
+	var best: Orb = null
+	for area: Area2D in _area.get_overlapping_areas():
+		var slot := area.get_parent() as Slot
+		if slot == null or slot.disabled or not slot.is_occupied():
+			continue
+		best = slot.get_orb()
+		break
+	_set_hovered_orb(best)
+
+func _set_hovered_orb(orb: Orb) -> void:
+	if orb == _hovered_orb:
+		return
+	if _hovered_orb != null:
+		_hovered_orb.hide_hover()
+	_hovered_orb = orb
+	if _hovered_orb != null:
+		_hovered_orb.show_hover()
 
 func _update_hovered_ring_slot() -> void:
 	if _held_orb == null or _held_orb.is_pearl:
@@ -150,6 +174,7 @@ func connect_button(button: PlaybackButton) -> void:
 func pick_up(orb: Orb) -> void:
 	if orb == null:
 		return
+	_set_hovered_orb(null)
 	_held_orb = orb
 	var actual_pos: Vector2 = orb.global_position
 	_held_orb.reparent(self, true)

@@ -7,12 +7,13 @@ extends Node2D
 
 signal slots_rebuilt
 
-enum IntervalType { QUARTER, EIGHTH, SIXTEENTH }
+enum IntervalType { QUARTER, EIGHTH, SIXTEENTH, TUTORIAL }
 
 const SLOT_COUNTS: Dictionary = {
 	IntervalType.QUARTER:      4,
 	IntervalType.EIGHTH:       8,
 	IntervalType.SIXTEENTH:    16,
+	IntervalType.TUTORIAL:     2,
 }
 
 const RESET_SPEED: float = 5.0
@@ -68,6 +69,8 @@ func set_current_angle(angle: float) -> void:
 func set_active(active: bool) -> void:
 	visible = active
 	for slot: Slot in _slots:
+		if not slot.visible:
+			continue
 		var handle := slot.get_node("Handle") as Area2D
 		if handle == null:
 			continue
@@ -107,6 +110,12 @@ func _rebuild_slots() -> void:
 		_slots_container.add_child(slot)
 		slot.index = i
 		_slots.append(slot)
+	if interval_type == IntervalType.TUTORIAL:
+		_slots[0].visible = false
+		var hidden_handle := _slots[0].get_node_or_null("Handle") as Area2D
+		if hidden_handle != null:
+			hidden_handle.monitorable = false
+			hidden_handle.monitoring = false
 	_calculate_slot_positions()
 
 func _calculate_slot_positions() -> void:
@@ -126,7 +135,7 @@ func slot_at_modified_index(index: int) -> Slot:
 		return _slots[index]
 	var new_index = round(index / load_modifier)
 	return _slots[new_index]
-	
+
 func _get_load_modifier() -> int:
 	match interval_type:
 		IntervalType.QUARTER:
@@ -135,4 +144,6 @@ func _get_load_modifier() -> int:
 			return 2
 		IntervalType.SIXTEENTH:
 			return 1
+		IntervalType.TUTORIAL:
+			return 8
 	return -1

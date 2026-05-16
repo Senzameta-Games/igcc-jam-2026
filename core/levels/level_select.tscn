@@ -3,36 +3,42 @@
 [ext_resource type="PackedScene" uid="uid://b5x3d8ndx7yln" path="res://core/levels/level_select_item.tscn" id="1_g06k2"]
 [ext_resource type="Script" uid="uid://d1woehev03ego" path="res://core/levels/level_select.gd" id="1_vv82d"]
 [ext_resource type="Texture2D" uid="uid://cwialm4j2di8h" path="res://core/assets/free_play/free_play_stars.png" id="3_crwlr"]
+[ext_resource type="Texture2D" uid="uid://bbv6v0p4ks3ks" path="res://core/assets/stars/tutorial.png" id="3_wcnro"]
 
-[node name="LevelSelect" type="Node2D" unique_id=1994786333]
+[node name="LevelSelect" type="Node2D" unique_id=1477367500]
 script = ExtResource("1_vv82d")
 
-[node name="Level0" parent="." unique_id=234798549 instance=ExtResource("1_g06k2")]
-position = Vector2(913, -238)
+[node name="Level0" parent="." unique_id=1654091346 instance=ExtResource("1_g06k2")]
+position = Vector2(960, 12)
+completed_color = Color(0.9137255, 0.9098039, 0.88235295, 0.47058824)
 
-[node name="Level1" parent="." unique_id=1791471152 instance=ExtResource("1_g06k2")]
-position = Vector2(913, 90)
+[node name="Sprite" parent="Level0" index="1" unique_id=348086013]
+texture = ExtResource("3_wcnro")
 
-[node name="Level2" parent="." unique_id=1376092054 instance=ExtResource("1_g06k2")]
-position = Vector2(578, 315)
+[node name="Level1" parent="." unique_id=807154709 instance=ExtResource("1_g06k2")]
+position = Vector2(204, 268)
 
-[node name="Level3" parent="." unique_id=1678130576 instance=ExtResource("1_g06k2")]
-position = Vector2(1234, 316)
+[node name="Level2" parent="." unique_id=1536085746 instance=ExtResource("1_g06k2")]
+position = Vector2(553, 488)
 
-[node name="Level4" parent="." unique_id=1179526704 instance=ExtResource("1_g06k2")]
-position = Vector2(306, 66)
+[node name="Level3" parent="." unique_id=1995756738 instance=ExtResource("1_g06k2")]
+position = Vector2(960, 565)
 
-[node name="Level5" parent="." unique_id=1976540429 instance=ExtResource("1_g06k2")]
-position = Vector2(1500, 61)
+[node name="Level4" parent="." unique_id=1036993754 instance=ExtResource("1_g06k2")]
+position = Vector2(1353, 488)
 
-[node name="Level6" parent="." unique_id=1799796255 instance=ExtResource("1_g06k2")]
-position = Vector2(910, 494)
+[node name="Level5" parent="." unique_id=723890810 instance=ExtResource("1_g06k2")]
+position = Vector2(1701, 268)
+
+[node name="Level6" parent="." unique_id=216553973 instance=ExtResource("1_g06k2")]
+position = Vector2(960, 276)
 locked_color = Color(0.364706, 0.364706, 0.364706, 0.215686)
 
 [node name="Sprite" parent="Level6" index="1" unique_id=348086013]
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("3_crwlr")
 
-[node name="Background" type="Sprite2D" parent="." unique_id=653116624]
+[node name="Background" type="Sprite2D" parent="." unique_id=1123435639]
 
+[editable path="Level0"]
 [editable path="Level6"]

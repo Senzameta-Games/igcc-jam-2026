@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bawhmj7xmw783"]
+
+[ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="1_4v2kl"]
+
+[node name="Tray" unique_id=835271133 instance=ExtResource("1_4v2kl")]
+
+[node name="Slot0" parent="Slots" parent_id_path=PackedInt32Array(856576797) index="0" unique_id=136360553]
+position = Vector2(0, -563)
+
+[node name="Slot1" parent="Slots" parent_id_path=PackedInt32Array(856576797) index="1" unique_id=849978761]
+visible = false
+
+[node name="Slot2" parent="Slots" parent_id_path=PackedInt32Array(856576797) index="2" unique_id=694147557]
+visible = false
+
+[node name="Slot3" parent="Slots" parent_id_path=PackedInt32Array(856576797) index="3" unique_id=341874409]
+visible = false
+
+[node name="Slot4" parent="Slots" parent_id_path=PackedInt32Array(856576797) index="4" unique_id=1912150730]
+visible = false
+
+[node name="Slot5" parent="Slots" parent_id_path=PackedInt32Array(856576797) index="5" unique_id=521193706]
+visible = false

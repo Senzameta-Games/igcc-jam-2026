@@ -12,6 +12,8 @@ radius = 160.0
 
 [node name="Level" type="Area2D" unique_id=1791471152]
 script = ExtResource("1_c6hew")
+completed_color = Color(0.9123918, 0.9102303, 0.8790715, 0.4392157)
+locked_color = Color(0.2509804, 0.2509804, 0.2509804, 0.40784314)
 hover_shader = ExtResource("6_d2k66")
 
 [node name="Shape" type="CollisionShape2D" parent="." unique_id=745144249]

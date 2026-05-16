@@ -6,49 +6,53 @@
 			"interval": "EIGHTH"
 		},
 		{
-			"interval": "EIGHTH"
-		},
-		{
 			"interval": "SIXTEENTH"
 		}
 	],
 	"tray_orbs": [
 		0,
-		1,
-		2,
 		3,
-		4,
-		1
+		0,
+		0
 	],
 	"solution": [
 		[
 			{
-				"orb_type": 2,
-				"ring": 2,
+				"orb_type": 1,
+				"ring": 1,
 				"locked": true
+			}
+		],
+		[],
+		[],
+		[],
+		[
+			{
+				"orb_type": 0,
+				"ring": 0,
+				"locked": false
 			}
 		],
 		[],
 		[
 			{
 				"orb_type": 3,
+				"ring": 0,
+				"locked": false
+			}
+		],
+		[
+			{
+				"orb_type": 0,
 				"ring": 1,
 				"locked": false
 			}
 		],
 		[
 			{
-				"orb_type": 4,
-				"ring": 2,
-				"locked": false
-			}
-		],
-		[],
-		[
-			{
-				"orb_type": 1,
-				"ring": 2,
-				"locked": false
+				"orb_type": 2,
+				"ring": 0,
+				"locked": true
 			}
 		],
 		[],
@@ -61,29 +65,8 @@
 			}
 		],
 		[],
-		[
-			{
-				"orb_type": 2,
-				"ring": 0,
-				"locked": false
-			}
-		],
 		[],
-		[
-			{
-				"orb_type": 4,
-				"ring": 0,
-				"locked": true
-			}
-		],
 		[],
-		[
-			{
-				"orb_type": 1,
-				"ring": 1,
-				"locked": false
-			}
-		],
 		[]
 	]
 }
