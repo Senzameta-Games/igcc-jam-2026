@@ -27,6 +27,7 @@ var _hints_pending: bool = false
 var _post_completion: bool = false
 var _pending_freeplay: bool = false
 var _active_tray: Tray = null
+var _event_toggled: bool = false
 
 
 func _ready() -> void:
@@ -106,6 +107,7 @@ func _update_camera() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("level_select"):
+		_event_toggled = true
 		_toggle_level_select()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("playback_toggle"):
@@ -181,6 +183,9 @@ func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 		ConsoleMode.Mode.CONSOLE:
 			if not _post_completion:
 				_level_manager.unmark_clue_for_current_level()
+				if (_event_toggled):
+					_present_clue_for_current_level(true)
+					_event_toggled = false
 			#_lockbox.visible = true
 			_post_completion = false
 		ConsoleMode.Mode.LEVEL_SELECT:
@@ -291,10 +296,10 @@ func _on_level_selected(index: int) -> void:
 		_clues.clear()
 		_pending_freeplay = true
 	else:
-		_present_clue_for_current_level()
+		_present_clue_for_current_level(false)
 	_console_mode.request_console()
 
-func _present_clue_for_current_level() -> void:
+func _present_clue_for_current_level(add_minimized: bool) -> void:
 	_clues.clear()
 	var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(_level_manager.current_index())
 	if data.solution.is_empty():
@@ -305,7 +310,7 @@ func _present_clue_for_current_level() -> void:
 		return
 	if not _level_manager.is_clue_shown(idx):
 		_level_manager.mark_clue_shown(idx)
-		_clues.queue_clue(data.solution, _desk_layer.get_measure_duration())
+		_clues.queue_clue(data.solution, _desk_layer.get_measure_duration(), add_minimized)
 		_audio_manager.play_level_start()
 		if idx == 1:
 			_hints_pending = true
