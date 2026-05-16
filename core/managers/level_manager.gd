@@ -83,6 +83,9 @@ func initialize(sequencer: DeskLayer, tray: Tray, piano_roll: PianoRoll) -> void
 	_piano_roll = piano_roll
 	_scan_levels()
 
+func set_tray(tray: Tray) -> void:
+	_tray = tray
+
 func get_level_filename(index: int) -> String:
 	if index < 0 or index >= _level_files.size():
 		return ""

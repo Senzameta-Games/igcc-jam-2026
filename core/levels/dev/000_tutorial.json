@@ -1,0 +1,36 @@
+{
+	"id": 0,
+	"name": "Tutorial",
+	"rings": [
+		{
+			"interval": "TUTORIAL"
+		}
+	],
+	"tray_orbs": [
+		3
+	],
+	"solution": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			{
+				"orb_type": 3,
+				"ring": 0,
+				"locked": false
+			}
+		],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[]
+	]
+}

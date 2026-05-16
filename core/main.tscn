@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://0jy8je4f7jdl" path="res://core/managers/console_mode.gd" id="4_7ua4h"]
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
+[ext_resource type="Texture2D" uid="uid://bahwwy6crwagq" path="res://core/assets/background/skyBG.png" id="7_ltm8o"]
 [ext_resource type="Texture2D" uid="uid://c05ekk8m7yswa" path="res://core/assets/background/clouds.png" id="9_k2fum"]
 [ext_resource type="PackedScene" uid="uid://esgkju3uf5pp" path="res://core/levels/level_select.tscn" id="11_7ua4h"]
 [ext_resource type="AudioStream" uid="uid://1prnm56knkjx" path="res://core/assets/audio/music/spheres_1_juiced.wav" id="12_l1ude"]
@@ -29,9 +30,6 @@
 [ext_resource type="AudioStream" uid="uid://bo30pgdcofwfy" path="res://core/assets/audio/slot/orbPlace3.wav" id="26_ltm8o"]
 [ext_resource type="AudioStream" uid="uid://cbk0aqsmhhu1r" path="res://core/assets/audio/slot/orbPlace4.wav" id="27_13j2v"]
 [ext_resource type="AudioStream" uid="uid://c3gm3gq1yac5c" path="res://core/assets/audio/slot/orbPlace5.wav" id="28_8dldp"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_rjnh8"]
-load_path = "res://.godot/imported/skyBG.png-2624ba02e6f67797803ba30816263408.ctex"
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_fc6mm"]
 streams_count = 5
@@ -92,7 +90,7 @@ cloud_wrap_left_x = -2000.0
 z_index = -3
 position = Vector2(-29, -1175)
 scale = Vector2(0.5, 0.7)
-texture = SubResource("CompressedTexture2D_rjnh8")
+texture = ExtResource("7_ltm8o")
 
 [node name="Foreground" type="Sprite2D" parent="SkyLayer" unique_id=1138337272]
 

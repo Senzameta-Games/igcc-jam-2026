@@ -645,7 +645,7 @@ func _cell_pos(tick: int, ring_index: int) -> Vector2:
 	return fan_origin + Vector2(cos(angle_rad), sin(angle_rad)) * radius
 
 func _tick_angle_rad(tick: float) -> float:
-	var t: float = tick / float(TICKS - 1)
+	var t: float = tick / float(TICKS)
 	var angle_deg: float = -fan_angle_span * 0.5 + t * fan_angle_span
 	return deg_to_rad(angle_deg - 90.0)
 

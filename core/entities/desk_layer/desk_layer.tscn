@@ -23,6 +23,7 @@
 [ext_resource type="AudioStream" uid="uid://cdiujaif3787j" path="res://core/assets/audio/background/measure_drums.wav" id="20_icovv"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="20_oyf0e"]
 [ext_resource type="PackedScene" uid="uid://bbmvjaukbxutq" path="res://core/entities/tray/extra_tray.tscn" id="23_bibdu"]
+[ext_resource type="PackedScene" uid="uid://bawhmj7xmw783" path="res://core/entities/tray/tutorial_tray.tscn" id="24_m1d6g"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ebywj"]
 shader = ExtResource("6_oyf0e")
@@ -104,6 +105,14 @@ volume_db = -14.0
 [node name="DetectionFeedback" type="Node2D" parent="Sequencer" unique_id=1697610570]
 
 [node name="Tray" parent="." unique_id=835271133 instance=ExtResource("20_oyf0e")]
+z_index = 1
+position = Vector2(960, 560)
+angle_sky_deg = -90.0
+desk_pos = Vector2(960, 560)
+sky_pos = Vector2(960, 640)
+arc_transition_duration = 1.2
+
+[node name="TutorialTray" parent="." unique_id=2116488950 instance=ExtResource("24_m1d6g")]
 z_index = 1
 position = Vector2(960, 560)
 angle_sky_deg = -90.0

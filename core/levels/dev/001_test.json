@@ -4,31 +4,22 @@
 	"rings": [
 		{
 			"interval": "EIGHTH"
-		},
-		{
-			"interval": "SIXTEENTH"
 		}
 	],
 	"tray_orbs": [
 		0,
-		3,
-		0,
-		0
+		1,
+		2,
+		3
 	],
 	"solution": [
-		[
-			{
-				"orb_type": 1,
-				"ring": 1,
-				"locked": true
-			}
-		],
+		[],
 		[],
 		[],
 		[],
 		[
 			{
-				"orb_type": 0,
+				"orb_type": 2,
 				"ring": 0,
 				"locked": false
 			}
@@ -41,29 +32,23 @@
 				"locked": false
 			}
 		],
+		[],
 		[
 			{
 				"orb_type": 0,
-				"ring": 1,
-				"locked": false
-			}
-		],
-		[
-			{
-				"orb_type": 2,
 				"ring": 0,
-				"locked": true
-			}
-		],
-		[],
-		[],
-		[
-			{
-				"orb_type": 0,
-				"ring": 1,
 				"locked": false
 			}
 		],
+		[],
+		[
+			{
+				"orb_type": 1,
+				"ring": 0,
+				"locked": false
+			}
+		],
+		[],
 		[],
 		[],
 		[],

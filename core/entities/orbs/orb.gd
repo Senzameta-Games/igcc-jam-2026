@@ -20,7 +20,9 @@ enum OrbType { Bb3, F3, G3, A4, D4 }
 var is_locked: bool = false
 
 static var _highlight_material: ShaderMaterial = null
+static var _hover_material: ShaderMaterial = null
 
+var _is_hovered: bool = false
 var source_level: int = -1
 var _state: State = State.IN_SLOT
 var _pulse_tween: Tween = null
@@ -43,10 +45,12 @@ func _ready() -> void:
 	if _highlight_material == null:
 		_highlight_material = ShaderMaterial.new()
 		_highlight_material.shader = preload("res://core/entities/orbs/orb_highlight.gdshader")
+	if _hover_material == null:
+		_hover_material = ShaderMaterial.new()
+		_hover_material.shader = preload("res://core/entities/orbs/hover_outline.gdshader")
 	Playback.started.connect(_on_playback_started)
 	Playback.stopped.connect(_on_playback_stopped)
-	if not Playback.is_playing:
-		_sprite.material = _highlight_material
+	_refresh_material()
 
 func _process(delta: float) -> void:
 	if _state != State.LERPING:
@@ -90,10 +94,27 @@ func land(silent: bool = false) -> void:
 		_land.play()
 		_pitchhint.play()
 
+func show_hover() -> void:
+	_is_hovered = true
+	_refresh_material()
+
+func hide_hover() -> void:
+	_is_hovered = false
+	_refresh_material()
+
+func _refresh_material() -> void:
+	if is_locked or Playback.is_playing:
+		_sprite.material = null
+	elif _is_hovered:
+		_sprite.material = _hover_material
+	else:
+		_sprite.material = _highlight_material
+
 func set_locked() -> void:
 	is_locked = true
+	_is_hovered = false
 	_sprite.play("locked")
-	_sprite.material = null
+	_refresh_material()
 	Playback.started.disconnect(_on_playback_started)
 	Playback.stopped.disconnect(_on_playback_stopped)
 
@@ -101,7 +122,7 @@ func play_return_to_tray() -> void:
 	_return_to_tray_sfx.play()
 
 func _on_playback_started() -> void:
-	_sprite.material = null
+	_refresh_material()
 
 func _on_playback_stopped() -> void:
-	_sprite.material = _highlight_material
+	_refresh_material()
