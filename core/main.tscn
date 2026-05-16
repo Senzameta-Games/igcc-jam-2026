@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://0jy8je4f7jdl" path="res://core/managers/console_mode.gd" id="4_7ua4h"]
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
-[ext_resource type="Texture2D" uid="uid://cp83ckcybx1an" path="res://core/assets/background/sky.png" id="7_cus2n"]
+[ext_resource type="Texture2D" uid="uid://c05ekk8m7yswa" path="res://core/assets/background/clouds.png" id="9_k2fum"]
 [ext_resource type="PackedScene" uid="uid://esgkju3uf5pp" path="res://core/levels/level_select.tscn" id="11_7ua4h"]
 [ext_resource type="AudioStream" uid="uid://1prnm56knkjx" path="res://core/assets/audio/music/spheres_1_juiced.wav" id="12_l1ude"]
 [ext_resource type="AudioStream" uid="uid://cvpxpwpvlpc63" path="res://core/assets/audio/background/noise_looped2.wav" id="13_l1ude"]
@@ -30,63 +30,74 @@
 [ext_resource type="AudioStream" uid="uid://cbk0aqsmhhu1r" path="res://core/assets/audio/slot/orbPlace4.wav" id="27_13j2v"]
 [ext_resource type="AudioStream" uid="uid://c3gm3gq1yac5c" path="res://core/assets/audio/slot/orbPlace5.wav" id="28_8dldp"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_rjnh8"]
+load_path = "res://.godot/imported/skyBG.png-2624ba02e6f67797803ba30816263408.ctex"
+
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_fc6mm"]
 streams_count = 5
 stream_0/stream = ExtResource("24_rjnh8")
+stream_0/weight = 1.61e-43
 stream_1/stream = ExtResource("25_k2fum")
+stream_1/weight = 1.39e-43
 stream_2/stream = ExtResource("26_ltm8o")
+stream_2/weight = 6.6e-44
 stream_3/stream = ExtResource("27_13j2v")
+stream_3/weight = 1.54e-43
 stream_4/stream = ExtResource("28_8dldp")
+stream_4/weight = 1.39e-43
 
-[node name="Main" type="Node2D" unique_id=1746196733]
+[node name="Main" type="Node2D" unique_id=1079612378]
 script = ExtResource("1_csopv")
 console_bottom = 1080.0
 
-[node name="LevelManager" type="Node" parent="." unique_id=531121199]
+[node name="LevelManager" type="Node" parent="." unique_id=1838999042]
 script = ExtResource("2_rayt5")
 metadata/_custom_type_script = "uid://0x2x5jmtfaov"
 
-[node name="ConsoleMode" type="Node" parent="." unique_id=978732142]
+[node name="ConsoleMode" type="Node" parent="." unique_id=475653254]
 script = ExtResource("4_7ua4h")
 
-[node name="HandLayer" type="CanvasLayer" parent="." unique_id=2001234569]
+[node name="HandLayer" type="CanvasLayer" parent="." unique_id=1921602446]
 layer = 11
 follow_viewport_enabled = true
 
-[node name="Hand" parent="HandLayer" unique_id=797971003 instance=ExtResource("2_csopv")]
+[node name="Hand" parent="HandLayer" unique_id=659350361 instance=ExtResource("2_csopv")]
 
-[node name="DeskLayer" parent="." unique_id=1167367685 instance=ExtResource("1_xiose")]
+[node name="DeskLayer" parent="." unique_id=870104005 instance=ExtResource("1_xiose")]
 position = Vector2(0, -60)
 position_console = Vector2(0, 180)
 position_playback = Vector2(0, 240)
 position_transition_duration = 1.4
 position_trans = 3
 
-[node name="Rings" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="0" unique_id=123070447]
-rotation = -1.5707964
+[node name="Rings" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(870104005, 1677363772) index="0" unique_id=123070447]
+rotation = -1.5708
 
-[node name="RayCaster" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(1167367685, 1677363772) index="1" unique_id=724280312]
-rotation = -1.5707964
+[node name="RayCaster" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(870104005, 1677363772) index="1" unique_id=724280312]
+rotation = -1.5708
 
-[node name="SkyLayer" type="Node2D" parent="." unique_id=1703590390]
+[node name="SkyLayer" type="Node2D" parent="." unique_id=1908889465 node_paths=PackedStringArray("cloud_layer")]
 position = Vector2(960, 520)
 script = ExtResource("6_brq4u")
 position_console = Vector2(960, 400)
 position_playback = Vector2(960, 640)
 mode_transition_duration = 1.2
 mode_trans = 3
+cloud_layer = NodePath("Paralax")
+cloud_speed = 200.0
+cloud_wrap_right_x = 2500.0
+cloud_wrap_left_x = -2000.0
 
-[node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=2124646230]
+[node name="Sky" type="Sprite2D" parent="SkyLayer" unique_id=401482841]
 z_index = -3
-position = Vector2(0, -822.62506)
-scale = Vector2(0.75, 0.7928783)
-texture = ExtResource("7_cus2n")
+position = Vector2(-29, -788)
+scale = Vector2(0.493739, 0.521966)
+texture = SubResource("CompressedTexture2D_rjnh8")
 
-[node name="Foreground" type="Sprite2D" parent="SkyLayer" unique_id=918667087]
+[node name="Foreground" type="Sprite2D" parent="SkyLayer" unique_id=1138337272]
 
-[node name="PianoRoll" parent="SkyLayer" unique_id=890019107 instance=ExtResource("6_kagtj")]
-position = Vector2(-524.0001, -349)
-scale = Vector2(0.99999994, 0.99999994)
+[node name="PianoRoll" parent="SkyLayer" unique_id=572281827 instance=ExtResource("6_kagtj")]
+position = Vector2(-524, -349)
 fan_radius_inner = 600.0
 fan_radius_outer = 800.0
 fan_angle_span = 135.0
@@ -97,49 +108,55 @@ ghost_marker_scale_max = 0.4
 ghost_marker_pulse_duration = 0.8
 line_star_scale_min = 0.16
 line_star_scale_max = 0.28
-line_star_color = Color(1, 1, 1, 0.7254902)
+line_star_color = Color(1, 1, 1, 0.72549)
 line_enter_duration = 2.1
 line_enter_step_delay = 0.025
 max_constellation_distance = 450.0
 star_scale_min = 0.15
 star_scale_max = 0.2
 
-[node name="LevelSelect" parent="SkyLayer" unique_id=302540498 instance=ExtResource("11_7ua4h")]
+[node name="LevelSelect" parent="SkyLayer" unique_id=1146152041 instance=ExtResource("11_7ua4h")]
 position = Vector2(-960, -1600)
 
-[node name="AudioManager" type="Node" parent="." unique_id=468181767]
+[node name="Paralax" type="Sprite2D" parent="SkyLayer" unique_id=792117348]
+z_index = -3
+position = Vector2(-1150.9999, -1579)
+scale = Vector2(0.7199944, 0.7846652)
+texture = ExtResource("9_k2fum")
+
+[node name="AudioManager" type="Node" parent="." unique_id=1340528299]
 script = ExtResource("14_lxu0y")
 
-[node name="BGM" type="AudioStreamPlayer" parent="AudioManager" unique_id=2011721722]
+[node name="BGM" type="AudioStreamPlayer" parent="AudioManager" unique_id=441425714]
 stream = ExtResource("12_l1ude")
 volume_db = -16.0
 autoplay = true
 
-[node name="RoomTone" type="AudioStreamPlayer" parent="AudioManager" unique_id=676740509]
+[node name="RoomTone" type="AudioStreamPlayer" parent="AudioManager" unique_id=1595499136]
 stream = ExtResource("13_l1ude")
 volume_db = -4.0
 autoplay = true
 
-[node name="ScreenUp" type="AudioStreamPlayer" parent="AudioManager" unique_id=1518849922]
+[node name="ScreenUp" type="AudioStreamPlayer" parent="AudioManager" unique_id=426893748]
 stream = ExtResource("14_ge7io")
 volume_db = -20.0
 
-[node name="ScreenDown" type="AudioStreamPlayer" parent="AudioManager" unique_id=1263234912]
+[node name="ScreenDown" type="AudioStreamPlayer" parent="AudioManager" unique_id=1661455356]
 stream = ExtResource("15_jeqa8")
 volume_db = -20.0
 
-[node name="LevelComplete" type="AudioStreamPlayer" parent="AudioManager" unique_id=462100004]
+[node name="LevelComplete" type="AudioStreamPlayer" parent="AudioManager" unique_id=360196955]
 stream = ExtResource("16_7akvt")
 volume_db = -10.0
 
-[node name="LevelStart" type="AudioStreamPlayer" parent="AudioManager" unique_id=297330845]
+[node name="LevelStart" type="AudioStreamPlayer" parent="AudioManager" unique_id=530209512]
 stream = ExtResource("17_bc33c")
 volume_db = -10.0
 
-[node name="HintsLayer" type="CanvasLayer" parent="." unique_id=2001234567]
+[node name="HintsLayer" type="CanvasLayer" parent="." unique_id=2072981211]
 layer = 10
 
-[node name="Hints" type="MarginContainer" parent="HintsLayer" unique_id=1895240326]
+[node name="Hints" type="MarginContainer" parent="HintsLayer" unique_id=175920355]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -152,65 +169,65 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="Hints" type="VBoxContainer" parent="HintsLayer/Hints" unique_id=747966718]
+[node name="Hints" type="VBoxContainer" parent="HintsLayer/Hints" unique_id=143686640]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="LevelSelectHint" type="HBoxContainer" parent="HintsLayer/Hints/Hints" unique_id=1181498548]
+[node name="LevelSelectHint" type="HBoxContainer" parent="HintsLayer/Hints/Hints" unique_id=836205377]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/separation = 8
 
-[node name="ActionHint" type="TextureRect" parent="HintsLayer/Hints/Hints/LevelSelectHint" unique_id=1636332159]
+[node name="ActionHint" type="TextureRect" parent="HintsLayer/Hints/Hints/LevelSelectHint" unique_id=260482619]
 layout_mode = 2
 texture = ExtResource("16_slld4")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="InputGlyph" type="TextureRect" parent="HintsLayer/Hints/Hints/LevelSelectHint" unique_id=1657101840]
+[node name="InputGlyph" type="TextureRect" parent="HintsLayer/Hints/Hints/LevelSelectHint" unique_id=45493131]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_vertical = 0
 texture = ExtResource("17_i2u5h")
 expand_mode = 3
 
-[node name="PlaybackHint" type="HBoxContainer" parent="HintsLayer/Hints/Hints" unique_id=283511412]
+[node name="PlaybackHint" type="HBoxContainer" parent="HintsLayer/Hints/Hints" unique_id=1558763894]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/separation = 8
 
-[node name="ActionHint" type="TextureRect" parent="HintsLayer/Hints/Hints/PlaybackHint" unique_id=1939955495]
+[node name="ActionHint" type="TextureRect" parent="HintsLayer/Hints/Hints/PlaybackHint" unique_id=955775035]
 layout_mode = 2
 texture = ExtResource("19_rjnh8")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="InputGlyph" type="TextureRect" parent="HintsLayer/Hints/Hints/PlaybackHint" unique_id=520922242]
+[node name="InputGlyph" type="TextureRect" parent="HintsLayer/Hints/Hints/PlaybackHint" unique_id=419085101]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_vertical = 0
 texture = ExtResource("20_k2fum")
 expand_mode = 3
 
-[node name="ReturnOrbsHint" type="HBoxContainer" parent="HintsLayer/Hints/Hints" unique_id=1216448947]
+[node name="ReturnOrbsHint" type="HBoxContainer" parent="HintsLayer/Hints/Hints" unique_id=1651854489]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/separation = 8
 
-[node name="ActionHint" type="TextureRect" parent="HintsLayer/Hints/Hints/ReturnOrbsHint" unique_id=1872246089]
+[node name="ActionHint" type="TextureRect" parent="HintsLayer/Hints/Hints/ReturnOrbsHint" unique_id=1347671262]
 layout_mode = 2
 texture = ExtResource("21_k2fum")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="InputGlyph" type="TextureRect" parent="HintsLayer/Hints/Hints/ReturnOrbsHint" unique_id=1134051842]
+[node name="InputGlyph" type="TextureRect" parent="HintsLayer/Hints/Hints/ReturnOrbsHint" unique_id=308672944]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_vertical = 0
 texture = ExtResource("21_ltm8o")
 expand_mode = 3
 
-[node name="Clues" type="Node2D" parent="." unique_id=1266064845]
+[node name="Clues" type="Node2D" parent="." unique_id=1694951001]
 z_index = 3
 position = Vector2(960, 1001)
 script = ExtResource("22_bc33c")
@@ -220,18 +237,18 @@ pile_top_y = -900.0
 pile_gap = 80.0
 scrim_opacity = 0.96
 
-[node name="Scrim" type="Sprite2D" parent="Clues" unique_id=1828588868]
+[node name="Scrim" type="Sprite2D" parent="Clues" unique_id=771515545]
 modulate = Color(1, 1, 1, 0)
-position = Vector2(0, -602.37494)
-scale = Vector2(0.7, 0.8978696)
+position = Vector2(0, -602.375)
+scale = Vector2(0.7, 0.89787)
 texture = ExtResource("23_s2qte")
 
-[node name="ClueNote" type="AudioStreamPlayer" parent="Clues" unique_id=875040904]
+[node name="ClueNote" type="AudioStreamPlayer" parent="Clues" unique_id=726564848]
 stream = SubResource("AudioStreamRandomizer_fc6mm")
 volume_db = -6.0
 pitch_scale = 2.0
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=2001234568]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=998296360]
 position = Vector2(960, 360)
 zoom = Vector2(1.03, 1.03)
 
