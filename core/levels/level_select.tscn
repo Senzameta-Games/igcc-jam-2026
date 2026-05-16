@@ -1,35 +1,35 @@
-[gd_scene format=3 uid="uid://esgkju3uf5pp"]
+[gd_scene load_steps=4 format=3 uid="uid://esgkju3uf5pp"]
 
 [ext_resource type="PackedScene" uid="uid://b5x3d8ndx7yln" path="res://core/levels/level_select_item.tscn" id="1_g06k2"]
-[ext_resource type="Script" uid="uid://d1woehev03ego" path="res://core/levels/level_select.gd" id="1_vv82d"]
+[ext_resource type="Script" path="res://core/levels/level_select.gd" id="1_vv82d"]
 [ext_resource type="Texture2D" uid="uid://cwialm4j2di8h" path="res://core/assets/free_play/free_play_stars.png" id="3_crwlr"]
 
-[node name="LevelSelect" type="Node2D" unique_id=302540498]
+[node name="LevelSelect" type="Node2D"]
 script = ExtResource("1_vv82d")
 
-[node name="Level" parent="." unique_id=1791471152 instance=ExtResource("1_g06k2")]
+[node name="Level" parent="." instance=ExtResource("1_g06k2")]
 position = Vector2(913, 90)
 
-[node name="Level2" parent="." unique_id=724728710 instance=ExtResource("1_g06k2")]
+[node name="Level2" parent="." instance=ExtResource("1_g06k2")]
 position = Vector2(578, 315)
 
-[node name="Level3" parent="." unique_id=1489925015 instance=ExtResource("1_g06k2")]
+[node name="Level3" parent="." instance=ExtResource("1_g06k2")]
 position = Vector2(1234, 316)
 
-[node name="Level4" parent="." unique_id=1046162003 instance=ExtResource("1_g06k2")]
+[node name="Level4" parent="." instance=ExtResource("1_g06k2")]
 position = Vector2(306, 66)
 
-[node name="Level5" parent="." unique_id=905073221 instance=ExtResource("1_g06k2")]
+[node name="Level5" parent="." instance=ExtResource("1_g06k2")]
 position = Vector2(1500, 61)
 
-[node name="Level6" parent="." unique_id=1011657618 instance=ExtResource("1_g06k2")]
+[node name="Level6" parent="." instance=ExtResource("1_g06k2")]
 position = Vector2(910, 494)
-locked_color = Color(0.3647059, 0.3647059, 0.3647059, 0.21568628)
+locked_color = Color(0.364706, 0.364706, 0.364706, 0.215686)
 
-[node name="Sprite" parent="Level6" index="1" unique_id=348086013]
+[node name="Sprite" parent="Level6" index="1"]
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("3_crwlr")
 
-[node name="Background" type="Sprite2D" parent="." unique_id=929764555]
+[node name="Background" type="Sprite2D" parent="."]
 
 [editable path="Level6"]

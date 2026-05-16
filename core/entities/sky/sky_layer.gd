@@ -27,6 +27,12 @@ signal transition_midpoint
 ## PianoRoll scale in LEVEL_SELECT.
 @export var piano_roll_scale_level_select: Vector2 = Vector2(1.0, 1.0)
 
+
+@export var cloud_layer: Sprite2D
+@export var cloud_speed: float = 20.0
+@export var cloud_wrap_right_x: float = 1920.0
+@export var cloud_wrap_left_x: float = -1920.0
+
 var _tween: Tween = null
 var _mode_tween: Tween = null
 var _mode_ready: bool = false
@@ -34,6 +40,16 @@ var _current_mode: ConsoleMode.Mode = ConsoleMode.Mode.LEVEL_SELECT
 
 @onready var _piano_roll: PianoRoll = $PianoRoll
 @onready var _level_select: LevelSelect = $LevelSelect
+
+func _process(delta: float) -> void:
+	move_clouds(delta)
+
+func move_clouds(delta: float) -> void:
+	if cloud_layer == null:
+		return
+	cloud_layer.position.x += cloud_speed * delta
+	if cloud_layer.position.x > cloud_wrap_right_x:
+		cloud_layer.position.x = cloud_wrap_left_x
 
 func on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	_current_mode = mode
