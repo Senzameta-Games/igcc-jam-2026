@@ -1,11 +1,26 @@
 [gd_scene format=3 uid="uid://c1ycavhb8bwf4"]
 
+[ext_resource type="Shader" uid="uid://drb1qdq61iyri" path="res://core/entities/orbs/hover_outline.gdshader" id="1_3gdvj"]
 [ext_resource type="Script" uid="uid://ckqdtgnc1nxah" path="res://core/entities/hand/hand.gd" id="1_ljdg1"]
 [ext_resource type="Texture2D" uid="uid://ch1re2se0arpy" path="res://core/assets/hand/hand_empty.png" id="2_oaghj"]
 [ext_resource type="Texture2D" uid="uid://du30vgygwe8gd" path="res://core/assets/hand/hand_holding.png" id="3_y17g0"]
 [ext_resource type="Texture2D" uid="uid://db6kld3pwjcw5" path="res://core/assets/hand/hand_pointing.png" id="4_y17g0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v2pej"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3gdvj"]
+shader = ExtResource("1_3gdvj")
+shader_parameter/outline_width = 1.0000000475
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/wave_amplitude = 3.0000001425
+shader_parameter/wave_frequency = 16.0000007125
+shader_parameter/wave_speed = 1.0000000475
+shader_parameter/glow_falloff = 0.6
+shader_parameter/pulse_speed = 2.000000095
+shader_parameter/pulse_amount = 0.08
+shader_parameter/dust_rise_speed = 0.050000002375
+shader_parameter/dust_size = 0.010000000475
+shader_parameter/brush_roughness = 0.65
 
 [node name="Hand" type="Node2D" unique_id=797971003]
 z_index = 99
@@ -22,4 +37,4 @@ collision_mask = 15
 shape = SubResource("RectangleShape2D_v2pej")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=941995552]
-scale = Vector2(0.8, 0.8)
+material = SubResource("ShaderMaterial_3gdvj")
