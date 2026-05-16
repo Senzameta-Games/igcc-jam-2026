@@ -183,6 +183,7 @@ func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 			_post_completion = false
 		ConsoleMode.Mode.LEVEL_SELECT:
 			_hand.return_held_to_tray(_active_tray)
+			_clues.clear()
 			if not _post_completion:
 				_sweep_non_pearl_orbs_to_tray()
 
