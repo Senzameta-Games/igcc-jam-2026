@@ -11,7 +11,7 @@
 	],
 	"tray_orbs": [
 		0,
-		2,
+		3,
 		0,
 		0
 	],
@@ -36,7 +36,7 @@
 		[],
 		[
 			{
-				"orb_type": 2,
+				"orb_type": 3,
 				"ring": 0,
 				"locked": false
 			}
@@ -50,7 +50,7 @@
 		],
 		[
 			{
-				"orb_type": 3,
+				"orb_type": 2,
 				"ring": 0,
 				"locked": true
 			}

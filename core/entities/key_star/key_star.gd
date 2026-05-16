@@ -6,7 +6,7 @@ const KEY_STAR_TEXTURES: Dictionary = {
 	Orb.OrbType.F3:  preload("res://core/assets/stars/keys/F.png"),
 	Orb.OrbType.G3:  preload("res://core/assets/stars/keys/G.png"),
 	Orb.OrbType.A4:  preload("res://core/assets/stars/keys/A.png"),
-	Orb.OrbType.D4:  preload("res://core/assets/stars/keys/D.png"),
+	Orb.OrbType.D4:  preload("res://core/assets/stars//keys/D.png"),
 }
 
 const _COLORS: Dictionary = {

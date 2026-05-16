@@ -13,7 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://uo46bofnpuuu" path="res://core/assets/audio/clue_card/page5.wav" id="11_wohuq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v52qp"]
-size = Vector2(280, 170)
+size = Vector2(338, 200)
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_1i65u"]
 streams_count = 5
@@ -32,17 +32,18 @@ solve_flash_duration = 0.1
 solve_slide_duration = 0.8
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=159149063]
-scale = Vector2(0.6, 0.6)
+scale = Vector2(0.75, 0.75)
 texture = ExtResource("2_h3pfr")
 
 [node name="Keys" type="Node2D" parent="." unique_id=1170791373]
 position = Vector2(0, -9)
 
 [node name="Constellation" type="Node2D" parent="Keys" unique_id=234567890]
+position = Vector2(0, 10)
 script = ExtResource("3_chdscr")
 star_textures = Array[Texture2D]([ExtResource("4_qsyu7"), ExtResource("5_d2k66"), ExtResource("4_qsyu7"), ExtResource("6_iq0g6")])
-fan_radius_outer = 120.0
-fan_angle_span = 40.0
+fan_radius_inner = 100.0
+fan_angle_span = 80.0
 grid_star_scale = 0.2
 constellation_star_scale_min = 0.4
 constellation_star_scale_max = 0.5
@@ -52,7 +53,7 @@ ring_padding = 0
 [node name="Area" type="Area2D" parent="." unique_id=1175856262]
 
 [node name="Shape" type="CollisionShape2D" parent="Area" unique_id=1872269837]
-position = Vector2(-2, -6)
+position = Vector2(-2, -13)
 shape = SubResource("RectangleShape2D_v52qp")
 
 [node name="SFX" type="Node" parent="." unique_id=2118203437]
