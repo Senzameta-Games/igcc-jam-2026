@@ -27,7 +27,7 @@ var _hints_pending: bool = false
 var _post_completion: bool = false
 var _pending_freeplay: bool = false
 var _active_tray: Tray = null
-var _event_toggled: bool = false
+var _level_select_by_event: bool = false
 
 
 func _ready() -> void:
@@ -107,7 +107,7 @@ func _update_camera() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("level_select"):
-		_event_toggled = true
+		_level_select_by_event = true
 		_toggle_level_select()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("playback_toggle"):
@@ -183,9 +183,9 @@ func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 		ConsoleMode.Mode.CONSOLE:
 			if not _post_completion:
 				_level_manager.unmark_clue_for_current_level()
-				if (_event_toggled):
+				if (_level_select_by_event):
 					_present_clue_for_current_level(true)
-					_event_toggled = false
+					_level_select_by_event = false
 			#_lockbox.visible = true
 			_post_completion = false
 		ConsoleMode.Mode.LEVEL_SELECT:
@@ -291,6 +291,7 @@ func _on_level_selected(index: int) -> void:
 	_swap_active_tray(index == 0)
 	_level_manager.load_level_at_index(index)
 	var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(index)
+	_level_select_by_event = false
 	if data.solution.is_empty():
 		_piano_roll.set_solution([])
 		_clues.clear()
