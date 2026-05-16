@@ -18,12 +18,12 @@
 [ext_resource type="AudioStream" uid="uid://1odt55oru0gy" path="res://core/assets/audio/background/measure_pad_4.wav" id="12_aen4v"]
 [ext_resource type="AudioStream" uid="uid://bjt8dxbjy7i0f" path="res://core/assets/audio/ring/playbackSpin.wav" id="14_52j4s"]
 [ext_resource type="Script" uid="uid://cybqk8chrpfwd" path="res://core/entities/desk_layer/measure_music.gd" id="14_icovv"]
-[ext_resource type="Texture2D" uid="uid://brctjjt72mrxc" path="res://core/assets/layout/bottom_frame.png" id="19_sxubq"]
 [ext_resource type="AudioStream" uid="uid://c83mupve7hurv" path="res://core/assets/audio/button_press/return_all_orbs.wav" id="20_18s83"]
 [ext_resource type="AudioStream" uid="uid://cdiujaif3787j" path="res://core/assets/audio/background/measure_drums.wav" id="20_icovv"]
 [ext_resource type="PackedScene" uid="uid://ci2o1mwtub86j" path="res://core/entities/tray/tray.tscn" id="20_oyf0e"]
 [ext_resource type="PackedScene" uid="uid://bbmvjaukbxutq" path="res://core/entities/tray/extra_tray.tscn" id="23_bibdu"]
 [ext_resource type="PackedScene" uid="uid://bawhmj7xmw783" path="res://core/entities/tray/tutorial_tray.tscn" id="24_m1d6g"]
+[ext_resource type="Texture2D" uid="uid://dmvb25qukc5wm" path="res://core/assets/layout/desk_bottom2.png" id="25_2dsaa"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ebywj"]
 shader = ExtResource("6_oyf0e")
@@ -149,8 +149,8 @@ rotation = -0.22689278
 position = Vector2(1641, 707)
 rotation = 0.22689278
 
-[node name="Frame" type="Sprite2D" parent="." unique_id=1633339244]
+[node name="Frame" type="Sprite2D" parent="." unique_id=1645791890]
 z_index = 2
-position = Vector2(975.99994, 875.99994)
-scale = Vector2(0.55, 0.55)
-texture = ExtResource("19_sxubq")
+position = Vector2(948.00006, 663)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("25_2dsaa")
