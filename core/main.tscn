@@ -48,7 +48,7 @@ stream_4/weight = 1.39e-43
 
 [node name="Main" type="Node2D" unique_id=1079612378]
 script = ExtResource("1_csopv")
-console_bottom = 1080.0
+console_bottom = 1120.0
 
 [node name="LevelManager" type="Node" parent="." unique_id=1838999042]
 script = ExtResource("2_rayt5")
@@ -79,8 +79,8 @@ rotation = -1.5708
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1908889465 node_paths=PackedStringArray("cloud_layer")]
 position = Vector2(960, 520)
 script = ExtResource("6_brq4u")
-position_console = Vector2(960, 400)
-position_playback = Vector2(960, 640)
+position_console = Vector2(960, 450)
+position_playback = Vector2(960, 700)
 mode_transition_duration = 1.2
 mode_trans = 3
 cloud_layer = NodePath("Paralax")
@@ -97,7 +97,7 @@ texture = SubResource("CompressedTexture2D_rjnh8")
 [node name="Foreground" type="Sprite2D" parent="SkyLayer" unique_id=1138337272]
 
 [node name="PianoRoll" parent="SkyLayer" unique_id=572281827 instance=ExtResource("6_kagtj")]
-position = Vector2(-524, -349)
+position = Vector2(-524, -369)
 fan_radius_inner = 600.0
 fan_radius_outer = 800.0
 fan_angle_span = 135.0
@@ -122,7 +122,7 @@ correct_burst_scale = 0.2
 correct_burst_opacity = 0.25
 
 [node name="LevelSelect" parent="SkyLayer" unique_id=1146152041 instance=ExtResource("11_7ua4h")]
-position = Vector2(-960, -1600)
+position = Vector2(-960, -1489)
 
 [node name="Paralax" type="Sprite2D" parent="SkyLayer" unique_id=792117348]
 z_index = -3
@@ -245,8 +245,8 @@ scrim_opacity = 0.96
 
 [node name="Scrim" type="Sprite2D" parent="Clues" unique_id=771515545]
 modulate = Color(1, 1, 1, 0)
-position = Vector2(2, -603.00006)
-scale = Vector2(0.7, 0.89787)
+position = Vector2(0, -1075.8749)
+scale = Vector2(0.7, 1.3725564)
 texture = ExtResource("23_s2qte")
 
 [node name="ClueNote" type="AudioStreamPlayer" parent="Clues" unique_id=726564848]
@@ -255,7 +255,7 @@ volume_db = -6.0
 pitch_scale = 2.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=998296360]
-position = Vector2(960, 360)
+position = Vector2(960, 536)
 zoom = Vector2(1.03, 1.03)
 
 [editable path="DeskLayer"]
