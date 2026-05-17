@@ -24,6 +24,9 @@ var _completed: bool = false
 var _hover_material: ShaderMaterial = null
 
 func _ready() -> void:
+	if hover_shader != null:
+		_hover_material = ShaderMaterial.new()
+		_hover_material.shader = hover_shader
 	input_event.connect(_on_input_event)
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
@@ -47,9 +50,6 @@ func _refresh_modulate() -> void:
 	if _constellation.stars.is_empty():
 		_sprite.visible = not _locked
 		if not _locked and not _completed:
-			if _hover_material == null and hover_shader != null:
-				_hover_material = ShaderMaterial.new()
-				_hover_material.shader = hover_shader
 			_sprite.material = _hover_material
 		else:
 			_sprite.material = null
@@ -76,12 +76,7 @@ func _set_hover(active: bool) -> void:
 		_hover_tween.kill()
 	if _constellation.stars.is_empty():
 		return
-	var mat: ShaderMaterial = null
-	if active and hover_shader != null:
-		if _hover_material == null:
-			_hover_material = ShaderMaterial.new()
-			_hover_material.shader = hover_shader
-		mat = _hover_material
+	var mat: ShaderMaterial = _hover_material if active else null
 	_hover_tween = create_tween().set_parallel(true)
 	_hover_tween.set_ease(Tween.EASE_OUT)
 	_hover_tween.set_trans(Tween.TRANS_BACK)

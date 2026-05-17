@@ -14,6 +14,7 @@ extends Node2D
 @onready var _audio_manager: AudioManager = $AudioManager
 #@onready var _lockbox: Lockbox = $DeskLayer/Lockbox
 @onready var _hints: Control = $HintsLayer/Hints
+@onready var _action_pressed_sfx: AudioStreamPlayer = $HintsLayer/ActionPressed
 @onready var _hint_level_select: Control = $HintsLayer/Hints/Hints/LevelSelectHint
 @onready var _hint_playback: Control = $HintsLayer/Hints/Hints/PlaybackHint
 @onready var _hint_return_orbs: Control = $HintsLayer/Hints/Hints/ReturnOrbsHint
@@ -31,6 +32,7 @@ var _level_select_by_event: bool = false
 
 
 func _ready() -> void:
+	Orb.prewarm()
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	_hints.visible = false
 
@@ -106,6 +108,13 @@ func _update_camera() -> void:
 	_clues.present_position = Vector2(0.0, cam_y - _clues.position.y)
 
 func _input(event: InputEvent) -> void:
+	var is_special := event.is_action_pressed("level_select") \
+		or event.is_action_pressed("playback_toggle") \
+		or event.is_action_pressed("return_orbs")
+	if is_special and _clues.is_active():
+		_clues.dismiss_active()
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("level_select"):
 		_level_select_by_event = true
 		_toggle_level_select()
@@ -122,18 +131,21 @@ func _toggle_level_select() -> void:
 		_console_mode.request_console()
 	else:
 		_console_mode.request_level_select()
+	_action_pressed_sfx.play()
 	_flash_hint(_hint_level_select)
 
 func _toggle_playback() -> void:
 	if _playback_button.disabled:
 		return
 	_playback_button.button_pressed = not _playback_button.button_pressed
+	_action_pressed_sfx.play()
 	_flash_hint(_hint_playback)
 
 func _return_orbs_to_tray() -> void:
 	if _console_mode.current_mode != ConsoleMode.Mode.CONSOLE or Playback.is_playing:
 		return
 	_sweep_non_pearl_orbs_to_tray()
+	_action_pressed_sfx.play()
 	_flash_hint(_hint_return_orbs)
 
 func _on_level_select_hint_gui_input(event: InputEvent) -> void:
@@ -182,8 +194,8 @@ func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
 		ConsoleMode.Mode.CONSOLE:
 			if not _post_completion:
-				_level_manager.unmark_clue_for_current_level()
-				if (_level_select_by_event):
+				if _level_select_by_event:
+					_level_manager.unmark_clue_for_current_level()
 					_present_clue_for_current_level(true)
 					_level_select_by_event = false
 			#_lockbox.visible = true
@@ -262,12 +274,18 @@ func _on_hovered_ring_slot_changed(slot: Slot) -> void:
 	_piano_roll.set_ghost_marker(tick, ring.ring_index)
 
 const INCORRECT_NOTE_DB_OFFSET: float = -8.0
+const POST_COMPLETION_NOTE_OFFSET_DB: float = -10.0
+
+var _sequencer_note_offset_db: float = 0.0
 
 func _on_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, _from_position: Vector2, tick: int, orb: Orb) -> void:
 	var ring: Ring = _desk_layer.get_ring_for_orb(orb)
 	var ring_index: int = ring.ring_index if ring != null else 0
+	var offset: float = _sequencer_note_offset_db
 	if not _piano_roll.is_solution_hit(tick, ring_index, orb_id):
-		orb.apply_note_volume_offset(INCORRECT_NOTE_DB_OFFSET)
+		offset += INCORRECT_NOTE_DB_OFFSET
+	if offset != 0.0:
+		orb.apply_note_volume_offset(offset)
 	_piano_roll.receive_orb(orb_id, texture, tick, ring_index, _desk_layer.get_measure_duration())
 
 func _on_sky_transition_midpoint() -> void:
@@ -288,6 +306,8 @@ func _setup_level_select() -> void:
 func _on_level_selected(index: int) -> void:
 	Playback.stop()
 	_playback_button.disabled = false
+	_sequencer_note_offset_db = 0.0
+	_desk_layer.apply_spin_sfx_db_offset(0.0)
 	_swap_active_tray(index == 0)
 	_level_manager.load_level_at_index(index)
 	var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(index)
@@ -330,6 +350,8 @@ func _on_constellation_completed() -> void:
 	if next < _level_manager.level_count():
 		_level_manager.unlock_level(next)
 		_level_select.set_locked(next, false)
+	_sequencer_note_offset_db = POST_COMPLETION_NOTE_OFFSET_DB
+	_desk_layer.apply_spin_sfx_db_offset(POST_COMPLETION_NOTE_OFFSET_DB)
 	_post_completion = true
 	_console_mode.force_level_select()
 

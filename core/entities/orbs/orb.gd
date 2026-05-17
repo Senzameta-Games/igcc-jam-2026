@@ -22,6 +22,14 @@ var is_locked: bool = false
 static var _highlight_material: ShaderMaterial = null
 static var _hover_material: ShaderMaterial = null
 
+static func prewarm() -> void:
+	if _highlight_material == null:
+		_highlight_material = ShaderMaterial.new()
+		_highlight_material.shader = preload("res://core/entities/orbs/orb_highlight.gdshader")
+	if _hover_material == null:
+		_hover_material = ShaderMaterial.new()
+		_hover_material.shader = preload("res://core/entities/orbs/hover_outline.gdshader")
+
 var _is_hovered: bool = false
 var source_level: int = -1
 var _state: State = State.IN_SLOT
@@ -42,12 +50,7 @@ func _init() -> void:
 func _ready() -> void:
 	_note_base_db = _note.volume_db
 	_sprite.play("default")
-	if _highlight_material == null:
-		_highlight_material = ShaderMaterial.new()
-		_highlight_material.shader = preload("res://core/entities/orbs/orb_highlight.gdshader")
-	if _hover_material == null:
-		_hover_material = ShaderMaterial.new()
-		_hover_material.shader = preload("res://core/entities/orbs/hover_outline.gdshader")
+	prewarm()
 	Playback.started.connect(_on_playback_started)
 	Playback.stopped.connect(_on_playback_stopped)
 	_refresh_material()

@@ -6,6 +6,7 @@ uniform float magnification : hint_range(1.0, 4.0) = 1.15;
 uniform float glass_mix : hint_range(0.0, 1.0) = 0.45;
 uniform float edge_distortion : hint_range(0.0, 0.05) = 0.015;
 uniform float edge_falloff : hint_range(0.0, 0.5) = 0.2;
+uniform float brightness : hint_range(1.0, 3.0) = 1.0;
 
 // Sprite center in viewport pixels, stable regardless of scene-tree position.
 varying flat vec2 center_viewport_pos;
@@ -46,4 +47,5 @@ void fragment() {
 
 	COLOR = screen_color;
 	COLOR.rgb = mix(COLOR.rgb, glass_color.rgb, glass_mix * glass_color.a);
+	COLOR.rgb *= brightness;
 }

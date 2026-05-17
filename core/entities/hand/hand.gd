@@ -8,6 +8,7 @@ signal hovered_ring_slot_changed(slot: Slot)
 @export var texture_empty: Texture2D
 @export var texture_holding: Texture2D
 @export var texture_pointing: Texture2D
+@export var click_stars_texture: Array[Texture2D]
 
 var _held_orb: Orb = null
 var _hovered_orb: Orb = null
@@ -15,9 +16,14 @@ var _pointing: bool = false
 var _tray: Tray = null
 var _clue_active: bool = false
 var _hovered_ring_slot: Slot = null
+var _click_tween: Tween = null
+var _stamps: Array[Sprite2D] = []
+
+const MAX_STAMPS: int = 5
 
 @onready var _area: Area2D = $Area
 @onready var _sprite: Sprite2D = $Sprite
+@onready var _tap: AudioStreamPlayer = $Tap
 
 func _ready() -> void:
 	_refresh_texture()
@@ -83,7 +89,11 @@ func _input(event: InputEvent) -> void:
 	var mb := event as InputEventMouseButton
 	if not mb.pressed:
 		return
-	if Playback.is_playing or _clue_active:
+	if _clue_active:
+		return
+	if Playback.is_playing:
+		if mb.button_index == MOUSE_BUTTON_LEFT:
+			_play_click_anim()
 		return
 	# Right click
 	if mb.button_index == MOUSE_BUTTON_RIGHT:
@@ -147,6 +157,7 @@ func _input(event: InputEvent) -> void:
 				pick_up(slot.eject_orb())
 				get_viewport().set_input_as_handled()
 				return
+	_play_click_anim()
 
 func return_held_to_tray(tray: Tray) -> void:
 	if _held_orb == null or _held_orb.is_pearl:
@@ -239,3 +250,32 @@ func _hide_all_drophints() -> void:
 		if slot == null:
 			continue
 		slot.hide_drophint()
+
+func _play_click_anim() -> void:
+	_tap.play()
+	_spawn_stamp()
+	if _click_tween != null and _click_tween.is_running():
+		_click_tween.kill()
+	_click_tween = create_tween()
+	_click_tween.tween_property(_sprite, "rotation", deg_to_rad(12.0), 0.07) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_click_tween.tween_property(_sprite, "rotation", 0.0, 0.25) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+
+func _spawn_stamp() -> void:
+	if click_stars_texture.is_empty():
+		return
+	while _stamps.size() >= MAX_STAMPS:
+		_stamps.pop_front().queue_free()
+	var stamp := Sprite2D.new()
+	stamp.texture = click_stars_texture[randi() % click_stars_texture.size()]
+	stamp.global_position = get_global_mouse_position()
+	add_child(stamp)
+	_stamps.append(stamp)
+	var t := create_tween()
+	t.tween_property(stamp, "modulate:a", 0.0, 0.5) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	t.tween_callback(func() -> void:
+		_stamps.erase(stamp)
+		stamp.queue_free()
+	)

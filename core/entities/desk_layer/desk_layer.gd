@@ -36,6 +36,7 @@ const MAX_BPM: float = 90.0
 
 @onready var _rings_container: Node2D = $Sequencer/Rings
 @onready var _ray_caster: RayCaster = $Sequencer/RayCaster
+@onready var _caster_sprite: Sprite2D = $Sequencer/RayCaster/Caster
 @onready var _ring_spin_sfx: AudioStreamPlayer = $PassiveSound/RingRotate
 @onready var _return_all_orbs_sfx: AudioStreamPlayer = $PassiveSound/ReturnAllOrbs
 @onready var _playback_button_sfx: AudioStreamPlayer = $Sequencer/StartStop/ButtonPress
@@ -44,7 +45,9 @@ const MAX_BPM: float = 90.0
 @onready var _extra_tray2: Node2D = $ExtraTray2
 
 var _rings: Array[Ring] = []
+var _spin_sfx_base_db: float = 0.0
 var _resetting: bool = false
+var _caster_pulse_tween: Tween = null
 var _position_tween: Tween = null
 var _position_ready: bool = false
 var _current_mode: ConsoleMode.Mode = ConsoleMode.Mode.LEVEL_SELECT
@@ -60,6 +63,7 @@ var _pending: Array[Dictionary] = []
 var _process_queued: bool = false
 
 func _ready() -> void:
+	_spin_sfx_base_db = _ring_spin_sfx.volume_db
 	await get_tree().process_frame
 	Playback.started.connect(_on_playback_started)
 	Playback.stopped.connect(_on_playback_stopped)
@@ -239,6 +243,9 @@ func _on_playback_stopped() -> void:
 		ring.set_rotation_speed(0.0)
 	_resetting = true
 
+func apply_spin_sfx_db_offset(offset_db: float) -> void:
+	_ring_spin_sfx.volume_db = _spin_sfx_base_db + offset_db
+
 func _bind_all_ring_slots() -> void:
 	for ring: Ring in _rings:
 		_bind_ring_slots(ring)
@@ -273,7 +280,17 @@ func get_ring_for_orb(orb: Orb) -> Ring:
 				return ring
 	return null
 
+func _pulse_caster() -> void:
+	if _caster_pulse_tween != null and _caster_pulse_tween.is_running():
+		_caster_pulse_tween.kill()
+	var mat := _caster_sprite.material as ShaderMaterial
+	mat.set_shader_parameter("brightness", 1.4)
+	_caster_pulse_tween = create_tween()
+	_caster_pulse_tween.tween_property(mat, "shader_parameter/brightness", 1.0, 1.0) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+
 func _on_ray_caster_note_triggered(orb_id: Orb.OrbType, texture: Texture2D, from_position: Vector2, tick: int, orb: Orb) -> void:
+	_pulse_caster()
 	_pending.append({
 		"orb_id": orb_id,
 		"texture": texture,

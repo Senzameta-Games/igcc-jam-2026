@@ -146,6 +146,7 @@ func _ready() -> void:
 	Playback.stopped.connect(_on_playback_stopped)
 	Playback.started.connect(_on_playback_started)
 	Playback.tick_advanced.connect(_on_tick_advanced)
+	_key_star_material = _get_key_star_material()
 
 func setup(tray: Tray) -> void:
 	_clear_slot_markers()

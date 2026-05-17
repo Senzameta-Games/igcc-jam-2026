@@ -20,6 +20,10 @@ const CLUE_CARD_SCENE: PackedScene = preload("res://core/entities/clue_card/clue
 @onready var _scrim: Sprite2D = $Scrim
 @onready var _clue_note_player: AudioStreamPlayer = $ClueNote
 
+func _ready() -> void:
+	_prewarm_card = CLUE_CARD_SCENE.instantiate() as ClueCard
+	add_child(_prewarm_card)
+
 var _cards: Array[ClueCard] = []
 var _pending_solution: Array[LevelManager.SolutionData] = []
 var _pending_measure_duration: float = 0.125
@@ -27,6 +31,14 @@ var _has_pending: bool = false
 var _active_card_count: int = 0
 var _scrim_tween: Tween = null
 var _add_minimized = false
+var _prewarm_card: ClueCard = null
+
+func is_active() -> bool:
+	return _active_card_count > 0
+
+func dismiss_active() -> void:
+	for card: ClueCard in _cards:
+		card.dismiss()
 
 func clear() -> void:
 	_has_pending = false
@@ -58,9 +70,14 @@ func on_desk_settled() -> void:
 	_spawn_card(_pending_solution, _pending_measure_duration)
 
 func _spawn_card(solution: Array[LevelManager.SolutionData], measure_duration: float) -> void:
-	var card := CLUE_CARD_SCENE.instantiate() as ClueCard
+	var card: ClueCard
+	if _prewarm_card != null:
+		card = _prewarm_card
+		_prewarm_card = null
+	else:
+		card = CLUE_CARD_SCENE.instantiate() as ClueCard
+		add_child(card)
 	_cards.append(card)
-	add_child(card)
 	_redistribute()
 	card.became_active.connect(_on_card_became_active)
 	card.dismiss_complete.connect(_on_card_dismiss_complete)

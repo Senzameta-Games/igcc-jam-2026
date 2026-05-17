@@ -5,6 +5,14 @@
 [ext_resource type="Texture2D" uid="uid://ch1re2se0arpy" path="res://core/assets/hand/hand_empty.png" id="2_oaghj"]
 [ext_resource type="Texture2D" uid="uid://du30vgygwe8gd" path="res://core/assets/hand/hand_holding.png" id="3_y17g0"]
 [ext_resource type="Texture2D" uid="uid://db6kld3pwjcw5" path="res://core/assets/hand/hand_pointing.png" id="4_y17g0"]
+[ext_resource type="Texture2D" uid="uid://2geknl8omchm" path="res://core/assets/stars/little-four-star.png" id="5_qjio2"]
+[ext_resource type="Texture2D" uid="uid://bbrwnoui87mpb" path="res://core/assets/stars/little-five-star.png" id="6_g0qfb"]
+[ext_resource type="AudioStream" uid="uid://0dy0b1lmnxcu" path="res://core/assets/audio/taps/tap1.wav" id="6_x7d0x"]
+[ext_resource type="AudioStream" uid="uid://b0fa8ocs0y0db" path="res://core/assets/audio/taps/tap2.wav" id="7_8t223"]
+[ext_resource type="Texture2D" uid="uid://csxukjckm33wl" path="res://core/assets/stars/little-ridged-star.png" id="7_eswg0"]
+[ext_resource type="AudioStream" uid="uid://bbmpqj8dggb4j" path="res://core/assets/audio/taps/tap3.wav" id="8_t31vj"]
+[ext_resource type="AudioStream" uid="uid://bymhjqd2ldsf" path="res://core/assets/audio/taps/tap4.wav" id="9_qjio2"]
+[ext_resource type="AudioStream" uid="uid://bmivs5655n40o" path="res://core/assets/audio/taps/tap5.wav" id="10_g0qfb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v2pej"]
 
@@ -22,12 +30,21 @@ shader_parameter/dust_rise_speed = 0.050000002375
 shader_parameter/dust_size = 0.010000000475
 shader_parameter/brush_roughness = 0.65
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_eswg0"]
+streams_count = 5
+stream_0/stream = ExtResource("6_x7d0x")
+stream_1/stream = ExtResource("7_8t223")
+stream_2/stream = ExtResource("8_t31vj")
+stream_3/stream = ExtResource("9_qjio2")
+stream_4/stream = ExtResource("10_g0qfb")
+
 [node name="Hand" type="Node2D" unique_id=797971003]
 z_index = 99
 script = ExtResource("1_ljdg1")
 texture_empty = ExtResource("2_oaghj")
 texture_holding = ExtResource("3_y17g0")
 texture_pointing = ExtResource("4_y17g0")
+click_stars_texture = Array[Texture2D]([ExtResource("5_qjio2"), ExtResource("6_g0qfb"), ExtResource("7_eswg0")])
 
 [node name="Area" type="Area2D" parent="." unique_id=388490053]
 collision_layer = 0
@@ -38,3 +55,8 @@ shape = SubResource("RectangleShape2D_v2pej")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=941995552]
 material = SubResource("ShaderMaterial_3gdvj")
+
+[node name="Tap" type="AudioStreamPlayer" parent="." unique_id=206857790]
+stream = SubResource("AudioStreamRandomizer_eswg0")
+volume_db = -16.0
+pitch_scale = 1.1
