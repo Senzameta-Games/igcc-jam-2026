@@ -5,8 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://c1ycavhb8bwf4" path="res://core/entities/hand/hand.tscn" id="2_csopv"]
 [ext_resource type="Script" uid="uid://0x2x5jmtfaov" path="res://core/managers/level_manager.gd" id="2_rayt5"]
 [ext_resource type="Script" uid="uid://0jy8je4f7jdl" path="res://core/managers/console_mode.gd" id="4_7ua4h"]
+[ext_resource type="Shader" uid="uid://bkkb57qwmh41d" path="res://core/assets/layout/flicker.gdshader" id="6_13j2v"]
 [ext_resource type="Script" uid="uid://didl8fdxlt1wx" path="res://core/entities/sky/sky_layer.gd" id="6_brq4u"]
 [ext_resource type="PackedScene" uid="uid://cwni48dewkaeh" path="res://core/entities/piano_roll/piano_roll.tscn" id="6_kagtj"]
+[ext_resource type="Texture2D" uid="uid://dwojcwvn6pfds" path="res://icon.svg" id="7_8dldp"]
 [ext_resource type="Texture2D" uid="uid://bahwwy6crwagq" path="res://core/assets/background/skyBG.png" id="7_ltm8o"]
 [ext_resource type="Texture2D" uid="uid://c05ekk8m7yswa" path="res://core/assets/background/clouds.png" id="9_k2fum"]
 [ext_resource type="PackedScene" uid="uid://esgkju3uf5pp" path="res://core/levels/level_select.tscn" id="11_7ua4h"]
@@ -30,6 +32,34 @@
 [ext_resource type="AudioStream" uid="uid://bo30pgdcofwfy" path="res://core/assets/audio/slot/orbPlace3.wav" id="26_ltm8o"]
 [ext_resource type="AudioStream" uid="uid://cbk0aqsmhhu1r" path="res://core/assets/audio/slot/orbPlace4.wav" id="27_13j2v"]
 [ext_resource type="AudioStream" uid="uid://c3gm3gq1yac5c" path="res://core/assets/audio/slot/orbPlace5.wav" id="28_8dldp"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fc6mm"]
+shader = ExtResource("6_13j2v")
+shader_parameter/speed = 0.10000000149012
+shader_parameter/pixelSize = 0.015
+shader_parameter/alpha = 0.450000021375
+shader_parameter/flickerStrength = 0.15
+shader_parameter/toColor = Color(0.4, 0.35, 0.2, 1)
+shader_parameter/fromColor = Color(0.9962109, 0.67871255, 0.6180374, 1)
+shader_parameter/hueShift = 0.0
+shader_parameter/saturationFactor = 1.0
+shader_parameter/particleCount = 128.0
+shader_parameter/brightness = 0.001
+shader_parameter/fireShift = 0.15
+shader_parameter/fireShiftFrequency = 5.0
+shader_parameter/size = Vector2(0.05, 0.75)
+shader_parameter/glow = Vector2(0.001, 0.04)
+shader_parameter/sparkCount = 18.0
+shader_parameter/sparkSize = 0.004
+shader_parameter/sparkSpeed = 0.15
+shader_parameter/sparkColor = Color(0.9999998, 0.8865774, 0.71559536, 1)
+shader_parameter/smokeCount = 20.0
+shader_parameter/smokeSize = 0.015
+shader_parameter/smokeDrift = 0.2
+shader_parameter/smokeColor = Color(0.05, 0.05, 0.05, 1)
+shader_parameter/windForce = 0.0
+shader_parameter/aspectRatio = 1.0
+shader_parameter/posOffset = Vector2(0, -0.5)
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_fc6mm"]
 streams_count = 5
@@ -73,6 +103,12 @@ rotation = -1.5708
 
 [node name="RayCaster" parent="DeskLayer/Sequencer" parent_id_path=PackedInt32Array(870104005, 1677363772) index="1" unique_id=724280312]
 rotation = -1.5708
+
+[node name="Sprite2D" type="Sprite2D" parent="DeskLayer/Frame" parent_id_path=PackedInt32Array(870104005, 1645791890) index="0" unique_id=922968156]
+material = SubResource("ShaderMaterial_fc6mm")
+position = Vector2(-701.33344, 109.33334)
+scale = Vector2(1, 1.4266666)
+texture = ExtResource("7_8dldp")
 
 [node name="SkyLayer" type="Node2D" parent="." unique_id=1908889465 node_paths=PackedStringArray("cloud_layer")]
 position = Vector2(960, 520)
