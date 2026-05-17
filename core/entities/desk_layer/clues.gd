@@ -26,6 +26,7 @@ var _pending_measure_duration: float = 0.125
 var _has_pending: bool = false
 var _active_card_count: int = 0
 var _scrim_tween: Tween = null
+var _add_minimized = false
 
 func clear() -> void:
 	_has_pending = false
@@ -44,10 +45,11 @@ func dismiss_solved() -> void:
 	for card: ClueCard in departing:
 		card.dismiss_solved()
 
-func queue_clue(solution: Array[LevelManager.SolutionData], measure_duration: float) -> void:
+func queue_clue(solution: Array[LevelManager.SolutionData], measure_duration: float, add_minimized: bool) -> void:
 	_pending_solution = solution
 	_pending_measure_duration = measure_duration
 	_has_pending = true
+	_add_minimized = add_minimized
 
 func on_desk_settled() -> void:
 	if not _has_pending:
@@ -64,7 +66,10 @@ func _spawn_card(solution: Array[LevelManager.SolutionData], measure_duration: f
 	card.dismiss_complete.connect(_on_card_dismiss_complete)
 	card.clue_note_triggered.connect(_on_clue_note_triggered)
 	card.setup(solution, present_position, measure_duration)
-	card.present()
+	if(_add_minimized):
+		card.show_minimized()
+	else:
+		card.present()
 
 func _on_card_became_active() -> void:
 	_active_card_count += 1

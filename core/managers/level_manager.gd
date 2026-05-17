@@ -178,6 +178,9 @@ func mark_clue_shown(index: int) -> void:
 	if index >= 0 and index < _clue_shown.size():
 		_clue_shown[index] = true
 
+func unmark_clue_for_current_level() -> void:
+	_clue_shown[_current_index] = false
+
 func _scan_levels() -> void:
 	_level_files.clear()
 	var dir := DirAccess.open(LEVELS_DIR)

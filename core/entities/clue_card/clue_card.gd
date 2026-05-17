@@ -135,6 +135,10 @@ func inspect() -> void:
 	_tween.tween_property(self, "scale", Vector2.ONE, minimize_duration) \
 		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
+func show_minimized() -> void:
+	visible = true
+	_minimize()
+
 func _minimize() -> void:
 	_stop_clock()
 	_state = State.MINIMIZED

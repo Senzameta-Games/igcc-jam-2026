@@ -65,9 +65,11 @@ func setup(solution: Array[LevelManager.SolutionData]) -> void:
 
 	if not found:
 		return
-
-	min_tick = maxi(0, min_tick - tick_padding)
-	max_tick = mini(_MAX_TICK, max_tick + tick_padding)
+	# Leaving this logic for if we ever want to include dynamic tick selection
+	#min_tick = maxi(0, min_tick - tick_padding)
+	#max_tick = mini(_MAX_TICK, max_tick + tick_padding)
+	min_tick = 0
+	max_tick = _MAX_TICK
 	min_ring = maxi(0, min_ring - ring_padding)
 	max_ring = mini(_MAX_RING, max_ring + ring_padding)
 
