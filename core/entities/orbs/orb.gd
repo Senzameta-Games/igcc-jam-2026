@@ -18,6 +18,7 @@ enum OrbType { Bb3, F3, G3, A4, D4 }
 @export var is_pearl: bool = false
 
 var is_locked: bool = false
+var home_slot: Slot = null
 
 static var _highlight_material: ShaderMaterial = null
 static var _hover_material: ShaderMaterial = null

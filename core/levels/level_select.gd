@@ -34,6 +34,7 @@ func _set_items_active(active: bool) -> void:
 	for item: LevelSelectItem in _items:
 		item.monitoring = active
 		item.monitorable = active
+		item.input_pickable = active
 
 func _on_item_selected(index: int) -> void:
 	level_selected.emit(index)

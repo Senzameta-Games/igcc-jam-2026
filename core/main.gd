@@ -28,7 +28,6 @@ var _hints_pending: bool = false
 var _post_completion: bool = false
 var _pending_freeplay: bool = false
 var _active_tray: Tray = null
-var _level_select_by_event: bool = false
 
 
 func _ready() -> void:
@@ -116,7 +115,6 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("level_select"):
-		_level_select_by_event = true
 		_toggle_level_select()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("playback_toggle"):
@@ -193,11 +191,7 @@ func _on_playback_state_changed(is_playing: bool) -> void:
 func _on_mode_changed(mode: ConsoleMode.Mode) -> void:
 	match mode:
 		ConsoleMode.Mode.CONSOLE:
-			if not _post_completion:
-				if _level_select_by_event:
-					_level_manager.unmark_clue_for_current_level()
-					_present_clue_for_current_level(true)
-					_level_select_by_event = false
+			_present_clue_for_current_level()
 			#_lockbox.visible = true
 			_post_completion = false
 		ConsoleMode.Mode.LEVEL_SELECT:
@@ -216,7 +210,12 @@ func _sweep_non_pearl_orbs_to_tray() -> void:
 		if orb.is_pearl or orb.is_locked:
 			continue
 		slot.eject_orb()
-		var tray_slot: Slot = _active_tray.get_slot_for_orb(orb)
+		var tray_slot: Slot = null
+		if is_instance_valid(orb.home_slot) and orb.home_slot.in_tray \
+				and not orb.home_slot.is_occupied() and not orb.home_slot.disabled:
+			tray_slot = orb.home_slot
+		if tray_slot == null:
+			tray_slot = _active_tray.get_slot_for_orb(orb)
 		if tray_slot == null:
 			tray_slot = _find_any_empty_tray_slot()
 		if tray_slot != null:
@@ -311,16 +310,13 @@ func _on_level_selected(index: int) -> void:
 	_swap_active_tray(index == 0)
 	_level_manager.load_level_at_index(index)
 	var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(index)
-	_level_select_by_event = false
 	if data.solution.is_empty():
 		_piano_roll.set_solution([])
 		_clues.clear()
 		_pending_freeplay = true
-	else:
-		_present_clue_for_current_level(false)
 	_console_mode.request_console()
 
-func _present_clue_for_current_level(add_minimized: bool) -> void:
+func _present_clue_for_current_level() -> void:
 	_clues.clear()
 	var data: LevelManager.LevelData = _level_manager.get_level_data_at_index(_level_manager.current_index())
 	if data.solution.is_empty():
@@ -331,10 +327,10 @@ func _present_clue_for_current_level(add_minimized: bool) -> void:
 		return
 	if not _level_manager.is_clue_shown(idx):
 		_level_manager.mark_clue_shown(idx)
-		_clues.queue_clue(data.solution, _desk_layer.get_measure_duration(), add_minimized)
 		_audio_manager.play_level_start()
 		if idx == 1:
 			_hints_pending = true
+	_clues.queue_clue(data.solution, _desk_layer.get_measure_duration(), false)
 
 func _on_completion_pending() -> void:
 	_playback_button.disabled = true

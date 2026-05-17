@@ -61,6 +61,8 @@ func eject_orb() -> Orb:
 	_orb = null
 	_refresh_visual()
 	orb_ejected.emit()
+	if in_tray:
+		orb.home_slot = self
 	return orb
 
 func is_occupied() -> bool:

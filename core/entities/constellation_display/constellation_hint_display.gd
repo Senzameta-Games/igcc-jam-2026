@@ -93,7 +93,6 @@ func setup(solution: Array[LevelManager.SolutionData]) -> void:
 			var is_constellation: bool = constellation_keys.has(key)
 			var star := Sprite2D.new()
 			star.texture = star_textures[randi() % star_textures.size()]
-			star.rotation = randf_range(0.0, TAU)
 			star.position = pos
 			if is_constellation:
 				var scale_val: float = randf_range(constellation_star_scale_min, constellation_star_scale_max)
@@ -105,6 +104,7 @@ func setup(solution: Array[LevelManager.SolutionData]) -> void:
 					_tick_stars[tick] = []
 				(_tick_stars[tick] as Array).append(star)
 			else:
+				star.rotation = randf_range(0.0, TAU)
 				var gs := Vector2(grid_star_scale, grid_star_scale)
 				star.scale = gs
 				star.modulate = grid_star_color
